@@ -1,0 +1,78 @@
+namespace ca.mcgill.ecse223.restoapp.model;
+
+class RestoApp {
+  1 -> * Table tables;
+  1 -> * Menu menus;
+  1 -> * Waiter waiters;
+}
+class Waiter {
+  String name;
+  1 -> * TotalBill bills;
+  1 -> * Reservation reservations;
+  1 -> * Order orders;
+}
+class Customer {
+   String name;
+   int seatNumber;
+  1 -> * Order orders;
+  * -> * Seat seat;
+}
+
+class Reservation {
+  autouniq id;
+  String name;
+  String email;
+  1 -> 1..* Table tables;
+}
+
+class Table {
+  autounique id;
+  bool isReserved;
+  double portion;
+  1 -> * Seat seats;
+}
+
+class Seat {
+  int number;
+}
+
+
+class Bill {
+  double price;
+}
+
+class IndividualBill {
+  isA Bill;
+  1 -> 1 Customer customer;
+
+}
+
+class TableBill  {
+  isA Bill;
+  1 -> 1 Table table;
+}
+
+class TotalBill {
+  1 -> * Bill bills;
+}
+
+class Order {
+  1-> 1..* OrderEntry entries;
+  autounique id;
+}
+
+class Menu {
+}
+
+class MenuItem {
+  *-> * Menu menu;
+  String name;
+  double price;
+}
+
+class OrderEntry {
+  int count;
+  bool isShared;
+  double portion;
+  1 -> * MenuItem items;
+}
