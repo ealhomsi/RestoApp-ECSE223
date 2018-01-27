@@ -4,7 +4,7 @@
 package ca.mcgill.ecse223.resto.model;
 import java.util.*;
 
-// line 17 "../../../../../model.ump"
+// line 18 "../../../../../model.ump"
 public class Menu
 {
 

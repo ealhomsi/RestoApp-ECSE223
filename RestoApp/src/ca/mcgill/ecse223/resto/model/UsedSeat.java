@@ -5,7 +5,7 @@ package ca.mcgill.ecse223.resto.model;
 import java.sql.Date;
 import java.sql.Time;
 
-// line 77 "../../../../../model.ump"
+// line 78 "../../../../../model.ump"
 public class UsedSeat
 {
 

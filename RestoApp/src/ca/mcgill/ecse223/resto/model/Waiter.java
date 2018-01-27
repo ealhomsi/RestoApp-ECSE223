@@ -6,7 +6,7 @@ import java.util.*;
 import java.sql.Date;
 import java.sql.Time;
 
-// line 10 "../../../../../model.ump"
+// line 12 "../../../../../model.ump"
 public class Waiter
 {
 
@@ -19,7 +19,6 @@ public class Waiter
 
   //Waiter Associations
   private List<Bill> bills;
-  private List<Reservation> reservations;
   private List<Order> orders;
   private RestoApp restoApp;
 
@@ -31,7 +30,6 @@ public class Waiter
   {
     name = aName;
     bills = new ArrayList<Bill>();
-    reservations = new ArrayList<Reservation>();
     orders = new ArrayList<Order>();
     boolean didAddRestoApp = setRestoApp(aRestoApp);
     if (!didAddRestoApp)
@@ -84,36 +82,6 @@ public class Waiter
   public int indexOfBill(Bill aBill)
   {
     int index = bills.indexOf(aBill);
-    return index;
-  }
-
-  public Reservation getReservation(int index)
-  {
-    Reservation aReservation = reservations.get(index);
-    return aReservation;
-  }
-
-  public List<Reservation> getReservations()
-  {
-    List<Reservation> newReservations = Collections.unmodifiableList(reservations);
-    return newReservations;
-  }
-
-  public int numberOfReservations()
-  {
-    int number = reservations.size();
-    return number;
-  }
-
-  public boolean hasReservations()
-  {
-    boolean has = reservations.size() > 0;
-    return has;
-  }
-
-  public int indexOfReservation(Reservation aReservation)
-  {
-    int index = reservations.indexOf(aReservation);
     return index;
   }
 
@@ -224,78 +192,6 @@ public class Waiter
     return wasAdded;
   }
 
-  public static int minimumNumberOfReservations()
-  {
-    return 0;
-  }
-  /* Code from template association_AddManyToOne */
-  public Reservation addReservation(Date aReservationDate, Time aReservationTime, ClientInfo aClient)
-  {
-    return new Reservation(aReservationDate, aReservationTime, aClient, this);
-  }
-
-  public boolean addReservation(Reservation aReservation)
-  {
-    boolean wasAdded = false;
-    if (reservations.contains(aReservation)) { return false; }
-    Waiter existingWaiter = aReservation.getWaiter();
-    boolean isNewWaiter = existingWaiter != null && !this.equals(existingWaiter);
-    if (isNewWaiter)
-    {
-      aReservation.setWaiter(this);
-    }
-    else
-    {
-      reservations.add(aReservation);
-    }
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removeReservation(Reservation aReservation)
-  {
-    boolean wasRemoved = false;
-    //Unable to remove aReservation, as it must always have a waiter
-    if (!this.equals(aReservation.getWaiter()))
-    {
-      reservations.remove(aReservation);
-      wasRemoved = true;
-    }
-    return wasRemoved;
-  }
-
-  public boolean addReservationAt(Reservation aReservation, int index)
-  {  
-    boolean wasAdded = false;
-    if(addReservation(aReservation))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfReservations()) { index = numberOfReservations() - 1; }
-      reservations.remove(aReservation);
-      reservations.add(index, aReservation);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveReservationAt(Reservation aReservation, int index)
-  {
-    boolean wasAdded = false;
-    if(reservations.contains(aReservation))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfReservations()) { index = numberOfReservations() - 1; }
-      reservations.remove(aReservation);
-      reservations.add(index, aReservation);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addReservationAt(aReservation, index);
-    }
-    return wasAdded;
-  }
-
   public static int minimumNumberOfOrders()
   {
     return 0;
@@ -393,11 +289,6 @@ public class Waiter
     {
       Bill aBill = bills.get(i - 1);
       aBill.delete();
-    }
-    for(int i=reservations.size(); i > 0; i--)
-    {
-      Reservation aReservation = reservations.get(i - 1);
-      aReservation.delete();
     }
     for(int i=orders.size(); i > 0; i--)
     {

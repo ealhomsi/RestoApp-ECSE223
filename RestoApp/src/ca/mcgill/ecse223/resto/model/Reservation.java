@@ -6,7 +6,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.*;
 
-// line 85 "../../../../../model.ump"
+// line 86 "../../../../../model.ump"
 public class Reservation
 {
 
@@ -30,13 +30,13 @@ public class Reservation
   //Reservation Associations
   private ClientInfo client;
   private List<Table> tables;
-  private Waiter waiter;
+  private RestoApp restoApp;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Reservation(Date aReservationDate, Time aReservationTime, ClientInfo aClient, Waiter aWaiter)
+  public Reservation(Date aReservationDate, Time aReservationTime, ClientInfo aClient, RestoApp aRestoApp)
   {
     reservationDate = aReservationDate;
     reservationTime = aReservationTime;
@@ -47,10 +47,10 @@ public class Reservation
       throw new RuntimeException("Unable to create reservation due to client");
     }
     tables = new ArrayList<Table>();
-    boolean didAddWaiter = setWaiter(aWaiter);
-    if (!didAddWaiter)
+    boolean didAddRestoApp = setRestoApp(aRestoApp);
+    if (!didAddRestoApp)
     {
-      throw new RuntimeException("Unable to create reservation due to waiter");
+      throw new RuntimeException("Unable to create reservation due to restoApp");
     }
   }
 
@@ -124,9 +124,9 @@ public class Reservation
     return index;
   }
 
-  public Waiter getWaiter()
+  public RestoApp getRestoApp()
   {
-    return waiter;
+    return restoApp;
   }
 
   public boolean setClient(ClientInfo aClient)
@@ -240,21 +240,21 @@ public class Reservation
     return wasAdded;
   }
 
-  public boolean setWaiter(Waiter aWaiter)
+  public boolean setRestoApp(RestoApp aRestoApp)
   {
     boolean wasSet = false;
-    if (aWaiter == null)
+    if (aRestoApp == null)
     {
       return wasSet;
     }
 
-    Waiter existingWaiter = waiter;
-    waiter = aWaiter;
-    if (existingWaiter != null && !existingWaiter.equals(aWaiter))
+    RestoApp existingRestoApp = restoApp;
+    restoApp = aRestoApp;
+    if (existingRestoApp != null && !existingRestoApp.equals(aRestoApp))
     {
-      existingWaiter.removeReservation(this);
+      existingRestoApp.removeReservation(this);
     }
-    waiter.addReservation(this);
+    restoApp.addReservation(this);
     wasSet = true;
     return wasSet;
   }
@@ -272,11 +272,11 @@ public class Reservation
       Table aTable = tables.get(i - 1);
       aTable.delete();
     }
-    Waiter placeholderWaiter = waiter;
-    this.waiter = null;
-    if(placeholderWaiter != null)
+    RestoApp placeholderRestoApp = restoApp;
+    this.restoApp = null;
+    if(placeholderRestoApp != null)
     {
-      placeholderWaiter.removeReservation(this);
+      placeholderRestoApp.removeReservation(this);
     }
   }
 
@@ -288,6 +288,6 @@ public class Reservation
             "  " + "reservationDate" + "=" + (getReservationDate() != null ? !getReservationDate().equals(this)  ? getReservationDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "reservationTime" + "=" + (getReservationTime() != null ? !getReservationTime().equals(this)  ? getReservationTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "client = "+(getClient()!=null?Integer.toHexString(System.identityHashCode(getClient())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "waiter = "+(getWaiter()!=null?Integer.toHexString(System.identityHashCode(getWaiter())):"null");
+            "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null");
   }
 }

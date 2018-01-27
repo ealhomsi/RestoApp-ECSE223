@@ -3,7 +3,7 @@
 
 package ca.mcgill.ecse223.resto.model;
 
-// line 28 "../../../../../model.ump"
+// line 29 "../../../../../model.ump"
 public class OrderEntry
 {
 

@@ -6,7 +6,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.*;
 
-// line 39 "../../../../../model.ump"
+// line 40 "../../../../../model.ump"
 public class InvdividualOrder extends Order
 {
 
