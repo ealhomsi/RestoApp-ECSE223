@@ -66,6 +66,8 @@ class Bill {
 class Table {
   autounique id;
   1 -- 1..* Seat seats;
+  int locationX;
+  int locationY; 
 }
 
 class Seat {
@@ -84,5 +86,7 @@ class Reservation {
   autounique id;
   * -- 1 ClientInfo client;
   1 -- 1..* Table tables;
+  Date reservationDate;
+  Time reservationTime;
 }
 

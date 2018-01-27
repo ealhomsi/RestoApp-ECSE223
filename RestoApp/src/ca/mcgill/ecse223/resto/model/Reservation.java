@@ -2,9 +2,11 @@
 /*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
+import java.sql.Date;
+import java.sql.Time;
 import java.util.*;
 
-// line 83 "../../../../../model.ump"
+// line 85 "../../../../../model.ump"
 public class Reservation
 {
 
@@ -18,6 +20,10 @@ public class Reservation
   // MEMBER VARIABLES
   //------------------------
 
+  //Reservation Attributes
+  private Date reservationDate;
+  private Time reservationTime;
+
   //Autounique Attributes
   private int id;
 
@@ -30,8 +36,10 @@ public class Reservation
   // CONSTRUCTOR
   //------------------------
 
-  public Reservation(ClientInfo aClient, Waiter aWaiter)
+  public Reservation(Date aReservationDate, Time aReservationTime, ClientInfo aClient, Waiter aWaiter)
   {
+    reservationDate = aReservationDate;
+    reservationTime = aReservationTime;
     id = nextId++;
     boolean didAddClient = setClient(aClient);
     if (!didAddClient)
@@ -49,6 +57,32 @@ public class Reservation
   //------------------------
   // INTERFACE
   //------------------------
+
+  public boolean setReservationDate(Date aReservationDate)
+  {
+    boolean wasSet = false;
+    reservationDate = aReservationDate;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setReservationTime(Time aReservationTime)
+  {
+    boolean wasSet = false;
+    reservationTime = aReservationTime;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public Date getReservationDate()
+  {
+    return reservationDate;
+  }
+
+  public Time getReservationTime()
+  {
+    return reservationTime;
+  }
 
   public int getId()
   {
@@ -125,9 +159,9 @@ public class Reservation
     return 1;
   }
 
-  public Table addTable(RestoApp aRestoApp)
+  public Table addTable(int aLocationX, int aLocationY, RestoApp aRestoApp)
   {
-    Table aNewTable = new Table(aRestoApp, this);
+    Table aNewTable = new Table(aLocationX, aLocationY, aRestoApp, this);
     return aNewTable;
   }
 
@@ -251,6 +285,8 @@ public class Reservation
   {
     return super.toString() + "["+
             "id" + ":" + getId()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "reservationDate" + "=" + (getReservationDate() != null ? !getReservationDate().equals(this)  ? getReservationDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "reservationTime" + "=" + (getReservationTime() != null ? !getReservationTime().equals(this)  ? getReservationTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "client = "+(getClient()!=null?Integer.toHexString(System.identityHashCode(getClient())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "waiter = "+(getWaiter()!=null?Integer.toHexString(System.identityHashCode(getWaiter())):"null");
   }

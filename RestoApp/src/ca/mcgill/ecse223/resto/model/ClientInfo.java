@@ -3,6 +3,8 @@
 
 package ca.mcgill.ecse223.resto.model;
 import java.util.*;
+import java.sql.Date;
+import java.sql.Time;
 
 // line 48 "../../../../../model.ump"
 public class ClientInfo
@@ -110,9 +112,9 @@ public class ClientInfo
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Reservation addReservation(Waiter aWaiter)
+  public Reservation addReservation(Date aReservationDate, Time aReservationTime, Waiter aWaiter)
   {
-    return new Reservation(this, aWaiter);
+    return new Reservation(aReservationDate, aReservationTime, this, aWaiter);
   }
 
   public boolean addReservation(Reservation aReservation)

@@ -64,25 +64,29 @@ class Bill {
 }
 
 class Table {
-  autouniq id;
+  autounique id;
   1 -- 1..* Seat seats;
+  int locationX;
+  int locationY; 
 }
 
 class Seat {
-  autouniq id;
+  autounique id;
 }
 
 class UsedSeat {
   * -- 1 Seat seat;
-  autouniq id;
+  autounique id;
   Date date;
   Time startTime;
   Time endTime;
 }
 
 class Reservation {
-  autouniq id;
+  autounique id;
   * -- 1 ClientInfo client;
   1 -- 1..* Table tables;
+  Date reservationDate;
+  Time reservationTime;
 }
 

@@ -127,9 +127,9 @@ public class RestoApp
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Table addTable(Reservation aReservation)
+  public Table addTable(int aLocationX, int aLocationY, Reservation aReservation)
   {
-    return new Table(this, aReservation);
+    return new Table(aLocationX, aLocationY, this, aReservation);
   }
 
   public boolean addTable(Table aTable)

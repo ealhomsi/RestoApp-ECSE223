@@ -6,7 +6,7 @@ import java.util.*;
 import java.sql.Date;
 import java.sql.Time;
 
-// line 71 "../../../../../model.ump"
+// line 73 "../../../../../model.ump"
 public class Seat
 {
 

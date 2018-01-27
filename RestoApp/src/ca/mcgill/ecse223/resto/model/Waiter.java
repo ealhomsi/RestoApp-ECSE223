@@ -229,9 +229,9 @@ public class Waiter
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Reservation addReservation(ClientInfo aClient)
+  public Reservation addReservation(Date aReservationDate, Time aReservationTime, ClientInfo aClient)
   {
-    return new Reservation(aClient, this);
+    return new Reservation(aReservationDate, aReservationTime, aClient, this);
   }
 
   public boolean addReservation(Reservation aReservation)

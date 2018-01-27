@@ -18,6 +18,10 @@ public class Table
   // MEMBER VARIABLES
   //------------------------
 
+  //Table Attributes
+  private int locationX;
+  private int locationY;
+
   //Autounique Attributes
   private int id;
 
@@ -30,8 +34,10 @@ public class Table
   // CONSTRUCTOR
   //------------------------
 
-  public Table(RestoApp aRestoApp, Reservation aReservation)
+  public Table(int aLocationX, int aLocationY, RestoApp aRestoApp, Reservation aReservation)
   {
+    locationX = aLocationX;
+    locationY = aLocationY;
     id = nextId++;
     seats = new ArrayList<Seat>();
     boolean didAddRestoApp = setRestoApp(aRestoApp);
@@ -49,6 +55,32 @@ public class Table
   //------------------------
   // INTERFACE
   //------------------------
+
+  public boolean setLocationX(int aLocationX)
+  {
+    boolean wasSet = false;
+    locationX = aLocationX;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setLocationY(int aLocationY)
+  {
+    boolean wasSet = false;
+    locationY = aLocationY;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getLocationX()
+  {
+    return locationX;
+  }
+
+  public int getLocationY()
+  {
+    return locationY;
+  }
 
   public int getId()
   {
@@ -261,7 +293,9 @@ public class Table
   public String toString()
   {
     return super.toString() + "["+
-            "id" + ":" + getId()+ "]" + System.getProperties().getProperty("line.separator") +
+            "id" + ":" + getId()+ "," +
+            "locationX" + ":" + getLocationX()+ "," +
+            "locationY" + ":" + getLocationY()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "reservation = "+(getReservation()!=null?Integer.toHexString(System.identityHashCode(getReservation())):"null");
   }
