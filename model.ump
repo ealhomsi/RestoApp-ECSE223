@@ -33,7 +33,6 @@ class OrderEntry {
 
 class Order {
    1 <@>- *  OrderEntry entries;
-  Date orderDate;
   Time orderTime;
 }
 
