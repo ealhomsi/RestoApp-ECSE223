@@ -16,18 +16,18 @@ class Waiter {
 }
 
 class Menu {
-  * -- * MenuEntry entries;
+  * -- * MenuItem entries;
   String title;
 }
 
-class MenuEntry {
+class MenuItem {
   String name;
   String description;
   double price;
 }
 
 class OrderEntry {
-   * -- 1  MenuEntry item;
+   * -- 1  MenuItem item;
   int count;
 }
 
@@ -46,20 +46,8 @@ class SharedOrder {
   double percentage;
 }
 
-class ClientInfo {
-  String name;
-  String emailAddress;
-  String phoneNumber;
-}
-
-class Customer {
-  1 <@>- * Order orders;
-  1 <@>- 1 UsedSeat usedseat;
-  * -> 1 ClientInfo info;
-}
-
 class Bill {
-  1 -- * Customer customers;
+  1 -- * SeatSchedule seats;
   Date billDate;
   Time billTime;
 }
@@ -75,18 +63,20 @@ class Seat {
   autounique id;
 }
 
-class UsedSeat {
+class SeatSchedule {
   * -- 1 Seat seat;
+  1 <@>- * Order orders;
   autounique id;
   Date date;
   Time startTime;
-  Time endTime;
 }
 
 class Reservation {
-  autounique id;
-  * -- 1 ClientInfo client;
   1 -- 1..* Table tables;
+  autounique id;
+  String name;
+  String emailAddress;
+  String phoneNumber;
   Date reservationDate;
   Time reservationTime;
 }
