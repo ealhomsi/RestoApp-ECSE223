@@ -3,63 +3,40 @@ namespace ca.mcgill.ecse223.resto.model;
 
 class RestoApp {
   1 <@>- * Table tables;
-  1 <@>- *  Menu menus;
-  1 <@>- *  Waiter waiters;
-  1 -- * Reservation reservations;
+  1 <@>- * Menu menus;
+  1 <@>- * Reservation reservations;
+  1 <@>- * Bill bills;
+  1 <@>- * Order orders;
 
 }
 
-class Waiter {
-  String name;
-  1 -- * Bill bills;
-  1 -- * Order orders;
-}
+enum MenuCategory {  Food, Beverages, Main, Appetizers }
 
 class Menu {
-  * -- * MenuEntry entries;
+  * -- * MenuItem items;
+  MenuCategory category;
   String title;
 }
 
-class MenuEntry {
+class MenuItem {
   String name;
   String description;
   double price;
 }
 
 class OrderEntry {
-   * -- 1  MenuEntry item;
+   * -- 1  MenuItem item;
   int count;
 }
 
 class Order {
    1 <@>- *  OrderEntry entries;
-  Date orderDate;
   Time orderTime;
-}
-
-class InvdividualOrder{
-  isA Order;
-}
-
-class SharedOrder {
-  isA Order;
   double percentage;
 }
 
-class ClientInfo {
-  String name;
-  String emailAddress;
-  String phoneNumber;
-}
-
-class Customer {
-  1 <@>- * Order orders;
-  1 <@>- 1 UsedSeat usedseat;
-  * -> 1 ClientInfo info;
-}
-
 class Bill {
-  1 -- * Customer customers;
+  1 -- * Seat seats;
   Date billDate;
   Time billTime;
 }
@@ -67,27 +44,25 @@ class Bill {
 class Table {
   autounique id;
   1 -- 1..* Seat seats;
+  boolean isTaken;
   int locationX;
   int locationY; 
 }
 
 class Seat {
+  1 -- * Order orders;
   autounique id;
+  boolean isTaken;
 }
 
-class UsedSeat {
-  * -- 1 Seat seat;
-  autounique id;
-  Date date;
-  Time startTime;
-  Time endTime;
-}
+
 
 class Reservation {
-  autounique id;
-  * -- 1 ClientInfo client;
   1 -- 1..* Table tables;
+  autounique id;
+  String name;
+  String emailAddress;
+  String phoneNumber;
   Date reservationDate;
   Time reservationTime;
 }
-

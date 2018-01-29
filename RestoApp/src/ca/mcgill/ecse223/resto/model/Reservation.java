@@ -6,7 +6,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.*;
 
-// line 86 "../../../../../model.ump"
+// line 60 "../../../../../model.ump"
 public class Reservation
 {
 
@@ -21,6 +21,9 @@ public class Reservation
   //------------------------
 
   //Reservation Attributes
+  private String name;
+  private String emailAddress;
+  private String phoneNumber;
   private Date reservationDate;
   private Time reservationTime;
 
@@ -28,7 +31,6 @@ public class Reservation
   private int id;
 
   //Reservation Associations
-  private ClientInfo client;
   private List<Table> tables;
   private RestoApp restoApp;
 
@@ -36,16 +38,14 @@ public class Reservation
   // CONSTRUCTOR
   //------------------------
 
-  public Reservation(Date aReservationDate, Time aReservationTime, ClientInfo aClient, RestoApp aRestoApp)
+  public Reservation(String aName, String aEmailAddress, String aPhoneNumber, Date aReservationDate, Time aReservationTime, RestoApp aRestoApp)
   {
+    name = aName;
+    emailAddress = aEmailAddress;
+    phoneNumber = aPhoneNumber;
     reservationDate = aReservationDate;
     reservationTime = aReservationTime;
     id = nextId++;
-    boolean didAddClient = setClient(aClient);
-    if (!didAddClient)
-    {
-      throw new RuntimeException("Unable to create reservation due to client");
-    }
     tables = new ArrayList<Table>();
     boolean didAddRestoApp = setRestoApp(aRestoApp);
     if (!didAddRestoApp)
@@ -57,6 +57,30 @@ public class Reservation
   //------------------------
   // INTERFACE
   //------------------------
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setEmailAddress(String aEmailAddress)
+  {
+    boolean wasSet = false;
+    emailAddress = aEmailAddress;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setPhoneNumber(String aPhoneNumber)
+  {
+    boolean wasSet = false;
+    phoneNumber = aPhoneNumber;
+    wasSet = true;
+    return wasSet;
+  }
 
   public boolean setReservationDate(Date aReservationDate)
   {
@@ -74,6 +98,21 @@ public class Reservation
     return wasSet;
   }
 
+  public String getName()
+  {
+    return name;
+  }
+
+  public String getEmailAddress()
+  {
+    return emailAddress;
+  }
+
+  public String getPhoneNumber()
+  {
+    return phoneNumber;
+  }
+
   public Date getReservationDate()
   {
     return reservationDate;
@@ -87,11 +126,6 @@ public class Reservation
   public int getId()
   {
     return id;
-  }
-
-  public ClientInfo getClient()
-  {
-    return client;
   }
 
   public Table getTable(int index)
@@ -129,25 +163,6 @@ public class Reservation
     return restoApp;
   }
 
-  public boolean setClient(ClientInfo aClient)
-  {
-    boolean wasSet = false;
-    if (aClient == null)
-    {
-      return wasSet;
-    }
-
-    ClientInfo existingClient = client;
-    client = aClient;
-    if (existingClient != null && !existingClient.equals(aClient))
-    {
-      existingClient.removeReservation(this);
-    }
-    client.addReservation(this);
-    wasSet = true;
-    return wasSet;
-  }
-
   public boolean isNumberOfTablesValid()
   {
     boolean isValid = numberOfTables() >= minimumNumberOfTables();
@@ -159,9 +174,9 @@ public class Reservation
     return 1;
   }
 
-  public Table addTable(int aLocationX, int aLocationY, RestoApp aRestoApp)
+  public Table addTable(boolean aIsTaken, int aLocationX, int aLocationY, RestoApp aRestoApp)
   {
-    Table aNewTable = new Table(aLocationX, aLocationY, aRestoApp, this);
+    Table aNewTable = new Table(aIsTaken, aLocationX, aLocationY, aRestoApp, this);
     return aNewTable;
   }
 
@@ -261,12 +276,6 @@ public class Reservation
 
   public void delete()
   {
-    ClientInfo placeholderClient = client;
-    this.client = null;
-    if(placeholderClient != null)
-    {
-      placeholderClient.removeReservation(this);
-    }
     for(int i=tables.size(); i > 0; i--)
     {
       Table aTable = tables.get(i - 1);
@@ -284,10 +293,12 @@ public class Reservation
   public String toString()
   {
     return super.toString() + "["+
-            "id" + ":" + getId()+ "]" + System.getProperties().getProperty("line.separator") +
+            "id" + ":" + getId()+ "," +
+            "name" + ":" + getName()+ "," +
+            "emailAddress" + ":" + getEmailAddress()+ "," +
+            "phoneNumber" + ":" + getPhoneNumber()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "reservationDate" + "=" + (getReservationDate() != null ? !getReservationDate().equals(this)  ? getReservationDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "reservationTime" + "=" + (getReservationTime() != null ? !getReservationTime().equals(this)  ? getReservationTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "client = "+(getClient()!=null?Integer.toHexString(System.identityHashCode(getClient())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null");
   }
 }

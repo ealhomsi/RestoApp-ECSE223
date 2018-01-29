@@ -3,7 +3,7 @@
 
 package ca.mcgill.ecse223.resto.model;
 
-// line 29 "../../../../../model.ump"
+// line 27 "../../../../../model.ump"
 public class OrderEntry
 {
 
@@ -15,14 +15,14 @@ public class OrderEntry
   private int count;
 
   //OrderEntry Associations
-  private MenuEntry item;
+  private MenuItem item;
   private Order order;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public OrderEntry(int aCount, MenuEntry aItem, Order aOrder)
+  public OrderEntry(int aCount, MenuItem aItem, Order aOrder)
   {
     count = aCount;
     boolean didAddItem = setItem(aItem);
@@ -54,7 +54,7 @@ public class OrderEntry
     return count;
   }
 
-  public MenuEntry getItem()
+  public MenuItem getItem()
   {
     return item;
   }
@@ -64,7 +64,7 @@ public class OrderEntry
     return order;
   }
 
-  public boolean setItem(MenuEntry aItem)
+  public boolean setItem(MenuItem aItem)
   {
     boolean wasSet = false;
     if (aItem == null)
@@ -72,7 +72,7 @@ public class OrderEntry
       return wasSet;
     }
 
-    MenuEntry existingItem = item;
+    MenuItem existingItem = item;
     item = aItem;
     if (existingItem != null && !existingItem.equals(aItem))
     {
@@ -104,7 +104,7 @@ public class OrderEntry
 
   public void delete()
   {
-    MenuEntry placeholderItem = item;
+    MenuItem placeholderItem = item;
     this.item = null;
     if(placeholderItem != null)
     {

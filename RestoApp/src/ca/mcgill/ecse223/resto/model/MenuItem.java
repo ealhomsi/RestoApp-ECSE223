@@ -4,20 +4,20 @@
 package ca.mcgill.ecse223.resto.model;
 import java.util.*;
 
-// line 23 "../../../../../model.ump"
-public class MenuEntry
+// line 21 "../../../../../model.ump"
+public class MenuItem
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //MenuEntry Attributes
+  //MenuItem Attributes
   private String name;
   private String description;
   private double price;
 
-  //MenuEntry Associations
+  //MenuItem Associations
   private List<Menu> menus;
   private List<OrderEntry> orderEntries;
 
@@ -25,7 +25,7 @@ public class MenuEntry
   // CONSTRUCTOR
   //------------------------
 
-  public MenuEntry(String aName, String aDescription, double aPrice)
+  public MenuItem(String aName, String aDescription, double aPrice)
   {
     name = aName;
     description = aDescription;
@@ -147,13 +147,13 @@ public class MenuEntry
     boolean wasAdded = false;
     if (menus.contains(aMenus)) { return false; }
     menus.add(aMenus);
-    if (aMenus.indexOfEntry(this) != -1)
+    if (aMenus.indexOfItem(this) != -1)
     {
       wasAdded = true;
     }
     else
     {
-      wasAdded = aMenus.addEntry(this);
+      wasAdded = aMenus.addItem(this);
       if (!wasAdded)
       {
         menus.remove(aMenus);
@@ -172,13 +172,13 @@ public class MenuEntry
 
     int oldIndex = menus.indexOf(aMenus);
     menus.remove(oldIndex);
-    if (aMenus.indexOfEntry(this) == -1)
+    if (aMenus.indexOfItem(this) == -1)
     {
       wasRemoved = true;
     }
     else
     {
-      wasRemoved = aMenus.removeEntry(this);
+      wasRemoved = aMenus.removeItem(this);
       if (!wasRemoved)
       {
         menus.add(oldIndex,aMenus);
@@ -233,7 +233,7 @@ public class MenuEntry
   {
     boolean wasAdded = false;
     if (orderEntries.contains(aOrderEntry)) { return false; }
-    MenuEntry existingItem = aOrderEntry.getItem();
+    MenuItem existingItem = aOrderEntry.getItem();
     boolean isNewItem = existingItem != null && !this.equals(existingItem);
     if (isNewItem)
     {
@@ -297,7 +297,7 @@ public class MenuEntry
     menus.clear();
     for(Menu aMenus : copyOfMenus)
     {
-      aMenus.removeEntry(this);
+      aMenus.removeItem(this);
     }
     for(int i=orderEntries.size(); i > 0; i--)
     {

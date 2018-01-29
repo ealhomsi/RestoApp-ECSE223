@@ -4,7 +4,7 @@
 package ca.mcgill.ecse223.resto.model;
 import java.util.*;
 
-// line 67 "../../../../../model.ump"
+// line 44 "../../../../../model.ump"
 public class Table
 {
 
@@ -19,6 +19,7 @@ public class Table
   //------------------------
 
   //Table Attributes
+  private boolean isTaken;
   private int locationX;
   private int locationY;
 
@@ -34,8 +35,9 @@ public class Table
   // CONSTRUCTOR
   //------------------------
 
-  public Table(int aLocationX, int aLocationY, RestoApp aRestoApp, Reservation aReservation)
+  public Table(boolean aIsTaken, int aLocationX, int aLocationY, RestoApp aRestoApp, Reservation aReservation)
   {
+    isTaken = aIsTaken;
     locationX = aLocationX;
     locationY = aLocationY;
     id = nextId++;
@@ -56,6 +58,14 @@ public class Table
   // INTERFACE
   //------------------------
 
+  public boolean setIsTaken(boolean aIsTaken)
+  {
+    boolean wasSet = false;
+    isTaken = aIsTaken;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setLocationX(int aLocationX)
   {
     boolean wasSet = false;
@@ -70,6 +80,11 @@ public class Table
     locationY = aLocationY;
     wasSet = true;
     return wasSet;
+  }
+
+  public boolean getIsTaken()
+  {
+    return isTaken;
   }
 
   public int getLocationX()
@@ -138,9 +153,9 @@ public class Table
     return 1;
   }
 
-  public Seat addSeat()
+  public Seat addSeat(boolean aIsTaken, Bill aBill)
   {
-    Seat aNewSeat = new Seat(this);
+    Seat aNewSeat = new Seat(aIsTaken, aBill, this);
     return aNewSeat;
   }
 
@@ -294,6 +309,7 @@ public class Table
   {
     return super.toString() + "["+
             "id" + ":" + getId()+ "," +
+            "isTaken" + ":" + getIsTaken()+ "," +
             "locationX" + ":" + getLocationX()+ "," +
             "locationY" + ":" + getLocationY()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null") + System.getProperties().getProperty("line.separator") +

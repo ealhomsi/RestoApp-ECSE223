@@ -3,20 +3,18 @@ namespace ca.mcgill.ecse223.resto.model;
 
 class RestoApp {
   1 <@>- * Table tables;
-  1 <@>- *  Menu menus;
-  1 <@>- *  Waiter waiters;
-  1 -- * Reservation reservations;
+  1 <@>- * Menu menus;
+  1 <@>- * Reservation reservations;
+  1 <@>- * Bill bills;
+  1 <@>- * Order orders;
 
 }
 
-class Waiter {
-  String name;
-  1 -- * Bill bills;
-  1 -- * Order orders;
-}
+enum MenuCategory {  Food, Beverages, Main, Appetizers }
 
 class Menu {
-  * -- * MenuItem entries;
+  * -- * MenuItem items;
+  MenuCategory category;
   String title;
 }
 
@@ -34,19 +32,11 @@ class OrderEntry {
 class Order {
    1 <@>- *  OrderEntry entries;
   Time orderTime;
-}
-
-class InvdividualOrder{
-  isA Order;
-}
-
-class SharedOrder {
-  isA Order;
   double percentage;
 }
 
 class Bill {
-  1 -- * SeatSchedule seats;
+  1 -- * Seat seats;
   Date billDate;
   Time billTime;
 }
@@ -54,21 +44,18 @@ class Bill {
 class Table {
   autounique id;
   1 -- 1..* Seat seats;
+  boolean isTaken;
   int locationX;
   int locationY; 
 }
 
 class Seat {
+  1 -- * Order orders;
   autounique id;
+  boolean isTaken;
 }
 
-class SeatSchedule {
-  * -- 1 Seat seat;
-  1 <@>- * Order orders;
-  autounique id;
-  Date date;
-  Time startTime;
-}
+
 
 class Reservation {
   1 -- 1..* Table tables;
@@ -79,4 +66,3 @@ class Reservation {
   Date reservationDate;
   Time reservationTime;
 }
-

@@ -4,29 +4,37 @@
 package ca.mcgill.ecse223.resto.model;
 import java.util.*;
 
-// line 18 "../../../../../model.ump"
+// line 15 "../../../../../model.ump"
 public class Menu
 {
+
+  //------------------------
+  // ENUMERATIONS
+  //------------------------
+
+  public enum MenuCategory { Food, Beverages, Main, Appetizers }
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
   //Menu Attributes
+  private MenuCategory category;
   private String title;
 
   //Menu Associations
-  private List<MenuEntry> entries;
+  private List<MenuItem> items;
   private RestoApp restoApp;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Menu(String aTitle, RestoApp aRestoApp)
+  public Menu(MenuCategory aCategory, String aTitle, RestoApp aRestoApp)
   {
+    category = aCategory;
     title = aTitle;
-    entries = new ArrayList<MenuEntry>();
+    items = new ArrayList<MenuItem>();
     boolean didAddRestoApp = setRestoApp(aRestoApp);
     if (!didAddRestoApp)
     {
@@ -38,6 +46,14 @@ public class Menu
   // INTERFACE
   //------------------------
 
+  public boolean setCategory(MenuCategory aCategory)
+  {
+    boolean wasSet = false;
+    category = aCategory;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setTitle(String aTitle)
   {
     boolean wasSet = false;
@@ -46,38 +62,43 @@ public class Menu
     return wasSet;
   }
 
+  public MenuCategory getCategory()
+  {
+    return category;
+  }
+
   public String getTitle()
   {
     return title;
   }
 
-  public MenuEntry getEntry(int index)
+  public MenuItem getItem(int index)
   {
-    MenuEntry aEntry = entries.get(index);
-    return aEntry;
+    MenuItem aItem = items.get(index);
+    return aItem;
   }
 
-  public List<MenuEntry> getEntries()
+  public List<MenuItem> getItems()
   {
-    List<MenuEntry> newEntries = Collections.unmodifiableList(entries);
-    return newEntries;
+    List<MenuItem> newItems = Collections.unmodifiableList(items);
+    return newItems;
   }
 
-  public int numberOfEntries()
+  public int numberOfItems()
   {
-    int number = entries.size();
+    int number = items.size();
     return number;
   }
 
-  public boolean hasEntries()
+  public boolean hasItems()
   {
-    boolean has = entries.size() > 0;
+    boolean has = items.size() > 0;
     return has;
   }
 
-  public int indexOfEntry(MenuEntry aEntry)
+  public int indexOfItem(MenuItem aItem)
   {
-    int index = entries.indexOf(aEntry);
+    int index = items.indexOf(aItem);
     return index;
   }
 
@@ -86,84 +107,84 @@ public class Menu
     return restoApp;
   }
 
-  public static int minimumNumberOfEntries()
+  public static int minimumNumberOfItems()
   {
     return 0;
   }
 
-  public boolean addEntry(MenuEntry aEntry)
+  public boolean addItem(MenuItem aItem)
   {
     boolean wasAdded = false;
-    if (entries.contains(aEntry)) { return false; }
-    entries.add(aEntry);
-    if (aEntry.indexOfMenus(this) != -1)
+    if (items.contains(aItem)) { return false; }
+    items.add(aItem);
+    if (aItem.indexOfMenus(this) != -1)
     {
       wasAdded = true;
     }
     else
     {
-      wasAdded = aEntry.addMenus(this);
+      wasAdded = aItem.addMenus(this);
       if (!wasAdded)
       {
-        entries.remove(aEntry);
+        items.remove(aItem);
       }
     }
     return wasAdded;
   }
 
-  public boolean removeEntry(MenuEntry aEntry)
+  public boolean removeItem(MenuItem aItem)
   {
     boolean wasRemoved = false;
-    if (!entries.contains(aEntry))
+    if (!items.contains(aItem))
     {
       return wasRemoved;
     }
 
-    int oldIndex = entries.indexOf(aEntry);
-    entries.remove(oldIndex);
-    if (aEntry.indexOfMenus(this) == -1)
+    int oldIndex = items.indexOf(aItem);
+    items.remove(oldIndex);
+    if (aItem.indexOfMenus(this) == -1)
     {
       wasRemoved = true;
     }
     else
     {
-      wasRemoved = aEntry.removeMenus(this);
+      wasRemoved = aItem.removeMenus(this);
       if (!wasRemoved)
       {
-        entries.add(oldIndex,aEntry);
+        items.add(oldIndex,aItem);
       }
     }
     return wasRemoved;
   }
 
-  public boolean addEntryAt(MenuEntry aEntry, int index)
+  public boolean addItemAt(MenuItem aItem, int index)
   {  
     boolean wasAdded = false;
-    if(addEntry(aEntry))
+    if(addItem(aItem))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfEntries()) { index = numberOfEntries() - 1; }
-      entries.remove(aEntry);
-      entries.add(index, aEntry);
+      if(index > numberOfItems()) { index = numberOfItems() - 1; }
+      items.remove(aItem);
+      items.add(index, aItem);
       wasAdded = true;
     }
     return wasAdded;
   }
 
-  public boolean addOrMoveEntryAt(MenuEntry aEntry, int index)
+  public boolean addOrMoveItemAt(MenuItem aItem, int index)
   {
     boolean wasAdded = false;
-    if(entries.contains(aEntry))
+    if(items.contains(aItem))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfEntries()) { index = numberOfEntries() - 1; }
-      entries.remove(aEntry);
-      entries.add(index, aEntry);
+      if(index > numberOfItems()) { index = numberOfItems() - 1; }
+      items.remove(aItem);
+      items.add(index, aItem);
       wasAdded = true;
     } 
     else 
     {
-      wasAdded = addEntryAt(aEntry, index);
+      wasAdded = addItemAt(aItem, index);
     }
     return wasAdded;
   }
@@ -189,11 +210,11 @@ public class Menu
 
   public void delete()
   {
-    ArrayList<MenuEntry> copyOfEntries = new ArrayList<MenuEntry>(entries);
-    entries.clear();
-    for(MenuEntry aEntry : copyOfEntries)
+    ArrayList<MenuItem> copyOfItems = new ArrayList<MenuItem>(items);
+    items.clear();
+    for(MenuItem aItem : copyOfItems)
     {
-      aEntry.removeMenus(this);
+      aItem.removeMenus(this);
     }
     RestoApp placeholderRestoApp = restoApp;
     this.restoApp = null;
@@ -208,6 +229,7 @@ public class Menu
   {
     return super.toString() + "["+
             "title" + ":" + getTitle()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "category" + "=" + (getCategory() != null ? !getCategory().equals(this)  ? getCategory().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null");
   }
 }

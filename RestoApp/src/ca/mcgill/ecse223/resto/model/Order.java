@@ -2,11 +2,10 @@
 /*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
-import java.sql.Date;
 import java.sql.Time;
 import java.util.*;
 
-// line 34 "../../../../../model.ump"
+// line 32 "../../../../../model.ump"
 public class Order
 {
 
@@ -15,46 +14,38 @@ public class Order
   //------------------------
 
   //Order Attributes
-  private Date orderDate;
   private Time orderTime;
+  private double percentage;
 
   //Order Associations
   private List<OrderEntry> entries;
-  private Waiter waiter;
-  private Customer customer;
+  private RestoApp restoApp;
+  private Seat seat;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Order(Date aOrderDate, Time aOrderTime, Waiter aWaiter, Customer aCustomer)
+  public Order(Time aOrderTime, double aPercentage, RestoApp aRestoApp, Seat aSeat)
   {
-    orderDate = aOrderDate;
     orderTime = aOrderTime;
+    percentage = aPercentage;
     entries = new ArrayList<OrderEntry>();
-    boolean didAddWaiter = setWaiter(aWaiter);
-    if (!didAddWaiter)
+    boolean didAddRestoApp = setRestoApp(aRestoApp);
+    if (!didAddRestoApp)
     {
-      throw new RuntimeException("Unable to create order due to waiter");
+      throw new RuntimeException("Unable to create order due to restoApp");
     }
-    boolean didAddCustomer = setCustomer(aCustomer);
-    if (!didAddCustomer)
+    boolean didAddSeat = setSeat(aSeat);
+    if (!didAddSeat)
     {
-      throw new RuntimeException("Unable to create order due to customer");
+      throw new RuntimeException("Unable to create order due to seat");
     }
   }
 
   //------------------------
   // INTERFACE
   //------------------------
-
-  public boolean setOrderDate(Date aOrderDate)
-  {
-    boolean wasSet = false;
-    orderDate = aOrderDate;
-    wasSet = true;
-    return wasSet;
-  }
 
   public boolean setOrderTime(Time aOrderTime)
   {
@@ -64,14 +55,22 @@ public class Order
     return wasSet;
   }
 
-  public Date getOrderDate()
+  public boolean setPercentage(double aPercentage)
   {
-    return orderDate;
+    boolean wasSet = false;
+    percentage = aPercentage;
+    wasSet = true;
+    return wasSet;
   }
 
   public Time getOrderTime()
   {
     return orderTime;
+  }
+
+  public double getPercentage()
+  {
+    return percentage;
   }
 
   public OrderEntry getEntry(int index)
@@ -104,14 +103,14 @@ public class Order
     return index;
   }
 
-  public Waiter getWaiter()
+  public RestoApp getRestoApp()
   {
-    return waiter;
+    return restoApp;
   }
 
-  public Customer getCustomer()
+  public Seat getSeat()
   {
-    return customer;
+    return seat;
   }
 
   public static int minimumNumberOfEntries()
@@ -119,7 +118,7 @@ public class Order
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public OrderEntry addEntry(int aCount, MenuEntry aItem)
+  public OrderEntry addEntry(int aCount, MenuItem aItem)
   {
     return new OrderEntry(aCount, aItem, this);
   }
@@ -186,40 +185,40 @@ public class Order
     return wasAdded;
   }
 
-  public boolean setWaiter(Waiter aWaiter)
+  public boolean setRestoApp(RestoApp aRestoApp)
   {
     boolean wasSet = false;
-    if (aWaiter == null)
+    if (aRestoApp == null)
     {
       return wasSet;
     }
 
-    Waiter existingWaiter = waiter;
-    waiter = aWaiter;
-    if (existingWaiter != null && !existingWaiter.equals(aWaiter))
+    RestoApp existingRestoApp = restoApp;
+    restoApp = aRestoApp;
+    if (existingRestoApp != null && !existingRestoApp.equals(aRestoApp))
     {
-      existingWaiter.removeOrder(this);
+      existingRestoApp.removeOrder(this);
     }
-    waiter.addOrder(this);
+    restoApp.addOrder(this);
     wasSet = true;
     return wasSet;
   }
 
-  public boolean setCustomer(Customer aCustomer)
+  public boolean setSeat(Seat aSeat)
   {
     boolean wasSet = false;
-    if (aCustomer == null)
+    if (aSeat == null)
     {
       return wasSet;
     }
 
-    Customer existingCustomer = customer;
-    customer = aCustomer;
-    if (existingCustomer != null && !existingCustomer.equals(aCustomer))
+    Seat existingSeat = seat;
+    seat = aSeat;
+    if (existingSeat != null && !existingSeat.equals(aSeat))
     {
-      existingCustomer.removeOrder(this);
+      existingSeat.removeOrder(this);
     }
-    customer.addOrder(this);
+    seat.addOrder(this);
     wasSet = true;
     return wasSet;
   }
@@ -233,27 +232,27 @@ public class Order
       entries.remove(aEntry);
     }
     
-    Waiter placeholderWaiter = waiter;
-    this.waiter = null;
-    if(placeholderWaiter != null)
+    RestoApp placeholderRestoApp = restoApp;
+    this.restoApp = null;
+    if(placeholderRestoApp != null)
     {
-      placeholderWaiter.removeOrder(this);
+      placeholderRestoApp.removeOrder(this);
     }
-    Customer placeholderCustomer = customer;
-    this.customer = null;
-    if(placeholderCustomer != null)
+    Seat placeholderSeat = seat;
+    this.seat = null;
+    if(placeholderSeat != null)
     {
-      placeholderCustomer.removeOrder(this);
+      placeholderSeat.removeOrder(this);
     }
   }
 
 
   public String toString()
   {
-    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "orderDate" + "=" + (getOrderDate() != null ? !getOrderDate().equals(this)  ? getOrderDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+    return super.toString() + "["+
+            "percentage" + ":" + getPercentage()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "orderTime" + "=" + (getOrderTime() != null ? !getOrderTime().equals(this)  ? getOrderTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "waiter = "+(getWaiter()!=null?Integer.toHexString(System.identityHashCode(getWaiter())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "customer = "+(getCustomer()!=null?Integer.toHexString(System.identityHashCode(getCustomer())):"null");
+            "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "seat = "+(getSeat()!=null?Integer.toHexString(System.identityHashCode(getSeat())):"null");
   }
 }

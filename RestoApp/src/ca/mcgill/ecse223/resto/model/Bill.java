@@ -6,7 +6,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.*;
 
-// line 61 "../../../../../model.ump"
+// line 38 "../../../../../model.ump"
 public class Bill
 {
 
@@ -19,22 +19,22 @@ public class Bill
   private Time billTime;
 
   //Bill Associations
-  private List<Customer> customers;
-  private Waiter waiter;
+  private List<Seat> seats;
+  private RestoApp restoApp;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Bill(Date aBillDate, Time aBillTime, Waiter aWaiter)
+  public Bill(Date aBillDate, Time aBillTime, RestoApp aRestoApp)
   {
     billDate = aBillDate;
     billTime = aBillTime;
-    customers = new ArrayList<Customer>();
-    boolean didAddWaiter = setWaiter(aWaiter);
-    if (!didAddWaiter)
+    seats = new ArrayList<Seat>();
+    boolean didAddRestoApp = setRestoApp(aRestoApp);
+    if (!didAddRestoApp)
     {
-      throw new RuntimeException("Unable to create bill due to waiter");
+      throw new RuntimeException("Unable to create bill due to restoApp");
     }
   }
 
@@ -68,144 +68,144 @@ public class Bill
     return billTime;
   }
 
-  public Customer getCustomer(int index)
+  public Seat getSeat(int index)
   {
-    Customer aCustomer = customers.get(index);
-    return aCustomer;
+    Seat aSeat = seats.get(index);
+    return aSeat;
   }
 
-  public List<Customer> getCustomers()
+  public List<Seat> getSeats()
   {
-    List<Customer> newCustomers = Collections.unmodifiableList(customers);
-    return newCustomers;
+    List<Seat> newSeats = Collections.unmodifiableList(seats);
+    return newSeats;
   }
 
-  public int numberOfCustomers()
+  public int numberOfSeats()
   {
-    int number = customers.size();
+    int number = seats.size();
     return number;
   }
 
-  public boolean hasCustomers()
+  public boolean hasSeats()
   {
-    boolean has = customers.size() > 0;
+    boolean has = seats.size() > 0;
     return has;
   }
 
-  public int indexOfCustomer(Customer aCustomer)
+  public int indexOfSeat(Seat aSeat)
   {
-    int index = customers.indexOf(aCustomer);
+    int index = seats.indexOf(aSeat);
     return index;
   }
 
-  public Waiter getWaiter()
+  public RestoApp getRestoApp()
   {
-    return waiter;
+    return restoApp;
   }
 
-  public static int minimumNumberOfCustomers()
+  public static int minimumNumberOfSeats()
   {
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Customer addCustomer(UsedSeat aUsedseat, ClientInfo aInfo)
+  public Seat addSeat(boolean aIsTaken, Table aTable)
   {
-    return new Customer(aUsedseat, aInfo, this);
+    return new Seat(aIsTaken, this, aTable);
   }
 
-  public boolean addCustomer(Customer aCustomer)
+  public boolean addSeat(Seat aSeat)
   {
     boolean wasAdded = false;
-    if (customers.contains(aCustomer)) { return false; }
-    Bill existingBill = aCustomer.getBill();
+    if (seats.contains(aSeat)) { return false; }
+    Bill existingBill = aSeat.getBill();
     boolean isNewBill = existingBill != null && !this.equals(existingBill);
     if (isNewBill)
     {
-      aCustomer.setBill(this);
+      aSeat.setBill(this);
     }
     else
     {
-      customers.add(aCustomer);
+      seats.add(aSeat);
     }
     wasAdded = true;
     return wasAdded;
   }
 
-  public boolean removeCustomer(Customer aCustomer)
+  public boolean removeSeat(Seat aSeat)
   {
     boolean wasRemoved = false;
-    //Unable to remove aCustomer, as it must always have a bill
-    if (!this.equals(aCustomer.getBill()))
+    //Unable to remove aSeat, as it must always have a bill
+    if (!this.equals(aSeat.getBill()))
     {
-      customers.remove(aCustomer);
+      seats.remove(aSeat);
       wasRemoved = true;
     }
     return wasRemoved;
   }
 
-  public boolean addCustomerAt(Customer aCustomer, int index)
+  public boolean addSeatAt(Seat aSeat, int index)
   {  
     boolean wasAdded = false;
-    if(addCustomer(aCustomer))
+    if(addSeat(aSeat))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfCustomers()) { index = numberOfCustomers() - 1; }
-      customers.remove(aCustomer);
-      customers.add(index, aCustomer);
+      if(index > numberOfSeats()) { index = numberOfSeats() - 1; }
+      seats.remove(aSeat);
+      seats.add(index, aSeat);
       wasAdded = true;
     }
     return wasAdded;
   }
 
-  public boolean addOrMoveCustomerAt(Customer aCustomer, int index)
+  public boolean addOrMoveSeatAt(Seat aSeat, int index)
   {
     boolean wasAdded = false;
-    if(customers.contains(aCustomer))
+    if(seats.contains(aSeat))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfCustomers()) { index = numberOfCustomers() - 1; }
-      customers.remove(aCustomer);
-      customers.add(index, aCustomer);
+      if(index > numberOfSeats()) { index = numberOfSeats() - 1; }
+      seats.remove(aSeat);
+      seats.add(index, aSeat);
       wasAdded = true;
     } 
     else 
     {
-      wasAdded = addCustomerAt(aCustomer, index);
+      wasAdded = addSeatAt(aSeat, index);
     }
     return wasAdded;
   }
 
-  public boolean setWaiter(Waiter aWaiter)
+  public boolean setRestoApp(RestoApp aRestoApp)
   {
     boolean wasSet = false;
-    if (aWaiter == null)
+    if (aRestoApp == null)
     {
       return wasSet;
     }
 
-    Waiter existingWaiter = waiter;
-    waiter = aWaiter;
-    if (existingWaiter != null && !existingWaiter.equals(aWaiter))
+    RestoApp existingRestoApp = restoApp;
+    restoApp = aRestoApp;
+    if (existingRestoApp != null && !existingRestoApp.equals(aRestoApp))
     {
-      existingWaiter.removeBill(this);
+      existingRestoApp.removeBill(this);
     }
-    waiter.addBill(this);
+    restoApp.addBill(this);
     wasSet = true;
     return wasSet;
   }
 
   public void delete()
   {
-    for(int i=customers.size(); i > 0; i--)
+    for(int i=seats.size(); i > 0; i--)
     {
-      Customer aCustomer = customers.get(i - 1);
-      aCustomer.delete();
+      Seat aSeat = seats.get(i - 1);
+      aSeat.delete();
     }
-    Waiter placeholderWaiter = waiter;
-    this.waiter = null;
-    if(placeholderWaiter != null)
+    RestoApp placeholderRestoApp = restoApp;
+    this.restoApp = null;
+    if(placeholderRestoApp != null)
     {
-      placeholderWaiter.removeBill(this);
+      placeholderRestoApp.removeBill(this);
     }
   }
 
@@ -215,6 +215,6 @@ public class Bill
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "billDate" + "=" + (getBillDate() != null ? !getBillDate().equals(this)  ? getBillDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "billTime" + "=" + (getBillTime() != null ? !getBillTime().equals(this)  ? getBillTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "waiter = "+(getWaiter()!=null?Integer.toHexString(System.identityHashCode(getWaiter())):"null");
+            "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null");
   }
 }

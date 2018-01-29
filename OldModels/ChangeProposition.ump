@@ -1,0 +1,101 @@
+class RestoApp 
+{
+  1 <@>- * Table tables;
+  1 <@>- *  Menu menus;
+  1 -- * Reservation reservations;
+
+}
+
+class Menu
+{
+  * -- * MenuItem entries;
+  String title;
+}
+
+class MenuItem
+{
+  String name;
+  String description;
+  double price;
+}
+
+class OrderEntry
+{
+   * -- 1  MenuItem item;
+  int quantity;
+}
+
+class Order 
+{
+   1 <@>- *  OrderEntry entries;
+  Time orderTime;
+}
+
+class InvdividualOrder
+{
+  isA Order;
+}
+
+class SharedOrder
+{
+  isA Order;
+  int numberOfPerson;
+}
+
+class Bill 
+{
+	  1 -- * TakenSeat seats;
+	  Date billDate;
+	  Time billTime;
+	  double totalCost;
+}
+
+	class IndividualBill 
+	{
+	  isA Bill;
+	  boolean sharedItem;
+	  boolean payingForOtherSeat;
+	 }
+	 
+	 class TableBill
+	 {
+	  isA Bill;
+	  int numberOfTable;
+	  }
+	 
+	class Table 
+	{
+	  autounique id;
+	  1 -- 1..* Seat seats;
+	  int locationX;
+	  int locationY;
+	  boolean isAvailabe;
+	}
+
+	class Seat 
+	{
+	  autounique id;
+	  boolean isEmpty;
+	}
+
+	class TakenSeat 
+	{
+	  isA Seat;
+	  1 <@>- * Order orders;
+	  autounique id;
+	  Date date;
+	  Time startTime;
+	}
+
+	class Reservation
+{
+	  1 -- 1..* Table tables;
+	  autounique id;
+	  String name;
+	  String emailAddress;
+	  String phoneNumber;
+	  Date reservationDate;
+	  Time reservationTime;
+	}
+
+
