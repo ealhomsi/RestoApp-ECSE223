@@ -12,7 +12,7 @@ public class OrderEntry
   //------------------------
 
   //OrderEntry Attributes
-  private int count;
+  private int quantity;
 
   //OrderEntry Associations
   private MenuItem item;
@@ -22,9 +22,9 @@ public class OrderEntry
   // CONSTRUCTOR
   //------------------------
 
-  public OrderEntry(int aCount, MenuItem aItem, Order aOrder)
+  public OrderEntry(int aQuantity, MenuItem aItem, Order aOrder)
   {
-    count = aCount;
+    quantity = aQuantity;
     boolean didAddItem = setItem(aItem);
     if (!didAddItem)
     {
@@ -41,17 +41,17 @@ public class OrderEntry
   // INTERFACE
   //------------------------
 
-  public boolean setCount(int aCount)
+  public boolean setQuantity(int aQuantity)
   {
     boolean wasSet = false;
-    count = aCount;
+    quantity = aQuantity;
     wasSet = true;
     return wasSet;
   }
 
-  public int getCount()
+  public int getQuantity()
   {
-    return count;
+    return quantity;
   }
 
   public MenuItem getItem()
@@ -122,7 +122,7 @@ public class OrderEntry
   public String toString()
   {
     return super.toString() + "["+
-            "count" + ":" + getCount()+ "]" + System.getProperties().getProperty("line.separator") +
+            "quantity" + ":" + getQuantity()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "item = "+(getItem()!=null?Integer.toHexString(System.identityHashCode(getItem())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "order = "+(getOrder()!=null?Integer.toHexString(System.identityHashCode(getOrder())):"null");
   }

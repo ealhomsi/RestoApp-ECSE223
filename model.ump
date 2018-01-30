@@ -26,7 +26,7 @@ class MenuItem {
 
 class OrderEntry {
    * -- 1  MenuItem item;
-  int count;
+  int quantity;
 }
 
 class Order {

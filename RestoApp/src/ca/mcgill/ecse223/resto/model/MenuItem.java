@@ -224,9 +224,9 @@ public class MenuItem
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public OrderEntry addOrderEntry(int aCount, Order aOrder)
+  public OrderEntry addOrderEntry(int aQuantity, Order aOrder)
   {
-    return new OrderEntry(aCount, this, aOrder);
+    return new OrderEntry(aQuantity, this, aOrder);
   }
 
   public boolean addOrderEntry(OrderEntry aOrderEntry)

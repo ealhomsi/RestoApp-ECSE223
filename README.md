@@ -7,29 +7,20 @@ Also it will specify how to do some required usecases in the application
 ## Design Details
 1. OrderEntry is a wrapper for MenuEntry which includes the multiplicity of the item ordered.
 2. Every Order is composed of a list of OrderEntries. Therefore, deleting the order would delete all order entries related to it.
-	* Class Order is abstract in this sense
-3. A Client is a potential customer that did not show up yet 
-4. Once the Client shows up he/she becomes a Customer which includes multiple functionalities:
-	* Every Customer has a list of Orders
-	* Every Customer should have an assigned Seat (UsedSeat)
-5. An Order could be either Individual or Shared
-	* An Individual Order is processed normally
-	* A Shared Order is added as a percentage for example 5 people would share (0.2) of the total.
-6. Therefore A Bill could be assigned to a list of Customers solving the problem of customized billing (We did not include the payment information so far).
-7. A ClientInfo (potential Client) could make one or more reservations and each reservation could target as many tables as necessary.
-8. One ClientInfo could have multiple customers (the same client showing up multiple times)
-
+3. A Shared Order is added as a percentage for example 5 people would share (0.2) of the total.
+4. An Individual Order is handled by setting the percentage to 1.0
+5. Therefore A Bill could be assigned to a list of Seats solving the problem of customized billing 
+6. The AppResto Class handles and manages all components of the App
 
 ## UseCases
-1. Billing a list of customers given their UsedSeats
-	* for every used Seat get the current Customer
-	* Create a bill by adding the customers
-	* Get the total by a simple iteration on the customers and their orders
-
+1. Billing a list of seats given their Table/Seats
+	* Iterate over the orders of each seat and sum them up
 2. Deleting a table or a seat
-	* Make sure there are no UsedSeats for the deleted seat or table
-	* delete the requested item
+	* Make sure there are the table/seat is not used. In case of a table we need to check all seats.
+3. Handling shared Order given a list of Seats 
+	* add the same Order with a percentage 0.2 to all 5 seats for example.  "with the right percentage to every Seat"
 
-3. Handling shared Order given a list of UsedSeats or Customers
-	* add a sharedOrder with the right percentage to every Customer.
+Thank you,
+Sincerely,
 
+Group 05
