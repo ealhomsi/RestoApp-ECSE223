@@ -4,9 +4,15 @@
 package ca.mcgill.ecse223.resto.model;
 import java.util.*;
 
-// line 38 "../../../../../model.ump"
+// line 24 "../../../../../RestoApp.ump"
 public class Table
 {
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  private static Map<Integer, Table> tablesByNumber = new HashMap<Integer, Table>();
 
   //------------------------
   // MEMBER VARIABLES
@@ -17,33 +23,36 @@ public class Table
   private int x;
   private int y;
   private int width;
-  private int height;
+  private int length;
 
   //Table Associations
   private List<Seat> seats;
+  private RestoApp restoApp;
   private List<Reservation> reservations;
   private List<Order> orders;
-  private RestoApp restoApp;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Table(int aNumber, int aX, int aY, int aWidth, int aHeight, RestoApp aRestoApp)
+  public Table(int aNumber, int aX, int aY, int aWidth, int aLength, RestoApp aRestoApp)
   {
-    number = aNumber;
     x = aX;
     y = aY;
     width = aWidth;
-    height = aHeight;
+    length = aLength;
+    if (!setNumber(aNumber))
+    {
+      throw new RuntimeException("Cannot create due to duplicate number");
+    }
     seats = new ArrayList<Seat>();
-    reservations = new ArrayList<Reservation>();
-    orders = new ArrayList<Order>();
     boolean didAddRestoApp = setRestoApp(aRestoApp);
     if (!didAddRestoApp)
     {
       throw new RuntimeException("Unable to create table due to restoApp");
     }
+    reservations = new ArrayList<Reservation>();
+    orders = new ArrayList<Order>();
   }
 
   //------------------------
@@ -53,8 +62,16 @@ public class Table
   public boolean setNumber(int aNumber)
   {
     boolean wasSet = false;
+    Integer anOldNumber = getNumber();
+    if (hasWithNumber(aNumber)) {
+      return wasSet;
+    }
     number = aNumber;
     wasSet = true;
+    if (anOldNumber != null) {
+      tablesByNumber.remove(anOldNumber);
+    }
+    tablesByNumber.put(aNumber, this);
     return wasSet;
   }
 
@@ -82,10 +99,10 @@ public class Table
     return wasSet;
   }
 
-  public boolean setHeight(int aHeight)
+  public boolean setLength(int aLength)
   {
     boolean wasSet = false;
-    height = aHeight;
+    length = aLength;
     wasSet = true;
     return wasSet;
   }
@@ -93,6 +110,16 @@ public class Table
   public int getNumber()
   {
     return number;
+  }
+
+  public static Table getWithNumber(int aNumber)
+  {
+    return tablesByNumber.get(aNumber);
+  }
+
+  public static boolean hasWithNumber(int aNumber)
+  {
+    return getWithNumber(aNumber) != null;
   }
 
   public int getX()
@@ -110,9 +137,9 @@ public class Table
     return width;
   }
 
-  public int getHeight()
+  public int getLength()
   {
-    return height;
+    return length;
   }
 
   public Seat getSeat(int index)
@@ -143,6 +170,11 @@ public class Table
   {
     int index = seats.indexOf(aSeat);
     return index;
+  }
+
+  public RestoApp getRestoApp()
+  {
+    return restoApp;
   }
 
   public Reservation getReservation(int index)
@@ -203,11 +235,6 @@ public class Table
   {
     int index = orders.indexOf(aOrder);
     return index;
-  }
-
-  public RestoApp getRestoApp()
-  {
-    return restoApp;
   }
 
   public boolean isNumberOfSeatsValid()
@@ -300,6 +327,25 @@ public class Table
       wasAdded = addSeatAt(aSeat, index);
     }
     return wasAdded;
+  }
+
+  public boolean setRestoApp(RestoApp aRestoApp)
+  {
+    boolean wasSet = false;
+    if (aRestoApp == null)
+    {
+      return wasSet;
+    }
+
+    RestoApp existingRestoApp = restoApp;
+    restoApp = aRestoApp;
+    if (existingRestoApp != null && !existingRestoApp.equals(aRestoApp))
+    {
+      existingRestoApp.removeTable(this);
+    }
+    restoApp.addTable(this);
+    wasSet = true;
+    return wasSet;
   }
 
   public static int minimumNumberOfReservations()
@@ -466,27 +512,9 @@ public class Table
     return wasAdded;
   }
 
-  public boolean setRestoApp(RestoApp aRestoApp)
-  {
-    boolean wasSet = false;
-    if (aRestoApp == null)
-    {
-      return wasSet;
-    }
-
-    RestoApp existingRestoApp = restoApp;
-    restoApp = aRestoApp;
-    if (existingRestoApp != null && !existingRestoApp.equals(aRestoApp))
-    {
-      existingRestoApp.removeTable(this);
-    }
-    restoApp.addTable(this);
-    wasSet = true;
-    return wasSet;
-  }
-
   public void delete()
   {
+    tablesByNumber.remove(getNumber());
     while (seats.size() > 0)
     {
       Seat aSeat = seats.get(seats.size() - 1);
@@ -494,6 +522,12 @@ public class Table
       seats.remove(aSeat);
     }
     
+    RestoApp placeholderRestoApp = restoApp;
+    this.restoApp = null;
+    if(placeholderRestoApp != null)
+    {
+      placeholderRestoApp.removeTable(this);
+    }
     ArrayList<Reservation> copyOfReservations = new ArrayList<Reservation>(reservations);
     reservations.clear();
     for(Reservation aReservation : copyOfReservations)
@@ -520,12 +554,6 @@ public class Table
         aOrder.removeTable(this);
       }
     }
-    RestoApp placeholderRestoApp = restoApp;
-    this.restoApp = null;
-    if(placeholderRestoApp != null)
-    {
-      placeholderRestoApp.removeTable(this);
-    }
   }
 
 
@@ -536,7 +564,7 @@ public class Table
             "x" + ":" + getX()+ "," +
             "y" + ":" + getY()+ "," +
             "width" + ":" + getWidth()+ "," +
-            "height" + ":" + getHeight()+ "]" + System.getProperties().getProperty("line.separator") +
+            "length" + ":" + getLength()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null");
   }
 }

@@ -4,7 +4,7 @@
 package ca.mcgill.ecse223.resto.model;
 import java.util.*;
 
-// line 25 "../../../../../model.ump"
+// line 53 "../../../../../RestoApp.ump"
 public class MenuItem
 {
 
@@ -13,6 +13,12 @@ public class MenuItem
   //------------------------
 
   public enum ItemCategory { Appetizer, Main, Dessert, AlcoholicBeverage, NonAlcoholicBeverage }
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  private static Map<String, MenuItem> menuitemsByName = new HashMap<String, MenuItem>();
 
   //------------------------
   // MEMBER VARIABLES
@@ -33,12 +39,15 @@ public class MenuItem
 
   public MenuItem(String aName, Menu aMenu)
   {
-    name = aName;
+    if (!setName(aName))
+    {
+      throw new RuntimeException("Cannot create due to duplicate name");
+    }
     pricedMenuItems = new ArrayList<PricedMenuItem>();
     boolean didAddMenu = setMenu(aMenu);
     if (!didAddMenu)
     {
-      throw new RuntimeException("Unable to create menuitem due to menu");
+      throw new RuntimeException("Unable to create menuItem due to menu");
     }
   }
 
@@ -49,8 +58,16 @@ public class MenuItem
   public boolean setName(String aName)
   {
     boolean wasSet = false;
+    String anOldName = getName();
+    if (hasWithName(aName)) {
+      return wasSet;
+    }
     name = aName;
     wasSet = true;
+    if (anOldName != null) {
+      menuitemsByName.remove(anOldName);
+    }
+    menuitemsByName.put(aName, this);
     return wasSet;
   }
 
@@ -65,6 +82,16 @@ public class MenuItem
   public String getName()
   {
     return name;
+  }
+
+  public static MenuItem getWithName(String aName)
+  {
+    return menuitemsByName.get(aName);
+  }
+
+  public static boolean hasWithName(String aName)
+  {
+    return getWithName(aName) != null;
   }
 
   public ItemCategory getItemCategory()
@@ -131,7 +158,7 @@ public class MenuItem
 
   public PricedMenuItem addPricedMenuItem(double aPrice, RestoApp aRestoApp)
   {
-    PricedMenuItem aNewPricedMenuItem = new PricedMenuItem(aPrice, this, aRestoApp);
+    PricedMenuItem aNewPricedMenuItem = new PricedMenuItem(aPrice, aRestoApp, this);
     return aNewPricedMenuItem;
   }
 
@@ -230,15 +257,16 @@ public class MenuItem
     menu = aMenu;
     if (existingMenu != null && !existingMenu.equals(aMenu))
     {
-      existingMenu.removeMenuitem(this);
+      existingMenu.removeMenuItem(this);
     }
-    menu.addMenuitem(this);
+    menu.addMenuItem(this);
     wasSet = true;
     return wasSet;
   }
 
   public void delete()
   {
+    menuitemsByName.remove(getName());
     for(int i=pricedMenuItems.size(); i > 0; i--)
     {
       PricedMenuItem aPricedMenuItem = pricedMenuItems.get(i - 1);
@@ -249,7 +277,7 @@ public class MenuItem
     this.menu = null;
     if(placeholderMenu != null)
     {
-      placeholderMenu.removeMenuitem(this);
+      placeholderMenu.removeMenuItem(this);
     }
   }
 

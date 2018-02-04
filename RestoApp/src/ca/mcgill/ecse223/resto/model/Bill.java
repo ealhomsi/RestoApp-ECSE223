@@ -4,7 +4,7 @@
 package ca.mcgill.ecse223.resto.model;
 import java.util.*;
 
-// line 36 "../../../../../model.ump"
+// line 65 "../../../../../RestoApp.ump"
 public class Bill
 {
 
@@ -56,6 +56,9 @@ public class Bill
     return aIssuedForSeat;
   }
 
+  /**
+   * only from order.orderItems.seats;
+   */
   public List<Seat> getIssuedForSeats()
   {
     List<Seat> newIssuedForSeats = Collections.unmodifiableList(issuedForSeats);

@@ -4,7 +4,7 @@
 package ca.mcgill.ecse223.resto.model;
 import java.util.*;
 
-// line 32 "../../../../../model.ump"
+// line 49 "../../../../../RestoApp.ump"
 public class Menu
 {
 
@@ -13,7 +13,7 @@ public class Menu
   //------------------------
 
   //Menu Associations
-  private List<MenuItem> menuitems;
+  private List<MenuItem> menuItems;
   private RestoApp restoApp;
 
   //------------------------
@@ -22,7 +22,7 @@ public class Menu
 
   public Menu(RestoApp aRestoApp)
   {
-    menuitems = new ArrayList<MenuItem>();
+    menuItems = new ArrayList<MenuItem>();
     if (aRestoApp == null || aRestoApp.getMenu() != null)
     {
       throw new RuntimeException("Unable to create Menu due to aRestoApp");
@@ -32,7 +32,7 @@ public class Menu
 
   public Menu()
   {
-    menuitems = new ArrayList<MenuItem>();
+    menuItems = new ArrayList<MenuItem>();
     restoApp = new RestoApp(this);
   }
 
@@ -40,33 +40,33 @@ public class Menu
   // INTERFACE
   //------------------------
 
-  public MenuItem getMenuitem(int index)
+  public MenuItem getMenuItem(int index)
   {
-    MenuItem aMenuitem = menuitems.get(index);
-    return aMenuitem;
+    MenuItem aMenuItem = menuItems.get(index);
+    return aMenuItem;
   }
 
-  public List<MenuItem> getMenuitems()
+  public List<MenuItem> getMenuItems()
   {
-    List<MenuItem> newMenuitems = Collections.unmodifiableList(menuitems);
-    return newMenuitems;
+    List<MenuItem> newMenuItems = Collections.unmodifiableList(menuItems);
+    return newMenuItems;
   }
 
-  public int numberOfMenuitems()
+  public int numberOfMenuItems()
   {
-    int number = menuitems.size();
+    int number = menuItems.size();
     return number;
   }
 
-  public boolean hasMenuitems()
+  public boolean hasMenuItems()
   {
-    boolean has = menuitems.size() > 0;
+    boolean has = menuItems.size() > 0;
     return has;
   }
 
-  public int indexOfMenuitem(MenuItem aMenuitem)
+  public int indexOfMenuItem(MenuItem aMenuItem)
   {
-    int index = menuitems.indexOf(aMenuitem);
+    int index = menuItems.indexOf(aMenuItem);
     return index;
   }
 
@@ -75,85 +75,85 @@ public class Menu
     return restoApp;
   }
 
-  public static int minimumNumberOfMenuitems()
+  public static int minimumNumberOfMenuItems()
   {
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public MenuItem addMenuitem(String aName)
+  public MenuItem addMenuItem(String aName)
   {
     return new MenuItem(aName, this);
   }
 
-  public boolean addMenuitem(MenuItem aMenuitem)
+  public boolean addMenuItem(MenuItem aMenuItem)
   {
     boolean wasAdded = false;
-    if (menuitems.contains(aMenuitem)) { return false; }
-    Menu existingMenu = aMenuitem.getMenu();
+    if (menuItems.contains(aMenuItem)) { return false; }
+    Menu existingMenu = aMenuItem.getMenu();
     boolean isNewMenu = existingMenu != null && !this.equals(existingMenu);
     if (isNewMenu)
     {
-      aMenuitem.setMenu(this);
+      aMenuItem.setMenu(this);
     }
     else
     {
-      menuitems.add(aMenuitem);
+      menuItems.add(aMenuItem);
     }
     wasAdded = true;
     return wasAdded;
   }
 
-  public boolean removeMenuitem(MenuItem aMenuitem)
+  public boolean removeMenuItem(MenuItem aMenuItem)
   {
     boolean wasRemoved = false;
-    //Unable to remove aMenuitem, as it must always have a menu
-    if (!this.equals(aMenuitem.getMenu()))
+    //Unable to remove aMenuItem, as it must always have a menu
+    if (!this.equals(aMenuItem.getMenu()))
     {
-      menuitems.remove(aMenuitem);
+      menuItems.remove(aMenuItem);
       wasRemoved = true;
     }
     return wasRemoved;
   }
 
-  public boolean addMenuitemAt(MenuItem aMenuitem, int index)
+  public boolean addMenuItemAt(MenuItem aMenuItem, int index)
   {  
     boolean wasAdded = false;
-    if(addMenuitem(aMenuitem))
+    if(addMenuItem(aMenuItem))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfMenuitems()) { index = numberOfMenuitems() - 1; }
-      menuitems.remove(aMenuitem);
-      menuitems.add(index, aMenuitem);
+      if(index > numberOfMenuItems()) { index = numberOfMenuItems() - 1; }
+      menuItems.remove(aMenuItem);
+      menuItems.add(index, aMenuItem);
       wasAdded = true;
     }
     return wasAdded;
   }
 
-  public boolean addOrMoveMenuitemAt(MenuItem aMenuitem, int index)
+  public boolean addOrMoveMenuItemAt(MenuItem aMenuItem, int index)
   {
     boolean wasAdded = false;
-    if(menuitems.contains(aMenuitem))
+    if(menuItems.contains(aMenuItem))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfMenuitems()) { index = numberOfMenuitems() - 1; }
-      menuitems.remove(aMenuitem);
-      menuitems.add(index, aMenuitem);
+      if(index > numberOfMenuItems()) { index = numberOfMenuItems() - 1; }
+      menuItems.remove(aMenuItem);
+      menuItems.add(index, aMenuItem);
       wasAdded = true;
     } 
     else 
     {
-      wasAdded = addMenuitemAt(aMenuitem, index);
+      wasAdded = addMenuItemAt(aMenuItem, index);
     }
     return wasAdded;
   }
 
   public void delete()
   {
-    while (menuitems.size() > 0)
+    while (menuItems.size() > 0)
     {
-      MenuItem aMenuitem = menuitems.get(menuitems.size() - 1);
-      aMenuitem.delete();
-      menuitems.remove(aMenuitem);
+      MenuItem aMenuItem = menuItems.get(menuItems.size() - 1);
+      aMenuItem.delete();
+      menuItems.remove(aMenuItem);
     }
     
     RestoApp existingRestoApp = restoApp;

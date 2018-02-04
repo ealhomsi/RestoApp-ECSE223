@@ -4,7 +4,7 @@
 package ca.mcgill.ecse223.resto.model;
 import java.util.*;
 
-// line 20 "../../../../../model.ump"
+// line 61 "../../../../../RestoApp.ump"
 public class PricedMenuItem
 {
 
@@ -16,27 +16,27 @@ public class PricedMenuItem
   private double price;
 
   //PricedMenuItem Associations
-  private List<OrderItem> orderitems;
-  private MenuItem menuItem;
   private RestoApp restoApp;
+  private List<OrderItem> orderItems;
+  private MenuItem menuItem;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public PricedMenuItem(double aPrice, MenuItem aMenuItem, RestoApp aRestoApp)
+  public PricedMenuItem(double aPrice, RestoApp aRestoApp, MenuItem aMenuItem)
   {
     price = aPrice;
-    orderitems = new ArrayList<OrderItem>();
-    boolean didAddMenuItem = setMenuItem(aMenuItem);
-    if (!didAddMenuItem)
-    {
-      throw new RuntimeException("Unable to create pricedMenuItem due to menuItem");
-    }
     boolean didAddRestoApp = setRestoApp(aRestoApp);
     if (!didAddRestoApp)
     {
       throw new RuntimeException("Unable to create pricedMenuItem due to restoApp");
+    }
+    orderItems = new ArrayList<OrderItem>();
+    boolean didAddMenuItem = setMenuItem(aMenuItem);
+    if (!didAddMenuItem)
+    {
+      throw new RuntimeException("Unable to create pricedMenuItem due to menuItem");
     }
   }
 
@@ -57,33 +57,38 @@ public class PricedMenuItem
     return price;
   }
 
-  public OrderItem getOrderitem(int index)
+  public RestoApp getRestoApp()
   {
-    OrderItem aOrderitem = orderitems.get(index);
-    return aOrderitem;
+    return restoApp;
   }
 
-  public List<OrderItem> getOrderitems()
+  public OrderItem getOrderItem(int index)
   {
-    List<OrderItem> newOrderitems = Collections.unmodifiableList(orderitems);
-    return newOrderitems;
+    OrderItem aOrderItem = orderItems.get(index);
+    return aOrderItem;
   }
 
-  public int numberOfOrderitems()
+  public List<OrderItem> getOrderItems()
   {
-    int number = orderitems.size();
+    List<OrderItem> newOrderItems = Collections.unmodifiableList(orderItems);
+    return newOrderItems;
+  }
+
+  public int numberOfOrderItems()
+  {
+    int number = orderItems.size();
     return number;
   }
 
-  public boolean hasOrderitems()
+  public boolean hasOrderItems()
   {
-    boolean has = orderitems.size() > 0;
+    boolean has = orderItems.size() > 0;
     return has;
   }
 
-  public int indexOfOrderitem(OrderItem aOrderitem)
+  public int indexOfOrderItem(OrderItem aOrderItem)
   {
-    int index = orderitems.indexOf(aOrderitem);
+    int index = orderItems.indexOf(aOrderItem);
     return index;
   }
 
@@ -92,89 +97,93 @@ public class PricedMenuItem
     return menuItem;
   }
 
-  public RestoApp getRestoApp()
+  public boolean setRestoApp(RestoApp aRestoApp)
   {
-    return restoApp;
+    boolean wasSet = false;
+    if (aRestoApp == null)
+    {
+      return wasSet;
+    }
+
+    RestoApp existingRestoApp = restoApp;
+    restoApp = aRestoApp;
+    if (existingRestoApp != null && !existingRestoApp.equals(aRestoApp))
+    {
+      existingRestoApp.removePricedMenuItem(this);
+    }
+    restoApp.addPricedMenuItem(this);
+    wasSet = true;
+    return wasSet;
   }
 
-  public static int minimumNumberOfOrderitems()
+  public static int minimumNumberOfOrderItems()
   {
     return 0;
   }
+  /* Code from template association_AddManyToOne */
+  public OrderItem addOrderItem(int aQuantity, Order aOrder, Seat... allSeats)
+  {
+    return new OrderItem(aQuantity, this, aOrder, allSeats);
+  }
 
-  public boolean addOrderitem(OrderItem aOrderitem)
+  public boolean addOrderItem(OrderItem aOrderItem)
   {
     boolean wasAdded = false;
-    if (orderitems.contains(aOrderitem)) { return false; }
-    orderitems.add(aOrderitem);
-    if (aOrderitem.indexOfPricedMenuItem(this) != -1)
+    if (orderItems.contains(aOrderItem)) { return false; }
+    PricedMenuItem existingPricedMenuItem = aOrderItem.getPricedMenuItem();
+    boolean isNewPricedMenuItem = existingPricedMenuItem != null && !this.equals(existingPricedMenuItem);
+    if (isNewPricedMenuItem)
     {
-      wasAdded = true;
+      aOrderItem.setPricedMenuItem(this);
     }
     else
     {
-      wasAdded = aOrderitem.addPricedMenuItem(this);
-      if (!wasAdded)
-      {
-        orderitems.remove(aOrderitem);
-      }
+      orderItems.add(aOrderItem);
     }
+    wasAdded = true;
     return wasAdded;
   }
 
-  public boolean removeOrderitem(OrderItem aOrderitem)
+  public boolean removeOrderItem(OrderItem aOrderItem)
   {
     boolean wasRemoved = false;
-    if (!orderitems.contains(aOrderitem))
+    //Unable to remove aOrderItem, as it must always have a pricedMenuItem
+    if (!this.equals(aOrderItem.getPricedMenuItem()))
     {
-      return wasRemoved;
-    }
-
-    int oldIndex = orderitems.indexOf(aOrderitem);
-    orderitems.remove(oldIndex);
-    if (aOrderitem.indexOfPricedMenuItem(this) == -1)
-    {
+      orderItems.remove(aOrderItem);
       wasRemoved = true;
-    }
-    else
-    {
-      wasRemoved = aOrderitem.removePricedMenuItem(this);
-      if (!wasRemoved)
-      {
-        orderitems.add(oldIndex,aOrderitem);
-      }
     }
     return wasRemoved;
   }
 
-  public boolean addOrderitemAt(OrderItem aOrderitem, int index)
+  public boolean addOrderItemAt(OrderItem aOrderItem, int index)
   {  
     boolean wasAdded = false;
-    if(addOrderitem(aOrderitem))
+    if(addOrderItem(aOrderItem))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfOrderitems()) { index = numberOfOrderitems() - 1; }
-      orderitems.remove(aOrderitem);
-      orderitems.add(index, aOrderitem);
+      if(index > numberOfOrderItems()) { index = numberOfOrderItems() - 1; }
+      orderItems.remove(aOrderItem);
+      orderItems.add(index, aOrderItem);
       wasAdded = true;
     }
     return wasAdded;
   }
 
-  public boolean addOrMoveOrderitemAt(OrderItem aOrderitem, int index)
+  public boolean addOrMoveOrderItemAt(OrderItem aOrderItem, int index)
   {
     boolean wasAdded = false;
-    if(orderitems.contains(aOrderitem))
+    if(orderItems.contains(aOrderItem))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfOrderitems()) { index = numberOfOrderitems() - 1; }
-      orderitems.remove(aOrderitem);
-      orderitems.add(index, aOrderitem);
+      if(index > numberOfOrderItems()) { index = numberOfOrderItems() - 1; }
+      orderItems.remove(aOrderItem);
+      orderItems.add(index, aOrderItem);
       wasAdded = true;
     } 
     else 
     {
-      wasAdded = addOrderitemAt(aOrderitem, index);
+      wasAdded = addOrderItemAt(aOrderItem, index);
     }
     return wasAdded;
   }
@@ -209,44 +218,24 @@ public class PricedMenuItem
     return wasSet;
   }
 
-  public boolean setRestoApp(RestoApp aRestoApp)
-  {
-    boolean wasSet = false;
-    if (aRestoApp == null)
-    {
-      return wasSet;
-    }
-
-    RestoApp existingRestoApp = restoApp;
-    restoApp = aRestoApp;
-    if (existingRestoApp != null && !existingRestoApp.equals(aRestoApp))
-    {
-      existingRestoApp.removePricedMenuItem(this);
-    }
-    restoApp.addPricedMenuItem(this);
-    wasSet = true;
-    return wasSet;
-  }
-
   public void delete()
   {
-    ArrayList<OrderItem> copyOfOrderitems = new ArrayList<OrderItem>(orderitems);
-    orderitems.clear();
-    for(OrderItem aOrderitem : copyOfOrderitems)
+    RestoApp placeholderRestoApp = restoApp;
+    this.restoApp = null;
+    if(placeholderRestoApp != null)
     {
-      aOrderitem.removePricedMenuItem(this);
+      placeholderRestoApp.removePricedMenuItem(this);
+    }
+    for(int i=orderItems.size(); i > 0; i--)
+    {
+      OrderItem aOrderItem = orderItems.get(i - 1);
+      aOrderItem.delete();
     }
     MenuItem placeholderMenuItem = menuItem;
     this.menuItem = null;
     if(placeholderMenuItem != null)
     {
       placeholderMenuItem.removePricedMenuItem(this);
-    }
-    RestoApp placeholderRestoApp = restoApp;
-    this.restoApp = null;
-    if(placeholderRestoApp != null)
-    {
-      placeholderRestoApp.removePricedMenuItem(this);
     }
   }
 
@@ -255,7 +244,7 @@ public class PricedMenuItem
   {
     return super.toString() + "["+
             "price" + ":" + getPrice()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "menuItem = "+(getMenuItem()!=null?Integer.toHexString(System.identityHashCode(getMenuItem())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null");
+            "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "menuItem = "+(getMenuItem()!=null?Integer.toHexString(System.identityHashCode(getMenuItem())):"null");
   }
 }

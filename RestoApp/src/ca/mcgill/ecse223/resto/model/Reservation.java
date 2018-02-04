@@ -5,9 +5,15 @@ package ca.mcgill.ecse223.resto.model;
 import java.sql.Date;
 import java.util.*;
 
-// line 48 "../../../../../model.ump"
+// line 14 "../../../../../RestoApp.ump"
 public class Reservation
 {
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  private static int nextReservationNumber = 1;
 
   //------------------------
   // MEMBER VARIABLES
@@ -19,6 +25,8 @@ public class Reservation
   private String contactName;
   private String contactEmailAddress;
   private String contactPhoneNumber;
+
+  //Autounique Attributes
   private int reservationNumber;
 
   //Reservation Associations
@@ -29,14 +37,14 @@ public class Reservation
   // CONSTRUCTOR
   //------------------------
 
-  public Reservation(Date aDateTime, int aNumberInParty, String aContactName, String aContactEmailAddress, String aContactPhoneNumber, int aReservationNumber, RestoApp aRestoApp, Table... allTables)
+  public Reservation(Date aDateTime, int aNumberInParty, String aContactName, String aContactEmailAddress, String aContactPhoneNumber, RestoApp aRestoApp, Table... allTables)
   {
     dateTime = aDateTime;
     numberInParty = aNumberInParty;
     contactName = aContactName;
     contactEmailAddress = aContactEmailAddress;
     contactPhoneNumber = aContactPhoneNumber;
-    reservationNumber = aReservationNumber;
+    reservationNumber = nextReservationNumber++;
     tables = new ArrayList<Table>();
     boolean didAddTables = setTables(allTables);
     if (!didAddTables)
@@ -94,14 +102,6 @@ public class Reservation
     return wasSet;
   }
 
-  public boolean setReservationNumber(int aReservationNumber)
-  {
-    boolean wasSet = false;
-    reservationNumber = aReservationNumber;
-    wasSet = true;
-    return wasSet;
-  }
-
   public Date getDateTime()
   {
     return dateTime;
@@ -138,6 +138,9 @@ public class Reservation
     return aTable;
   }
 
+  /**
+   * only from currentTables
+   */
   public List<Table> getTables()
   {
     List<Table> newTables = Collections.unmodifiableList(tables);
@@ -340,11 +343,11 @@ public class Reservation
   public String toString()
   {
     return super.toString() + "["+
+            "reservationNumber" + ":" + getReservationNumber()+ "," +
             "numberInParty" + ":" + getNumberInParty()+ "," +
             "contactName" + ":" + getContactName()+ "," +
             "contactEmailAddress" + ":" + getContactEmailAddress()+ "," +
-            "contactPhoneNumber" + ":" + getContactPhoneNumber()+ "," +
-            "reservationNumber" + ":" + getReservationNumber()+ "]" + System.getProperties().getProperty("line.separator") +
+            "contactPhoneNumber" + ":" + getContactPhoneNumber()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "dateTime" + "=" + (getDateTime() != null ? !getDateTime().equals(this)  ? getDateTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null");
   }

@@ -4,7 +4,7 @@
 package ca.mcgill.ecse223.resto.model;
 import java.util.*;
 
-// line 58 "../../../../../model.ump"
+// line 33 "../../../../../RestoApp.ump"
 public class Seat
 {
 
@@ -13,9 +13,9 @@ public class Seat
   //------------------------
 
   //Seat Associations
-  private List<OrderItem> orderitems;
-  private List<Bill> bills;
   private Table table;
+  private List<OrderItem> orderItems;
+  private List<Bill> bills;
 
   //------------------------
   // CONSTRUCTOR
@@ -23,46 +23,51 @@ public class Seat
 
   public Seat(Table aTable)
   {
-    orderitems = new ArrayList<OrderItem>();
-    bills = new ArrayList<Bill>();
     boolean didAddTable = setTable(aTable);
     if (!didAddTable)
     {
       throw new RuntimeException("Unable to create seat due to table");
     }
+    orderItems = new ArrayList<OrderItem>();
+    bills = new ArrayList<Bill>();
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public OrderItem getOrderitem(int index)
+  public Table getTable()
   {
-    OrderItem aOrderitem = orderitems.get(index);
-    return aOrderitem;
+    return table;
   }
 
-  public List<OrderItem> getOrderitems()
+  public OrderItem getOrderItem(int index)
   {
-    List<OrderItem> newOrderitems = Collections.unmodifiableList(orderitems);
-    return newOrderitems;
+    OrderItem aOrderItem = orderItems.get(index);
+    return aOrderItem;
   }
 
-  public int numberOfOrderitems()
+  public List<OrderItem> getOrderItems()
   {
-    int number = orderitems.size();
+    List<OrderItem> newOrderItems = Collections.unmodifiableList(orderItems);
+    return newOrderItems;
+  }
+
+  public int numberOfOrderItems()
+  {
+    int number = orderItems.size();
     return number;
   }
 
-  public boolean hasOrderitems()
+  public boolean hasOrderItems()
   {
-    boolean has = orderitems.size() > 0;
+    boolean has = orderItems.size() > 0;
     return has;
   }
 
-  public int indexOfOrderitem(OrderItem aOrderitem)
+  public int indexOfOrderItem(OrderItem aOrderItem)
   {
-    int index = orderitems.indexOf(aOrderitem);
+    int index = orderItems.indexOf(aOrderItem);
     return index;
   }
 
@@ -96,89 +101,114 @@ public class Seat
     return index;
   }
 
-  public Table getTable()
+  public boolean setTable(Table aTable)
   {
-    return table;
+    boolean wasSet = false;
+    //Must provide table to seat
+    if (aTable == null)
+    {
+      return wasSet;
+    }
+
+    if (table != null && table.numberOfSeats() <= Table.minimumNumberOfSeats())
+    {
+      return wasSet;
+    }
+
+    Table existingTable = table;
+    table = aTable;
+    if (existingTable != null && !existingTable.equals(aTable))
+    {
+      boolean didRemove = existingTable.removeSeat(this);
+      if (!didRemove)
+      {
+        table = existingTable;
+        return wasSet;
+      }
+    }
+    table.addSeat(this);
+    wasSet = true;
+    return wasSet;
   }
 
-  public static int minimumNumberOfOrderitems()
+  public static int minimumNumberOfOrderItems()
   {
     return 0;
   }
 
-  public boolean addOrderitem(OrderItem aOrderitem)
+  public boolean addOrderItem(OrderItem aOrderItem)
   {
     boolean wasAdded = false;
-    if (orderitems.contains(aOrderitem)) { return false; }
-    orderitems.add(aOrderitem);
-    if (aOrderitem.indexOfSeat(this) != -1)
+    if (orderItems.contains(aOrderItem)) { return false; }
+    orderItems.add(aOrderItem);
+    if (aOrderItem.indexOfSeat(this) != -1)
     {
       wasAdded = true;
     }
     else
     {
-      wasAdded = aOrderitem.addSeat(this);
+      wasAdded = aOrderItem.addSeat(this);
       if (!wasAdded)
       {
-        orderitems.remove(aOrderitem);
+        orderItems.remove(aOrderItem);
       }
     }
     return wasAdded;
   }
 
-  public boolean removeOrderitem(OrderItem aOrderitem)
+  public boolean removeOrderItem(OrderItem aOrderItem)
   {
     boolean wasRemoved = false;
-    if (!orderitems.contains(aOrderitem))
+    if (!orderItems.contains(aOrderItem))
     {
       return wasRemoved;
     }
 
-    int oldIndex = orderitems.indexOf(aOrderitem);
-    orderitems.remove(oldIndex);
-    if (aOrderitem.indexOfSeat(this) == -1)
+    int oldIndex = orderItems.indexOf(aOrderItem);
+    orderItems.remove(oldIndex);
+    if (aOrderItem.indexOfSeat(this) == -1)
     {
       wasRemoved = true;
     }
     else
     {
-      wasRemoved = aOrderitem.removeSeat(this);
+      wasRemoved = aOrderItem.removeSeat(this);
       if (!wasRemoved)
       {
-        orderitems.add(oldIndex,aOrderitem);
+        orderItems.add(oldIndex,aOrderItem);
       }
     }
     return wasRemoved;
   }
 
-  public boolean addOrderitemAt(OrderItem aOrderitem, int index)
+  public boolean addOrderItemAt(OrderItem aOrderItem, int index)
   {  
     boolean wasAdded = false;
-    if(addOrderitem(aOrderitem))
+    if(addOrderItem(aOrderItem))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfOrderitems()) { index = numberOfOrderitems() - 1; }
-      orderitems.remove(aOrderitem);
-      orderitems.add(index, aOrderitem);
+      if(index > numberOfOrderItems()) { index = numberOfOrderItems() - 1; }
+      orderItems.remove(aOrderItem);
+      orderItems.add(index, aOrderItem);
       wasAdded = true;
     }
     return wasAdded;
   }
 
-  public boolean addOrMoveOrderitemAt(OrderItem aOrderitem, int index)
+  public boolean addOrMoveOrderItemAt(OrderItem aOrderItem, int index)
   {
     boolean wasAdded = false;
-    if(orderitems.contains(aOrderitem))
+    if(orderItems.contains(aOrderItem))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfOrderitems()) { index = numberOfOrderitems() - 1; }
-      orderitems.remove(aOrderitem);
-      orderitems.add(index, aOrderitem);
+      if(index > numberOfOrderItems()) { index = numberOfOrderItems() - 1; }
+      orderItems.remove(aOrderItem);
+      orderItems.add(index, aOrderItem);
       wasAdded = true;
     } 
     else 
     {
-      wasAdded = addOrderitemAt(aOrderitem, index);
+      wasAdded = addOrderItemAt(aOrderItem, index);
     }
     return wasAdded;
   }
@@ -265,49 +295,25 @@ public class Seat
     return wasAdded;
   }
 
-  public boolean setTable(Table aTable)
-  {
-    boolean wasSet = false;
-    //Must provide table to seat
-    if (aTable == null)
-    {
-      return wasSet;
-    }
-
-    if (table != null && table.numberOfSeats() <= Table.minimumNumberOfSeats())
-    {
-      return wasSet;
-    }
-
-    Table existingTable = table;
-    table = aTable;
-    if (existingTable != null && !existingTable.equals(aTable))
-    {
-      boolean didRemove = existingTable.removeSeat(this);
-      if (!didRemove)
-      {
-        table = existingTable;
-        return wasSet;
-      }
-    }
-    table.addSeat(this);
-    wasSet = true;
-    return wasSet;
-  }
-
   public void delete()
   {
-    ArrayList<OrderItem> copyOfOrderitems = new ArrayList<OrderItem>(orderitems);
-    orderitems.clear();
-    for(OrderItem aOrderitem : copyOfOrderitems)
+    Table placeholderTable = table;
+    this.table = null;
+    if(placeholderTable != null)
     {
-      if (aOrderitem.numberOfSeats() <= OrderItem.minimumNumberOfSeats())
+      placeholderTable.removeSeat(this);
+    }
+    ArrayList<OrderItem> copyOfOrderItems = new ArrayList<OrderItem>(orderItems);
+    orderItems.clear();
+    for(OrderItem aOrderItem : copyOfOrderItems)
+    {
+      if (aOrderItem.numberOfSeats() <= OrderItem.minimumNumberOfSeats())
       {
-        aOrderitem.delete();
+        aOrderItem.delete();
       }
       else
       {
-        aOrderitem.removeSeat(this);
+        aOrderItem.removeSeat(this);
       }
     }
     ArrayList<Bill> copyOfBills = new ArrayList<Bill>(bills);
@@ -322,12 +328,6 @@ public class Seat
       {
         aBill.removeIssuedForSeat(this);
       }
-    }
-    Table placeholderTable = table;
-    this.table = null;
-    if(placeholderTable != null)
-    {
-      placeholderTable.removeSeat(this);
     }
   }
 
