@@ -1,0 +1,8 @@
+RestoApp getRestoApp(); //create a new restoapp or loads one from persistance if it exists
+getCurrentTables(); //returns a list of tables currently used
+void save() throws RunTimeException; //ensure that the modification are saved
+
+Assumption:
+The existance of the two helper methods:
+1) boolean isTableOccupied(Table t); that checks if a table is occupied
+2) boolean crashTable(Table t, int x, int y); checks that if we move that table to (x,y) whether it will crash with another table or not. (simple math using width and height)
