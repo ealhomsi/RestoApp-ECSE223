@@ -1,68 +1,72 @@
 namespace ca.mcgill.ecse223.resto.model;
 
-
-class RestoApp {
-  1 <@>- * Table tables;
-  1 <@>- * Menu menus;
-  1 <@>- * Reservation reservations;
-  1 <@>- * Bill bills;
-  1 <@>- * Order orders;
-
+class Order {
+	Date dateTime;
+	Integer number;
+	1 <@>- * OrderItem orderitems;
+	1 order -- * Bill bills;
+	* orders -- 1..* Table tables;
 }
 
-enum MenuCategory {  Food, Beverages, Main, Appetizers }
+class OrderItem {
+	Integer quantity;
+}
 
-class Menu {
-  * -- * MenuItem items;
-  MenuCategory category;
-  String title;
+enum ItemCategory {
+	Appetizer, Main, Dessert, AlcoholicBeverage, NonAlcoholicBeverage 
+}
+
+
+class PricedMenuItem {
+	Double price;
+	* pricedMenuItems -- * OrderItem orderitems;
 }
 
 class MenuItem {
-  String name;
-  String description;
-  double price;
+	name;
+	lazy ItemCategory itemCategory;
+	1 -- 1..* PricedMenuItem pricedMenuItems;
+	1 -> 0..1 PricedMenuItem currentPricedMenuItem;
 }
 
-class OrderEntry {
-   * -- 1  MenuItem item;
-  int quantity;
+class Menu {
+	1 menu <@>- * MenuItem menuitems;
 }
 
-class Order {
-   1 <@>- *  OrderEntry entries;
-  Time orderTime;
-  double percentage;
-}
-
-class Bill {
-  1 -- * Seat seats;
-  Date billDate;
-  Time billTime;
-}
+class Bill {}
 
 class Table {
-  autounique id;
-  1 -- 1..* Seat seats;
-  boolean isTaken;
-  int locationX;
-  int locationY; 
+	Integer number;
+	Integer x;
+	Integer y;
+	Integer width;
+	Integer height;
+	1 table <@>- 1..* Seat seats;
+	1..* tables -- * Reservation reservations;
 }
-
-class Seat {
-  1 -- * Order orders;
-  autounique id;
-  boolean isTaken;
-}
-
-
 
 class Reservation {
-  1 -- 1..* Table tables;
-  autounique id;
-  String name;
-  String emailAddress;
-  String phoneNumber;
-  Date reservationDate;
-  Time reservationTime;
+	Date dateTime;
+	Integer numberInParty;
+	String contactName;
+	String contactEmailAddress;
+	String contactPhoneNumber;
+	Integer reservationNumber;
+}
+
+
+class Seat {
+	1..* seats -- * OrderItem orderitems;
+	1..* issuedForSeats -- * Bill bills;
+}
+
+class RestoApp {
+	1 <@>- * Order orders;
+	1 <@>- * PricedMenuItem pricedMenuItems;
+	1 <@>- 1 Menu menu;
+	1 <@>- * Bill bills;
+	1 <@>- * Table tables;
+	1 <@>- * Reservation reservations;
+	1 -> * Table currentTables;
+	1 -> * Order currentOrders;
 }

@@ -3,47 +3,28 @@
 
 package ca.mcgill.ecse223.resto.model;
 import java.util.*;
-import java.sql.Time;
 
-// line 52 "../../../../../model.ump"
+// line 58 "../../../../../model.ump"
 public class Seat
 {
-
-  //------------------------
-  // STATIC VARIABLES
-  //------------------------
-
-  private static int nextId = 1;
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //Seat Attributes
-  private boolean isTaken;
-
-  //Autounique Attributes
-  private int id;
-
   //Seat Associations
-  private List<Order> orders;
-  private Bill bill;
+  private List<OrderItem> orderitems;
+  private List<Bill> bills;
   private Table table;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Seat(boolean aIsTaken, Bill aBill, Table aTable)
+  public Seat(Table aTable)
   {
-    isTaken = aIsTaken;
-    id = nextId++;
-    orders = new ArrayList<Order>();
-    boolean didAddBill = setBill(aBill);
-    if (!didAddBill)
-    {
-      throw new RuntimeException("Unable to create seat due to bill");
-    }
+    orderitems = new ArrayList<OrderItem>();
+    bills = new ArrayList<Bill>();
     boolean didAddTable = setTable(aTable);
     if (!didAddTable)
     {
@@ -55,57 +36,64 @@ public class Seat
   // INTERFACE
   //------------------------
 
-  public boolean setIsTaken(boolean aIsTaken)
+  public OrderItem getOrderitem(int index)
   {
-    boolean wasSet = false;
-    isTaken = aIsTaken;
-    wasSet = true;
-    return wasSet;
+    OrderItem aOrderitem = orderitems.get(index);
+    return aOrderitem;
   }
 
-  public boolean getIsTaken()
+  public List<OrderItem> getOrderitems()
   {
-    return isTaken;
+    List<OrderItem> newOrderitems = Collections.unmodifiableList(orderitems);
+    return newOrderitems;
   }
 
-  public int getId()
+  public int numberOfOrderitems()
   {
-    return id;
-  }
-
-  public Order getOrder(int index)
-  {
-    Order aOrder = orders.get(index);
-    return aOrder;
-  }
-
-  public List<Order> getOrders()
-  {
-    List<Order> newOrders = Collections.unmodifiableList(orders);
-    return newOrders;
-  }
-
-  public int numberOfOrders()
-  {
-    int number = orders.size();
+    int number = orderitems.size();
     return number;
   }
 
-  public boolean hasOrders()
+  public boolean hasOrderitems()
   {
-    boolean has = orders.size() > 0;
+    boolean has = orderitems.size() > 0;
     return has;
   }
 
-  public int indexOfOrder(Order aOrder)
+  public int indexOfOrderitem(OrderItem aOrderitem)
   {
-    int index = orders.indexOf(aOrder);
+    int index = orderitems.indexOf(aOrderitem);
     return index;
   }
 
-  public Bill getBill()
+  public Bill getBill(int index)
   {
-    return bill;
+    Bill aBill = bills.get(index);
+    return aBill;
+  }
+
+  public List<Bill> getBills()
+  {
+    List<Bill> newBills = Collections.unmodifiableList(bills);
+    return newBills;
+  }
+
+  public int numberOfBills()
+  {
+    int number = bills.size();
+    return number;
+  }
+
+  public boolean hasBills()
+  {
+    boolean has = bills.size() > 0;
+    return has;
+  }
+
+  public int indexOfBill(Bill aBill)
+  {
+    int index = bills.indexOf(aBill);
+    return index;
   }
 
   public Table getTable()
@@ -113,95 +101,168 @@ public class Seat
     return table;
   }
 
-  public static int minimumNumberOfOrders()
+  public static int minimumNumberOfOrderitems()
   {
     return 0;
   }
-  /* Code from template association_AddManyToOne */
-  public Order addOrder(Time aOrderTime, double aPercentage, RestoApp aRestoApp)
-  {
-    return new Order(aOrderTime, aPercentage, aRestoApp, this);
-  }
 
-  public boolean addOrder(Order aOrder)
+  public boolean addOrderitem(OrderItem aOrderitem)
   {
     boolean wasAdded = false;
-    if (orders.contains(aOrder)) { return false; }
-    Seat existingSeat = aOrder.getSeat();
-    boolean isNewSeat = existingSeat != null && !this.equals(existingSeat);
-    if (isNewSeat)
+    if (orderitems.contains(aOrderitem)) { return false; }
+    orderitems.add(aOrderitem);
+    if (aOrderitem.indexOfSeat(this) != -1)
     {
-      aOrder.setSeat(this);
+      wasAdded = true;
     }
     else
     {
-      orders.add(aOrder);
+      wasAdded = aOrderitem.addSeat(this);
+      if (!wasAdded)
+      {
+        orderitems.remove(aOrderitem);
+      }
     }
-    wasAdded = true;
     return wasAdded;
   }
 
-  public boolean removeOrder(Order aOrder)
+  public boolean removeOrderitem(OrderItem aOrderitem)
   {
     boolean wasRemoved = false;
-    //Unable to remove aOrder, as it must always have a seat
-    if (!this.equals(aOrder.getSeat()))
+    if (!orderitems.contains(aOrderitem))
     {
-      orders.remove(aOrder);
+      return wasRemoved;
+    }
+
+    int oldIndex = orderitems.indexOf(aOrderitem);
+    orderitems.remove(oldIndex);
+    if (aOrderitem.indexOfSeat(this) == -1)
+    {
       wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aOrderitem.removeSeat(this);
+      if (!wasRemoved)
+      {
+        orderitems.add(oldIndex,aOrderitem);
+      }
     }
     return wasRemoved;
   }
 
-  public boolean addOrderAt(Order aOrder, int index)
+  public boolean addOrderitemAt(OrderItem aOrderitem, int index)
   {  
     boolean wasAdded = false;
-    if(addOrder(aOrder))
+    if(addOrderitem(aOrderitem))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfOrders()) { index = numberOfOrders() - 1; }
-      orders.remove(aOrder);
-      orders.add(index, aOrder);
+      if(index > numberOfOrderitems()) { index = numberOfOrderitems() - 1; }
+      orderitems.remove(aOrderitem);
+      orderitems.add(index, aOrderitem);
       wasAdded = true;
     }
     return wasAdded;
   }
 
-  public boolean addOrMoveOrderAt(Order aOrder, int index)
+  public boolean addOrMoveOrderitemAt(OrderItem aOrderitem, int index)
   {
     boolean wasAdded = false;
-    if(orders.contains(aOrder))
+    if(orderitems.contains(aOrderitem))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfOrders()) { index = numberOfOrders() - 1; }
-      orders.remove(aOrder);
-      orders.add(index, aOrder);
+      if(index > numberOfOrderitems()) { index = numberOfOrderitems() - 1; }
+      orderitems.remove(aOrderitem);
+      orderitems.add(index, aOrderitem);
       wasAdded = true;
     } 
     else 
     {
-      wasAdded = addOrderAt(aOrder, index);
+      wasAdded = addOrderitemAt(aOrderitem, index);
     }
     return wasAdded;
   }
 
-  public boolean setBill(Bill aBill)
+  public static int minimumNumberOfBills()
   {
-    boolean wasSet = false;
-    if (aBill == null)
+    return 0;
+  }
+
+  public boolean addBill(Bill aBill)
+  {
+    boolean wasAdded = false;
+    if (bills.contains(aBill)) { return false; }
+    bills.add(aBill);
+    if (aBill.indexOfIssuedForSeat(this) != -1)
     {
-      return wasSet;
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aBill.addIssuedForSeat(this);
+      if (!wasAdded)
+      {
+        bills.remove(aBill);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeBill(Bill aBill)
+  {
+    boolean wasRemoved = false;
+    if (!bills.contains(aBill))
+    {
+      return wasRemoved;
     }
 
-    Bill existingBill = bill;
-    bill = aBill;
-    if (existingBill != null && !existingBill.equals(aBill))
+    int oldIndex = bills.indexOf(aBill);
+    bills.remove(oldIndex);
+    if (aBill.indexOfIssuedForSeat(this) == -1)
     {
-      existingBill.removeSeat(this);
+      wasRemoved = true;
     }
-    bill.addSeat(this);
-    wasSet = true;
-    return wasSet;
+    else
+    {
+      wasRemoved = aBill.removeIssuedForSeat(this);
+      if (!wasRemoved)
+      {
+        bills.add(oldIndex,aBill);
+      }
+    }
+    return wasRemoved;
+  }
+
+  public boolean addBillAt(Bill aBill, int index)
+  {  
+    boolean wasAdded = false;
+    if(addBill(aBill))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfBills()) { index = numberOfBills() - 1; }
+      bills.remove(aBill);
+      bills.add(index, aBill);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveBillAt(Bill aBill, int index)
+  {
+    boolean wasAdded = false;
+    if(bills.contains(aBill))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfBills()) { index = numberOfBills() - 1; }
+      bills.remove(aBill);
+      bills.add(index, aBill);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addBillAt(aBill, index);
+    }
+    return wasAdded;
   }
 
   public boolean setTable(Table aTable)
@@ -236,16 +297,31 @@ public class Seat
 
   public void delete()
   {
-    for(int i=orders.size(); i > 0; i--)
+    ArrayList<OrderItem> copyOfOrderitems = new ArrayList<OrderItem>(orderitems);
+    orderitems.clear();
+    for(OrderItem aOrderitem : copyOfOrderitems)
     {
-      Order aOrder = orders.get(i - 1);
-      aOrder.delete();
+      if (aOrderitem.numberOfSeats() <= OrderItem.minimumNumberOfSeats())
+      {
+        aOrderitem.delete();
+      }
+      else
+      {
+        aOrderitem.removeSeat(this);
+      }
     }
-    Bill placeholderBill = bill;
-    this.bill = null;
-    if(placeholderBill != null)
+    ArrayList<Bill> copyOfBills = new ArrayList<Bill>(bills);
+    bills.clear();
+    for(Bill aBill : copyOfBills)
     {
-      placeholderBill.removeSeat(this);
+      if (aBill.numberOfIssuedForSeats() <= Bill.minimumNumberOfIssuedForSeats())
+      {
+        aBill.delete();
+      }
+      else
+      {
+        aBill.removeIssuedForSeat(this);
+      }
     }
     Table placeholderTable = table;
     this.table = null;
@@ -255,13 +331,4 @@ public class Seat
     }
   }
 
-
-  public String toString()
-  {
-    return super.toString() + "["+
-            "id" + ":" + getId()+ "," +
-            "isTaken" + ":" + getIsTaken()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "bill = "+(getBill()!=null?Integer.toHexString(System.identityHashCode(getBill())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "table = "+(getTable()!=null?Integer.toHexString(System.identityHashCode(getTable())):"null");
-  }
 }
