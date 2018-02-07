@@ -1,0 +1,5 @@
+Add a table and its seats to the restaurant --> Max Brodeur
+Remove a table from the restaurant --> Hani Damlaj
+Update the table number and number of seats of a table --> Carl ElKhoury
+Change the location of a table --> Elias Homsi
+Display the menu according to the food/beverage categories (including loading the menu from a file and saving all data required for all features to a file) --> Marie Vu and Yuxin Zhou
