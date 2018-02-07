@@ -5,7 +5,7 @@ package ca.mcgill.ecse223.resto.model;
 import java.sql.Date;
 import java.util.*;
 
-// line 14 "../../../../../RestoApp.ump"
+// line 14 "../../../../../RestoApp v2.ump"
 public class Reservation
 {
 
