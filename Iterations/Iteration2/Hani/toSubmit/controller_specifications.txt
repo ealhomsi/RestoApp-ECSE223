@@ -1,3 +1,2 @@
 RestoApp getRestoApp() --> returns a restoApp from the persistence layer, if it exists. Otherwise, it creates a new restoApp.
 void save() throws Exception --> saves the changes made to the restoApp object
-
