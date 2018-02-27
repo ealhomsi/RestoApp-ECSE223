@@ -1,12 +1,14 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
 
-package ca.mcgill.ecse223.resto.model;
+package ca.mcgill.ecse.resto.model;
+import java.io.Serializable;
 import java.sql.Date;
 import java.util.*;
 
-// line 14 "../../../../../RestoApp v2.ump"
-public class Reservation
+// line 59 "../../../../../RestoAppPersistence.ump"
+// line 15 "../../../../../RestoApp.ump"
+public class Reservation implements Serializable
 {
 
   //------------------------
@@ -350,5 +352,13 @@ public class Reservation
             "contactPhoneNumber" + ":" + getContactPhoneNumber()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "dateTime" + "=" + (getDateTime() != null ? !getDateTime().equals(this)  ? getDateTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null");
-  }
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 62 "../../../../../RestoAppPersistence.ump"
+  private static final long serialVersionUID = 2315072607928790501L ;
+
+  
 }

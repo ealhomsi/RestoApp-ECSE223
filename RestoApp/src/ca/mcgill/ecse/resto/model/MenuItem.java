@@ -1,11 +1,13 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
 
-package ca.mcgill.ecse223.resto.model;
+package ca.mcgill.ecse.resto.model;
+import java.io.Serializable;
 import java.util.*;
 
-// line 54 "../../../../../RestoApp v2.ump"
-public class MenuItem
+// line 34 "../../../../../RestoAppPersistence.ump"
+// line 55 "../../../../../RestoApp.ump"
+public class MenuItem implements Serializable
 {
 
   //------------------------
@@ -281,6 +283,14 @@ public class MenuItem
     }
   }
 
+  // line 40 "../../../../../RestoAppPersistence.ump"
+   public static  void reinitializeUniqueName(List<MenuItem> menuItems){
+    menuitemsByName = new HashMap<String, menuItem>();
+	for (MenuItem menuItem : menuItems) {
+	menuitemsByName.put(menuItem.getName(), menuItem); 
+	}
+  }
+
 
   public String toString()
   {
@@ -289,5 +299,13 @@ public class MenuItem
             "  " + "itemCategory" + "=" + (getItemCategory() != null ? !getItemCategory().equals(this)  ? getItemCategory().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "currentPricedMenuItem = "+(getCurrentPricedMenuItem()!=null?Integer.toHexString(System.identityHashCode(getCurrentPricedMenuItem())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "menu = "+(getMenu()!=null?Integer.toHexString(System.identityHashCode(getMenu())):"null");
-  }
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 37 "../../../../../RestoAppPersistence.ump"
+  private static final long serialVersionUID =  -1776230320092632776L ;
+
+  
 }

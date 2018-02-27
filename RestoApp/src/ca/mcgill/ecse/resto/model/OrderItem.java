@@ -1,11 +1,13 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
 
-package ca.mcgill.ecse223.resto.model;
+package ca.mcgill.ecse.resto.model;
+import java.io.Serializable;
 import java.util.*;
 
-// line 44 "../../../../../RestoApp v2.ump"
-public class OrderItem
+// line 80 "../../../../../RestoAppPersistence.ump"
+// line 45 "../../../../../RestoApp.ump"
+public class OrderItem implements Serializable
 {
 
   //------------------------
@@ -306,5 +308,13 @@ public class OrderItem
             "quantity" + ":" + getQuantity()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "pricedMenuItem = "+(getPricedMenuItem()!=null?Integer.toHexString(System.identityHashCode(getPricedMenuItem())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "order = "+(getOrder()!=null?Integer.toHexString(System.identityHashCode(getOrder())):"null");
-  }
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 83 "../../../../../RestoAppPersistence.ump"
+  private static final long serialVersionUID = 2045406856025012133L ;
+
+  
 }

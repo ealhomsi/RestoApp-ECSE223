@@ -1,11 +1,13 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
 
-package ca.mcgill.ecse223.resto.model;
+package ca.mcgill.ecse.resto.model;
+import java.io.Serializable;
 import java.util.*;
 
-// line 34 "../../../../../RestoApp v2.ump"
-public class Seat
+// line 47 "../../../../../RestoAppPersistence.ump"
+// line 35 "../../../../../RestoApp.ump"
+public class Seat implements Serializable
 {
 
   //------------------------
@@ -330,5 +332,13 @@ public class Seat
       }
     }
   }
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 50 "../../../../../RestoAppPersistence.ump"
+  private static final long serialVersionUID = 386717977557499839L ;
 
+  
 }
