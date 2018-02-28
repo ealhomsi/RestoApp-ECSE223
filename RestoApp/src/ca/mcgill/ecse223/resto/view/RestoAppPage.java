@@ -1,26 +1,108 @@
 package ca.mcgill.ecse223.resto.view;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 
 import ca.mcgill.ecse223.resto.controller.Controller;
 import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 
-public class RestoAppPage extends JFrame {
+@SuppressWarnings("serial")
+public class RestoAppPage extends JFrame implements ActionListener {
 	private JMenuBar menuBar;
 	private Controller controller;
+	private JComboBox<String> options;
+	private DrawingPanel drawPane;
+	private SidePanel[] sidePanels = null;
+
+	/**
+	 * constructor of the main page
+	 * 
+	 * @param aRestoApp
+	 *            the system
+	 * @throws InvalidInputException
+	 *             when controller get mad
+	 */
+	public RestoAppPage(Controller c) throws InvalidInputException {
+		// set the controller
+		this.controller = c;
+
+		// set menu bar
+		this.initMenuBar();
+
+		// init the page
+		this.setTitle("RestoPage");
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setSize(200, 200);
+
+		// content
+		Container contentPane = this.getContentPane();
+		contentPane.setBackground(Color.white);
+
+		drawPane = new DrawingPanel(c);
+		contentPane.add(drawPane, BorderLayout.CENTER);
+
+		// combo box init
+		String[] items = { "Add a table", "Remove a table", "Update the table number and number of seats of a table",
+				"Change the location of a table", "Display the menu" };
+		options = new JComboBox<String>(items);
+		options.addActionListener(this);
+		contentPane.add(options, BorderLayout.PAGE_START);
+		
+		// init side panels ADD YOURS HERE
+		sidePanels = new SidePanel[5];
+		sidePanels[3] = new ChangeTableLocationPanel(c);
+	
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		int optionCode = options.getSelectedIndex();
+		sidePanels[3].updateView();
+		try {
+			switch (optionCode) {
+			case 0:
+				// Add A table
+				controller.addTable(62, 1000, 600, 300, 200, 15); //test
+				break;
+			case 1:
+				// Remove a table
+				controller.addTable(621, 1000, 600, 300, 200, 4); //test
+				break;
+			case 2:
+				// Update the table number and number of seats of a table
+				break;
+			case 3:
+				// Change the location of a table
+				sidePanels[3].updateView();
+				this.getContentPane().add(sidePanels[3], BorderLayout.EAST);
+				break;
+			case 4:
+				// Display the menu
+				break;
+			}
+			
+			this.getContentPane().revalidate();
+			this.getContentPane().repaint();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+		}
+	}
 
 	/**
 	 * for now it is a template for MenuBar
@@ -95,35 +177,4 @@ public class RestoAppPage extends JFrame {
 		this.setJMenuBar(menuBar);
 	}
 
-	/**
-	 * constructor of the main page
-	 * 
-	 * @param aRestoApp
-	 *            the system
-	 * @throws InvalidInputException
-	 *             when controller get mad
-	 */
-	public RestoAppPage(Controller c) throws InvalidInputException {
-		// set the controller
-		this.controller = c;
-
-		// set menu bar
-		this.initMenuBar();
-
-		// init the page
-		this.setTitle("RestoPage");
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setSize(200, 200);
-
-		// content
-		Container contentPane = this.getContentPane();
-		contentPane.setBackground(Color.white);
-		
-		DrawingPanel dp = new DrawingPanel(c.getAllTables());
-		contentPane.add(dp);
-//		controller.addTable(1000, 10, 10, 100, 200, 3);
-//		controller.addTable(100, 140, 240, 300, 200, 5);
-//		controller.addTable(60, 1000, 600, 300, 200, 6);
-
-	}
 }

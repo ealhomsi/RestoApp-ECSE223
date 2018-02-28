@@ -1,26 +1,33 @@
 package ca.mcgill.ecse223.resto.view;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.List;
 
 import javax.swing.JPanel;
 
-public class DrawingPanel extends JPanel{
-	private List<TableView> tvs;
+import ca.mcgill.ecse223.resto.controller.Controller;
 
-	
-	public DrawingPanel(List<TableView> tvs) {
+/**
+ * This class is a list of all tables that needs to be maintained and drawn
+ * @author student
+ *
+ */
+public class DrawingPanel extends JPanel  {
+	private Controller controller;
+
+	public DrawingPanel(Controller c) {
 		super();
-		this.tvs = tvs;
+		this.controller = c;
+		this.setBackground(Color.white);
 	}
-
 
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		for(TableView tv: tvs) {
+		for (TableView tv : controller.getAllTables()) {
 			tv.drawTable(g);
-			for(SeatView sv: tv.getSeats()) {
+			for (SeatView sv : tv.getSeats()) {
 				sv.drawSeat(g);
 			}
 		}

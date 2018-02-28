@@ -1,10 +1,9 @@
 package ca.mcgill.ecse223.resto.view;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +45,9 @@ public class TableView {
 		}
 	}
 
+	public int getNumber() {
+		return table.getNumber();
+	}
 	public Color getColor() {
 		return color;
 	}
@@ -80,78 +82,57 @@ public class TableView {
 		g.setColor(color);
 		g.fillRect(table.getX(), table.getY(), table.getWidth(), table.getLength());
 		g.setColor(Color.white);
-	
-		//draw text in the middle of the table	
+
+		// draw text in the middle of the table
 		Rectangle rect = new Rectangle(table.getX(), table.getY(), table.getWidth(), table.getLength());
 		FontMetrics metrics = g.getFontMetrics(g.getFont());
 		String text = table.getNumber() + " ";
 		// Determine the X coordinate for the text
-	    int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
-	    // Determine the Y coordinate for the text
-	    int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
-	    g.setColor(Color.WHITE);
-	    // Draw the String
-	    g.drawString(text, x, y);
+		int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
+		// Determine the Y coordinate for the text
+		int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
+		g.setColor(Color.WHITE);
+		// Draw the String
+		g.drawString(text, x, y);
 	}
 
 	/** Helper methods for automatic seats placing **/
-	private static class Point {
-		int x;
-		int y;
-
-		public Point(int x, int y) {
-			super();
-			this.x = x;
-			this.y = y;
-		}
-	}
-
 	private List<Point> getListOfSeatCoordinates() throws InvalidInputException {
+		int seatSize = SeatView.getRadius() * 2;
 		int numberOfSeats = this.table.numberOfSeats();
-		int a = this.table.getWidth();
-		int b = this.table.getLength();
 
-		int g = gcd(a, b);
+		int a = table.getWidth();
+		int b = table.getLength();
+		int step = SeatView.getRadius() * 2;
+		double ratio = a * 1.0 / (a + b);
+		int aSeats = (int) Math.floor(ratio * numberOfSeats);
+		int bSeats = (int) Math.floor((1 - ratio) * numberOfSeats);
 
-		int aUnits = a / g;
-		int bUnits = b / g;
+		if (aSeats + bSeats < numberOfSeats)
+			aSeats += numberOfSeats - aSeats - bSeats;
 
-		int total = aUnits + bUnits;
+		if ((a / seatSize) < aSeats / 2 || (b / seatSize) < bSeats / 2)
+			throw new InvalidInputException("Too many seats for table number" + table.getNumber());
 
-		int crowdFactor = numberOfSeats / (total * 2);
-		if (crowdFactor == 0)
-			crowdFactor++;
-		if (crowdFactor < g) {
-			// use crowdFactor as seats per unit length
-			List<Point> points = new ArrayList<>();
+		List<Point> points = new ArrayList<Point>();
 
-			for (int aIndex = 0; aIndex < aUnits; aIndex++) {
-				for (int c = 0; c <= crowdFactor; c++) {
-					points.add(new Point(table.getX() + c * (g / crowdFactor) + aIndex * g - c * SeatView.getRadius(),
-							table.getY() - SeatView.getRadius()));
-					points.add(new Point(table.getX() + c * (g / crowdFactor) + aIndex * g - c * SeatView.getRadius(),
-							table.getY() + table.getLength()));
-				}
-			}
-
-			for (int bIndex = 0; bIndex < bUnits; bIndex++) {
-				for (int c = 0; c <= crowdFactor; c++) {
-					points.add(new Point(table.getX() - SeatView.getRadius(),
-							table.getY() + c * (g / crowdFactor) + bIndex * g));
-					points.add(new Point(table.getX() + table.getWidth(),
-							table.getY() + c * (g / crowdFactor) + bIndex * g));
-				}
-			}
-
-			return points;
-		} else {
-			throw new InvalidInputException("too many seats for visual display");
+		for (int i = 0; i <= aSeats / 2; i++) {
+			points.add(new Point(table.getX() + 2 * i * (a / aSeats), table.getY() - step / 2));
+			points.add(new Point(table.getX() + 2 * i * (a / aSeats), table.getY() + table.getLength()));
 		}
+
+		for (int i = 0; i <= bSeats / 2; i++) {
+			points.add(new Point(table.getX() - step / 2, step / 2 + table.getY() + 2 * i * (b / bSeats)));
+			points.add(new Point(table.getX() + table.getWidth(), step / 2 + table.getY() + 2 * i * (b / bSeats)));
+		}
+		return points;
 	}
 
-	private int gcd(int a, int b) {
-		if (b == 0)
-			return a;
-		return gcd(b, a % b);
+	@Override
+	public String toString() {
+		return table.getNumber()+ "";
 	}
+	
+	
+
 }
