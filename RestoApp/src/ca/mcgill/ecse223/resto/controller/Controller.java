@@ -64,7 +64,7 @@ public class Controller {
 			}
 		}
 
-		//passwed all checks
+		// passwed all checks
 		Table newt = new Table(number, x, y, width, length, service);
 		for (int i = 0; i < numberOfSeats; i++) {
 			newt.addSeat();
@@ -78,6 +78,7 @@ public class Controller {
 
 	/**
 	 * Give a list of all tables views
+	 * 
 	 * @return list of all table views
 	 */
 	public List<TableView> getAllTables() {
@@ -91,16 +92,21 @@ public class Controller {
 
 	/**
 	 * Changing a table location
-	 * @param number: number of the table
-	 * @param newX: new coordinates
-	 * @param newY: new coordiantes
-	 * @throws InvalidInputException thrown when arguments are wrong or on overlap
+	 * 
+	 * @param number:
+	 *            number of the table
+	 * @param newX:
+	 *            new coordinates
+	 * @param newY:
+	 *            new coordiantes
+	 * @throws InvalidInputException
+	 *             thrown when arguments are wrong or on overlap
 	 */
 	public void changeTableLocation(int number, int newX, int newY) throws InvalidInputException {
 
 		if (newX < 0 || newY < 0)
 			throw new InvalidInputException("arguments are wrong");
-		
+
 		Table found = null;
 		for (Table t : service.getTables()) {
 			if (t.getNumber() == number) {
@@ -108,42 +114,56 @@ public class Controller {
 				break;
 			}
 		}
-		
+
 		if (found == null)
 			throw new InvalidInputException("table was not found");
-		
-		//dimensions with the new location
+
+		// dimensions with the new location
 		Rectangle rect = new Rectangle(newX, newY, found.getX(), found.getY());
-		
-		//check for collision
-		for(Table t: service.getTables()) {
-			if(t == found)
+
+		// check for collision
+		for (Table t : service.getTables()) {
+			if (t == found)
 				continue;
-			if(tableOverLap(rect, tableToRectangle(t)))
-					throw new InvalidInputException("table will collide with table number "+ t.getNumber());
+			if (tableOverLap(rect, tableToRectangle(t)))
+				throw new InvalidInputException("table will collide with table number " + t.getNumber());
 		}
-		
-		//all good set new coordinates
+
+		// all good set new coordinates
 		found.setX(newX);
 		found.setY(newY);
-		
+
 		// saving
 		RestoApplication.save();
-		
+
+	}
+
+	/**
+	 * returns a list of all table numbers
+	 * 
+	 * @return an array of Integers
+	 */
+	public List<Integer> getAllTableNumbers() {
+		List<Integer> list = new ArrayList<>();
+		for (Table t : service.getTables())
+			list.add(t.getNumber());
+
+		return list;
 	}
 	
 	/**
-	 * returns a list of all table numbers
-	 * @return an array of Integers
+	 * get a table by number
+	 * @param number the number of the table
+	 * @return a table view object or null if not found
 	 */
-	public Integer[] getAllTableNumbers() {
-		Integer[] a = new Integer[service.getTables().size()];
-		for(int i=0; i<a.length; i++) {
-			a[i] = service.getTable(i).getNumber();
+	public TableView getTableByNumber(int number) {
+		for(Table t: service.getTables()) {
+			if(t.getNumber() == number)
+				return convertToViewObject(t);
 		}
-		return a;
+		return null;
 	}
-	
+
 	/** CONVERSION METHODS **/
 
 	TableView convertToViewObject(Table t) {
