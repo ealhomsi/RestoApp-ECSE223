@@ -9,9 +9,9 @@ public class AddTablePanel extends SidePanel {
 
 	}
 
-	public AddTablePanel(Controller c) {
+	public AddTablePanel(Controller c, RestoAppPage p) {
 		// TODO Auto-generated constructor stub
-		super(c);
+		super(c, p);
 	}
 
 }

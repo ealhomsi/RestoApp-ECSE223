@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
@@ -14,16 +15,18 @@ import javax.swing.SwingConstants;
 
 import ca.mcgill.ecse223.resto.controller.Controller;
 
+@SuppressWarnings("serial")
 public class MainSidePanel extends SidePanel implements ActionListener {
 	private JButton btnMenu;
 	private JTextField txtSettings;
 	private Controller c;
-	private JComboBox comboBox;
-	public MainSidePanel(Controller c) {
-		super(c);
+	private JComboBox<String> comboBox;
+
+	public MainSidePanel(Controller c, RestoAppPage p) {
+		super(c, p);
 
 		this.setLayout(null);
-		
+
 		btnMenu = new JButton("MENU");
 		btnMenu.setBounds(100, 249, 520, 160);
 		btnMenu.setBackground(Color.white);
@@ -43,7 +46,7 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		btnBill.setBounds(380, 435, 240, 80);
 		this.add(btnBill);
 
-		comboBox = new JComboBox();
+		comboBox = new JComboBox<String>();
 		comboBox.setBackground(Color.white);
 		comboBox.setBounds(200, 587, 400, 50);
 		comboBox.addItem("");
@@ -53,6 +56,7 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		comboBox.addItem("Change location of a table");
 		comboBox.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
 		this.add(comboBox);
+		comboBox.addActionListener(this);
 
 		JSeparator sep = new JSeparator();
 		sep.setOrientation(SwingConstants.VERTICAL);
@@ -83,8 +87,13 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		this.requestSetLeft(0);
+		
+		//if the source is combobox
+		if (e.getSource() == comboBox) {
+			int option = comboBox.getSelectedIndex();
+			this.page.setRightIndex(--option);
+			this.page.updateSidePanels();
+		}
 	}
 
 }

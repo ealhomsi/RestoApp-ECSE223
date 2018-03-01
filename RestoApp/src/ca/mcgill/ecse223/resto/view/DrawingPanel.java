@@ -14,8 +14,8 @@ import ca.mcgill.ecse223.resto.controller.Controller;
  *
  */
 public class DrawingPanel extends SidePanel  {
-	public DrawingPanel(Controller c) {
-		super(c);
+	public DrawingPanel(Controller c, RestoAppPage p) {
+		super(c, p);
 		this.setBackground(Color.white);
 	}
 

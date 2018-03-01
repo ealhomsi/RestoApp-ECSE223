@@ -36,8 +36,8 @@ public class ChangeTableLocationPanel extends SidePanel implements ActionListene
 		this.controller = controller;
 	}
 
-	public ChangeTableLocationPanel(Controller controller) {
-		super(controller);
+	public ChangeTableLocationPanel(Controller controller, RestoAppPage p) {
+		super(controller, p);
 		
 		// init
 		promptLabel = new JLabel("Please enter the new coordiantes");
