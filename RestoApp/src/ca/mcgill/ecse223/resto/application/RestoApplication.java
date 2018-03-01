@@ -1,7 +1,8 @@
 package ca.mcgill.ecse223.resto.application;
 
+import java.awt.EventQueue;
+
 import ca.mcgill.ecse223.resto.controller.Controller;
-import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.model.RestoApp;
 import ca.mcgill.ecse223.resto.persistence.PersistenceObjectStream;
 import ca.mcgill.ecse223.resto.view.RestoAppPage;
@@ -20,16 +21,16 @@ public class RestoApplication {
 		Controller c = new Controller(ra);
 		
 		//start ui
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-					new RestoAppPage(c).setVisible(true);
-				} catch (InvalidInputException e) {
-					// TODO Auto-generated catch block
+        EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					RestoAppPage frame = new RestoAppPage(c);
+					frame.setVisible(true);
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
-            }
-        });
+			}
+		});
 	}
 	
 

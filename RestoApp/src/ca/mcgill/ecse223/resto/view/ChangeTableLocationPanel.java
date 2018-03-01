@@ -37,9 +37,8 @@ public class ChangeTableLocationPanel extends SidePanel implements ActionListene
 	}
 
 	public ChangeTableLocationPanel(Controller controller) {
-		super();
-		this.controller = controller;
-
+		super(controller);
+		
 		// init
 		promptLabel = new JLabel("Please enter the new coordiantes");
 		newXLabel = new JLabel("newX");
@@ -90,7 +89,7 @@ public class ChangeTableLocationPanel extends SidePanel implements ActionListene
 
 	@Override
 	public void updateView() {
-		if(tables.getItemCount() < controller.getAllTables().size()) {
+		if(tables != null && controller != null && tables.getItemCount() < controller.getAllTables().size()) {
 			tables = new JComboBox<Integer>(controller.getAllTableNumbers());
 			tables.setSelectedIndex(0);
 		}

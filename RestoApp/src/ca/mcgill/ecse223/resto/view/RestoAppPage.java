@@ -1,110 +1,62 @@
 package ca.mcgill.ecse223.resto.view;
 
-import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.Font;
+import java.awt.GridLayout;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JComboBox;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
-import javax.swing.JTextField;
-import javax.swing.JPanel;
+import ca.mcgill.ecse223.resto.controller.Controller;
 
 @SuppressWarnings("serial")
-public class RestoAppPage extends JFrame implements ActionListener{
-	private JTextField txtSettings;
+public class RestoAppPage extends JFrame {
+	private Controller c;
+	private SidePanel[] sidePanels;
+	private int leftIndex;
+	private int rightIndex;
+	
+	public RestoAppPage(Controller c) {
+		this.c = c;
 
-	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					RestoAppPage frame = new RestoAppPage();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
-	
-	public RestoAppPage() {
-		setSize(1500,800);
-		getContentPane().setLayout(null);
+		// split into two
+		setSize(1500, 800);
+		this.setResizable(false);
+		this.getContentPane().setLayout(new GridLayout(1, 2));
 		
-		JButton btnMenu = new JButton("MENU");
-		/*btnMenu.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					MenuCategories newMenuCategories = new MenuCategories();
-					newMenuCategories.setVisible(true);
-				}
-				catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
-		});*/
-		btnMenu.setBounds(800, 249, 520, 160);
-		btnMenu.setBackground(Color.white);
-		btnMenu.setFont(new Font("Comic sans MS", Font.PLAIN, 40));
-		getContentPane().add(btnMenu);
+		//init sidePanels
+		initSidePanels();
 		
-		JButton btnReserved = new JButton("RESERVED");
-		btnReserved.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
-		btnReserved.setBackground(Color.white);
-		btnReserved.setBounds(800, 435, 240, 80);
-		getContentPane().add(btnReserved);
-		
-		JButton btnBill = new JButton("BILL");
-		btnBill.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
-		btnBill.setBackground(Color.white);
-		btnBill.setBounds(1080, 435, 240, 80);
-		getContentPane().add(btnBill);
-		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBackground(Color.white);
-		comboBox.setBounds(920, 587, 400, 50);
-		comboBox.addItem("");
-		comboBox.addItem("Add tables and its seats");
-		comboBox.addItem("Remove tables");
-		comboBox.addItem("Update table number and number of seats");
-		comboBox.addItem("Change location of a table");
-		comboBox.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
-		getContentPane().add(comboBox);
-		
-		JSeparator sep = new JSeparator();
-		sep.setOrientation(SwingConstants.VERTICAL);
-		sep.setBounds(700, 112, 2, 525);
-		sep.setBackground(Color.BLACK);
-		sep.setForeground(Color.BLACK);
-		getContentPane().add(sep);
-		
-		txtSettings = new JTextField();
-		txtSettings.setText("Settings");
-		txtSettings.setBackground(null);
-		txtSettings.setBorder(null);
-		txtSettings.setFont(new Font("Comic sans MS", Font.PLAIN, 18));
-		txtSettings.setBounds(841, 587, 70, 50);
-		getContentPane().add(txtSettings);
-		txtSettings.setColumns(10);
-		
-		JPanel panel = new JPanel();
-		panel.setBounds(0, 0, 702, 728);
-		getContentPane().add(panel);
-	
-		
+		this.leftIndex = 0;
+		this.rightIndex = 1;
+
+		this.add(sidePanels[leftIndex], 0, 0);
+		this.add(sidePanels[rightIndex], 0, 1);
 	}
 
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
+	/**
+	 * this method would create all side panels needed
+	 */
+	public void initSidePanels() {
+		sidePanels = new SidePanel[6];
+		sidePanels[0] = new MainSidePanel(c);
+		sidePanels[1] = new DrawingPanel(c);
+		sidePanels[2] = new AddTablePanel(c);
+		sidePanels[3] = new ChangeTableLocationPanel(c);
 	}
+
+	
+	public void setLeftIndex(int i) {
+		this.leftIndex = i;
+		this.add(sidePanels[leftIndex], 0, 0);
+		this.add(sidePanels[rightIndex], 0, 1);
+		this.repaint();
+		this.revalidate();
+	}
+	
+	public void setRightIndex(int i) {
+		this.rightIndex = i;
+		this.add(sidePanels[leftIndex], 0, 0);
+		this.add(sidePanels[rightIndex], 0, 1);
+		this.repaint();
+		this.revalidate();
+	}
+	
 }
