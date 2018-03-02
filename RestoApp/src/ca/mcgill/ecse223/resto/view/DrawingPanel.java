@@ -13,12 +13,9 @@ import ca.mcgill.ecse223.resto.controller.Controller;
  * @author student
  *
  */
-public class DrawingPanel extends JPanel  {
-	private Controller controller;
-
-	public DrawingPanel(Controller c) {
-		super();
-		this.controller = c;
+public class DrawingPanel extends SidePanel  {
+	public DrawingPanel(Controller c, RestoAppPage p) {
+		super(c, p);
 		this.setBackground(Color.white);
 	}
 
@@ -31,5 +28,11 @@ public class DrawingPanel extends JPanel  {
 				sv.drawSeat(g);
 			}
 		}
+	}
+
+	@Override
+	public void updateView() {
+		// TODO Auto-generated method stub
+		
 	}
 }
