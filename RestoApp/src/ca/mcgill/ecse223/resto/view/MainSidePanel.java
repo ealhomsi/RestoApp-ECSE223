@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -48,11 +47,11 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		comboBox.setBackground(Color.white);
 		comboBox.setBounds(200, 587, 400, 50);
 		comboBox.addItem("");
-		comboBox.addItem("Add tables and its seats");
-		comboBox.addItem("Remove tables");
-		comboBox.addItem("Update table number and number of seats");
-		comboBox.addItem("Change location of a table");
-		comboBox.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
+		comboBox.addItem("Add Tables");
+		comboBox.addItem("Remove Tables");
+		comboBox.addItem("Update Table");
+		comboBox.addItem("Change Table Location");
+		comboBox.setFont(new Font("Comiec sans MS", Font.PLAIN, 20));
 		this.add(comboBox);
 		comboBox.addActionListener(this);
 
@@ -81,22 +80,14 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-		//if the source is combo box
+
+		// if the source is combo box
 		if (e.getSource() == comboBox) {
 			int option = comboBox.getSelectedIndex();
-			
-			switch(option){
-			case 1: 
-				this.page.setRightIndex(2);
-				break;
-			case 3:
-				this.page.setRightIndex(3);
-				break;
-			default:
-				this.page.setRightIndex(--option);
-			}
-			
+			this.page.setRightIndex(++option);
+			this.page.updateSidePanels();
+		} else if(e.getSource() == btnMenu) {
+			this.page.setRightIndex(6);
 			this.page.updateSidePanels();
 		}
 	}

@@ -15,7 +15,7 @@ import ca.mcgill.ecse223.resto.controller.Controller;
 
 @SuppressWarnings("serial")
 
-public class AddTablePanel extends SidePanel{
+public class AddTablePanel extends SidePanel implements ActionListener{
 
 	private JButton addButton;
 	private JButton backButton;
@@ -54,6 +54,7 @@ public class AddTablePanel extends SidePanel{
 		backButton.setBackground(Color.white);
 		backButton.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
 		this.add(backButton);
+		backButton.addActionListener(this);
 		
 		seatNumber = new JTextField();
 		seatNumber.setBounds(250, 200, 300, 50);
@@ -121,5 +122,15 @@ public class AddTablePanel extends SidePanel{
 	@Override
 	public void updateView() {
 
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getSource() == backButton) {
+			this.page.setRightIndex(0);
+			this.page.updateSidePanels();
+		}
+		
 	}
 }
