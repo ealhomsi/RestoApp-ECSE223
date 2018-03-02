@@ -6,6 +6,7 @@ import java.util.List;
 
 import ca.mcgill.ecse223.resto.application.RestoApplication;
 import ca.mcgill.ecse223.resto.model.MenuItem;
+import ca.mcgill.ecse223.resto.model.Order;
 import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
 import ca.mcgill.ecse223.resto.model.RestoApp;
 import ca.mcgill.ecse223.resto.model.Table;
@@ -243,5 +244,35 @@ public class Controller {
 			
 		}
 		return categoryItemsList;
+	}
+
+	public void removeTable(int number) throws InvalidInputException{
+		//retrieve table by its unique id
+		Table foundTable = Table.getWithNumber(number);
+
+		//if no table by specified id was found, throw exception
+		if(foundTable == null){
+			throw new InvalidInputException();
+		}
+		//if the table has reservations, it cannot be removed
+		//due to the inability to remove table, throw exception
+		if(foundTable.hasReservations()){
+			throw new InvalidInputException();
+		}
+
+		List<Order> orders = service.getCurrentOrders();
+		List<Table> tables;
+
+		//iterate through all orders to check if table is in use
+		for(Order order: orders){
+			tables = order.getTables();
+			if(tables.contains(foundTable))
+				throw InvalidInputException();
+		}
+		service.removeCurrentTable(foundTable);
+		RestoApplication.save();
+
+
+		
 	}
 }
