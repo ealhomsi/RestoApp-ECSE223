@@ -80,7 +80,7 @@ public class ChangeTableLocationPanel extends SidePanel implements ActionListene
 		currentTableLocY = new JLabel("Y: ");
 		currentTableWidth = new JLabel("W: ");
 		currentTableHeight = new JLabel("H: ");
-		JLabel currentTable = new JLabel("Current Table:");
+		JLabel currentTable = new JLabel("Current Table Data:");
 		currentTable.setFont((new Font("Comic sans MS", Font.BOLD, 15)));
 		currentTableLocX.setFont((new Font("Comic sans MS", Font.BOLD, 12)));
 		currentTableLocY.setFont((new Font("Comic sans MS", Font.BOLD, 12)));

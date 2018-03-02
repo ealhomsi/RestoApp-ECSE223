@@ -1,20 +1,20 @@
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JScrollBar;
+package ca.mcgill.ecse223.resto.view;
 
 import java.awt.Font;
 
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.JTextField;
 
-public class AppetizersPanel extends JPanel {
+import ca.mcgill.ecse223.resto.controller.Controller;
+
+public class AppetizersPanel extends SidePanel {
 	private JTextField txtAppetizers;
 
 	/**
 	 * Create the panel.
 	 */
-	public AppetizersPanel() {
+	public AppetizersPanel(Controller c, RestoAppPage p) {
+		super(c, p);
 		setSize(1500,800);
 		setLayout(null);
 		
@@ -70,6 +70,12 @@ public class AppetizersPanel extends JPanel {
 		btn7.setBounds(393, 293, 200, 60);
 		btn7.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
 		add(btn7);
+		
+	}
+
+	@Override
+	public void updateView() {
+		// TODO Auto-generated method stub
 		
 	}
 }
