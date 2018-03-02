@@ -7,7 +7,9 @@ import java.util.List;
 import ca.mcgill.ecse223.resto.application.RestoApplication;
 import ca.mcgill.ecse223.resto.model.MenuItem;
 import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
+import ca.mcgill.ecse223.resto.model.Order;
 import ca.mcgill.ecse223.resto.model.RestoApp;
+import ca.mcgill.ecse223.resto.model.Seat;
 import ca.mcgill.ecse223.resto.model.Table;
 import ca.mcgill.ecse223.resto.view.TableView;
 
@@ -243,5 +245,29 @@ public class Controller {
 			
 		}
 		return categoryItemsList;
+	}
+	public void updateTable(Table table, int newNumber, int numberOfSeats) throws InvalidInputException{
+		if(table == null || newNumber < 0 || numberOfSeats < 0 || table.hasReservations())
+			throw new InvalidInputException("Wrong Input");
+		List<Order> currentOrders = service.getCurrentOrders();
+		for(Order t : currentOrders){
+			List<Table> tables = t.getTables();
+			if(tables.contains(table))
+				throw new InvalidInputException("Table has current orders");			
+		}
+		try{
+			table.setNumber(newNumber);
+		}catch(Exception e){
+			throw new InvalidInputException("Dublicate number");
+		}
+		for(int count=0 ; count<numberOfSeats-table.numberOfCurrentSeats();count++){
+			Seat seat = table.addSeat();
+			table.addCurrentSeat(seat);
+		}
+		for(int count=0 ; count<table.numberOfCurrentSeats()-numberOfSeats ; count++){
+			Seat seat = table.getCurrentSeat(0);
+			table.removeCurrentSeat(seat);
+		}
+		RestoApplication.save();
 	}
 }
