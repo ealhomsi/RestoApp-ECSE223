@@ -31,7 +31,7 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		btnMenu.setFont(new Font("Comic sans MS", Font.PLAIN, 40));
 		this.add(btnMenu);
 		btnMenu.addActionListener(this);
-		;
+		
 
 		JButton btnReserved = new JButton("RESERVED");
 		btnReserved.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
@@ -49,9 +49,9 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		comboBox.setBackground(Color.white);
 		comboBox.setBounds(200, 587, 400, 50);
 		comboBox.addItem("");
-		comboBox.addItem("Add tables and its seats");
-		comboBox.addItem("Remove tables");
-		comboBox.addItem("Update table number and number of seats");
+		comboBox.addItem("Add Table");
+		comboBox.addItem("Remove Table");
+		comboBox.addItem("Update Table");
 		comboBox.addItem("Change location of a table");
 		comboBox.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
 		this.add(comboBox);
@@ -86,11 +86,11 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		// if the source is combobox
 		if (e.getSource() == comboBox) {
 			int option = comboBox.getSelectedIndex();
-			this.page.setRightIndex(--option);
+			this.page.setRightIndex(++option);
 			this.page.updateSidePanels();
 		}
 		if (e.getSource() == btnMenu) {
-			this.page.setRightIndex(4); 
+			this.page.setRightIndex(6); 
 			this.page.updateSidePanels();
 		}
 	}

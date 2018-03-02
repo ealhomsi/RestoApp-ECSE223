@@ -89,7 +89,7 @@ public class MenuCategoriesPanel extends SidePanel implements ActionListener {
 			this.page.setRightIndex(0);
 			this.page.updateSidePanels();
 		}else if(e.getSource() == btnAppetizer) {
-			this.page.setRightIndex(5);
+			this.page.setRightIndex(7);
 			this.page.updateSidePanels();
 		}
 
