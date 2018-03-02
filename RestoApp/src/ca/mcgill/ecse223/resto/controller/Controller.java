@@ -271,4 +271,31 @@ public class Controller {
 		}
 		RestoApplication.save();
 	}
+
+	public void removeTable(int number) throws InvalidInputException{
+		//retrieve table by its unique id
+		Table foundTable = Table.getWithNumber(number);
+
+		//if no table by specified id was found, throw exception
+		if(foundTable == null){
+			throw new InvalidInputException();
+		}
+		//if the table has reservations, it cannot be removed
+		//due to the inability to remove table, throw exception
+		if(foundTable.hasReservations()){
+			throw new InvalidInputException();
+		}
+
+		List<Order> orders = service.getCurrentOrders();
+		List<Table> tables;
+
+		//iterate through all orders to check if table is in use
+		for(Order order: orders){
+			tables = order.getTables();
+			if(tables.contains(foundTable))
+				throw InvalidInputException();
+		}
+		service.removeCurrentTable(foundTable);
+		RestoApplication.save();
+	}
 }
