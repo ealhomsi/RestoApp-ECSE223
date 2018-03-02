@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ca.mcgill.ecse223.resto.application.RestoApplication;
+import ca.mcgill.ecse223.resto.model.MenuItem;
+import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
 import ca.mcgill.ecse223.resto.model.RestoApp;
 import ca.mcgill.ecse223.resto.model.Table;
 import ca.mcgill.ecse223.resto.view.TableView;
@@ -200,5 +202,26 @@ public class Controller {
 
 	private Rectangle tableToRectangle(Table t) {
 		return new Rectangle(t.getX(), t.getY(), t.getWidth(), t.getLength());
+	}
+	
+	public static ItemCategory[] getMenuCategories()
+	{
+		ItemCategory[] itemCategories = ItemCategory.values();
+		return itemCategories;
+	}
+	
+	public List<MenuItem> getMenuItems (ItemCategory selectedItemCategory)
+	{
+		ArrayList<MenuItem> categoryItemsList = new ArrayList<>();
+		for(MenuItem menuItem: service.getMenu().getMenuItems())
+		{
+			ItemCategory foundCategory = menuItem.getItemCategory();
+			if(selectedItemCategory == foundCategory && menuItem.hasCurrentPricedMenuItem())
+			{
+				categoryItemsList.add(menuItem);
+			}
+			
+		}
+		return categoryItemsList;
 	}
 }
