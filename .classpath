@@ -1,6 +1,15 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="RestoApp/src"/>
 	<classpathentry kind="output" path="RestoApp/bin"/>
 </classpath>
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="RestoApp/src"/>
+	<classpathentry kind="output" path="RestoApp/bin"/>
+</classpath>
+>>>>>>> branch 'master' of https://github.com/W2018-ECSE223/Group05.git

@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
@@ -19,7 +18,6 @@ import ca.mcgill.ecse223.resto.controller.Controller;
 public class MainSidePanel extends SidePanel implements ActionListener {
 	private JButton btnMenu;
 	private JTextField txtSettings;
-	private Controller c;
 	private JComboBox<String> comboBox;
 
 	public MainSidePanel(Controller c, RestoAppPage p) {
@@ -73,10 +71,6 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		txtSettings.setBounds(100, 587, 70, 50);
 		this.add(txtSettings);
 		txtSettings.setColumns(10);
-
-		JPanel panel = new JPanel();
-		panel.setBounds(0, 0, 702, 728);
-		this.add(panel);
 	}
 
 	@Override
