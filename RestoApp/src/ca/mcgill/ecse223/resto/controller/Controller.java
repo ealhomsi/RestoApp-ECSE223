@@ -8,7 +8,9 @@ import ca.mcgill.ecse223.resto.application.RestoApplication;
 import ca.mcgill.ecse223.resto.model.MenuItem;
 import ca.mcgill.ecse223.resto.model.Order;
 import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
+import ca.mcgill.ecse223.resto.model.Order;
 import ca.mcgill.ecse223.resto.model.RestoApp;
+import ca.mcgill.ecse223.resto.model.Seat;
 import ca.mcgill.ecse223.resto.model.Table;
 import ca.mcgill.ecse223.resto.view.TableView;
 
@@ -245,34 +247,28 @@ public class Controller {
 		}
 		return categoryItemsList;
 	}
-
-	public void removeTable(int number) throws InvalidInputException{
-		//retrieve table by its unique id
-		Table foundTable = Table.getWithNumber(number);
-
-		//if no table by specified id was found, throw exception
-		if(foundTable == null){
-			throw new InvalidInputException();
+	public void updateTable(Table table, int newNumber, int numberOfSeats) throws InvalidInputException{
+		if(table == null || newNumber < 0 || numberOfSeats < 0 || table.hasReservations())
+			throw new InvalidInputException("Wrong Input");
+		List<Order> currentOrders = service.getCurrentOrders();
+		for(Order t : currentOrders){
+			List<Table> tables = t.getTables();
+			if(tables.contains(table))
+				throw new InvalidInputException("Table has current orders");			
 		}
-		//if the table has reservations, it cannot be removed
-		//due to the inability to remove table, throw exception
-		if(foundTable.hasReservations()){
-			throw new InvalidInputException();
+		try{
+			table.setNumber(newNumber);
+		}catch(Exception e){
+			throw new InvalidInputException("Dublicate number");
 		}
-
-		List<Order> orders = service.getCurrentOrders();
-		List<Table> tables;
-
-		//iterate through all orders to check if table is in use
-		for(Order order: orders){
-			tables = order.getTables();
-			if(tables.contains(foundTable))
-				throw InvalidInputException();
+		for(int count=0 ; count<numberOfSeats-table.numberOfCurrentSeats();count++){
+			Seat seat = table.addSeat();
+			table.addCurrentSeat(seat);
 		}
-		service.removeCurrentTable(foundTable);
+		for(int count=0 ; count<table.numberOfCurrentSeats()-numberOfSeats ; count++){
+			Seat seat = table.getCurrentSeat(0);
+			table.removeCurrentSeat(seat);
+		}
 		RestoApplication.save();
-
-
-		
 	}
 }
