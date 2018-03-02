@@ -32,7 +32,7 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		btnMenu.setBackground(Color.white);
 		btnMenu.setFont(new Font("Comic sans MS", Font.PLAIN, 40));
 		this.add(btnMenu);
-		btnMenu.addActionListener(this);
+		btnMenu.addActionListener(this);;
 
 		JButton btnReserved = new JButton("RESERVED");
 		btnReserved.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
@@ -88,12 +88,23 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		//if the source is combobox
+	//if the source is combobox
 		if (e.getSource() == comboBox) {
 			int option = comboBox.getSelectedIndex();
 			this.page.setRightIndex(--option);
 			this.page.updateSidePanels();
 		}
+		if (e.getSource() == btnMenu) {
+			
+			this.setVisible(false);
+			MenuCategoriesPanel newMenuCat = new MenuCategoriesPanel(controller, page);
+			newMenuCat.setVisible(true);
+			this.page.updateSidePanels();
+			
+			        /*this.setVisible(false);
+			        new MenuCategoriesPanel(c, page).setVisible(true);
+			        this.page.updateSidePanels();
+*/			    }
 	}
 
 }

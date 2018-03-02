@@ -44,6 +44,8 @@ public class RestoAppPage extends JFrame {
 		sidePanels[1] = new DrawingPanel(c, this);
 		sidePanels[2] = new AddTablePanel(c, this);
 		sidePanels[3] = new ChangeTableLocationPanel(c, this);
+		sidePanels[4] = new MenuCategoriesPanel(c, this);
+		
 	}
 
 	public int getRightIndex() {
