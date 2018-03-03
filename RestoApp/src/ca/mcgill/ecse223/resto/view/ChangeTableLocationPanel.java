@@ -158,10 +158,16 @@ public class ChangeTableLocationPanel extends SidePanel implements ActionListene
 
 	@Override
 	public void updateView() {
+		//null check => hani
+		if(tables.getSelectedItem() == null)
+			return;
+
+
 		this.tables.removeAllItems();
-		for (Integer item : controller.getAllTableNumbers()) {
+		for (Integer item : controller.getAllCurrentTableNumbers()) {
 			tables.addItem(item);
 		}
+
 		int tableNumber = (Integer) tables.getSelectedItem();
 		TableView t = controller.getTableByNumber(tableNumber);
 

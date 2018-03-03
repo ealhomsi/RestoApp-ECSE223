@@ -29,7 +29,7 @@ public class Controller {
 
 	/**
 	 * This method adds a new table to the system
-	 * 
+	 *
 	 * @param number:
 	 *            table number
 	 * @param x:
@@ -74,6 +74,7 @@ public class Controller {
 			newt.addSeat();
 		}
 
+		service.addCurrentTable(newt);
 		// saving
 		RestoApplication.save();
 
@@ -112,7 +113,7 @@ public class Controller {
 			throw new InvalidInputException("arguments are wrong");
 
 		Table found = null;
-		for (Table t : service.getTables()) {
+		for (Table t : service.getCurrentTables()) {
 			if (t.getNumber() == number) {
 				found = t;
 				break;
@@ -126,7 +127,7 @@ public class Controller {
 		Rectangle rect = new Rectangle(newX, newY, found.getX(), found.getY());
 
 		// check for collision
-		for (Table t : service.getTables()) {
+		for (Table t : service.getCurrentTables()) {
 			if (t == found)
 				continue;
 			if (tableOverLap(rect, tableToRectangle(t)))
@@ -152,6 +153,16 @@ public class Controller {
 		for (Table t : service.getTables())
 			list.add(t.getNumber());
 
+		return list;
+	}
+
+	//corrected method
+	public List<Integer> getAllCurrentTableNumbers(){
+		List<Integer> list = new ArrayList<>();
+		for(Table t : service.getCurrentTables()){
+			list.add(t.getNumber());
+			System.out.println(t.getNumber());
+		}
 		return list;
 	}
 	

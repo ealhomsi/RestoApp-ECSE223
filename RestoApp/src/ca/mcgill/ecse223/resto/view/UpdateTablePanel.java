@@ -138,7 +138,7 @@ public class UpdateTablePanel extends SidePanel implements ActionListener {
 	@Override
 	public void updateView() {
 		selectedTable.removeAllItems();
-		for (Integer item : controller.getAllTableNumbers()) {
+		for (Integer item : controller.getAllCurrentTableNumbers()) {
 			selectedTable.addItem(item);		
 		}
 		this.revalidate();

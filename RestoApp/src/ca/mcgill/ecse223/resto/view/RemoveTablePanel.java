@@ -24,17 +24,17 @@ public class RemoveTablePanel extends SidePanel implements ActionListener{
 		this.setLayout(null);
 
 		//title label properties
-		title = new JLabel("Remove Table");
+		title = new JLabel("Remove Table", SwingConstants.CENTER);
 		title.setFont(new Font("Comic sans MS", Font.BOLD, 50));
-		title.setForeground(new Color(102, 255, 153));
-		title.setBounds(50, 50, 650, 150);
+		title.setForeground(Color.decode("#00BF9A"));
+		title.setBounds(50, 0, 650, 200);
 
 
 		//removeTableLabel properties
-		removeTableLabel = new JLabel("select the table to remove");
-		title.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
-		title.setForeground(new Color(102, 255, 153));
-		title.setBounds(300, 425, 200, 50);
+		removeTableLabel = new JLabel("select the table to remove", SwingConstants.CENTER);
+		removeTableLabel.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
+		title.setForeground(Color.decode("#00BF9A"));
+		removeTableLabel.setBounds(0, 425, 750, 50);
 
 		//back button properties
 		back = new JButton("back");
@@ -52,14 +52,16 @@ public class RemoveTablePanel extends SidePanel implements ActionListener{
 		tables.setBounds(300, 500, 200, 50);
 		tables.addActionListener(this);
 
-		updateView();
-
+		//adding components to JPanel
 		this.add(title);
+		this.add(removeTableLabel);
 		this.add(submit);
 		this.add(back);
 		this.add(tables);
 
 		this.setVisible(true);
+
+		updateView();
 
 
 	}
@@ -67,7 +69,7 @@ public class RemoveTablePanel extends SidePanel implements ActionListener{
 	@Override
 	public void updateView() {
 		tables.removeAllItems();
-		for(Integer tableId : controller.getAllTableNumbers()){
+		for(Integer tableId : controller.getAllCurrentTableNumbers()){
 			tables.addItem(tableId);
 		}
 		revalidate();
