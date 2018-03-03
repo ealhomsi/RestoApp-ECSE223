@@ -278,12 +278,12 @@ public class Controller {
 
 		//if no table by specified id was found, throw exception
 		if(foundTable == null){
-			throw new InvalidInputException();
+			throw new InvalidInputException("no such table exists");
 		}
 		//if the table has reservations, it cannot be removed
 		//due to the inability to remove table, throw exception
 		if(foundTable.hasReservations()){
-			throw new InvalidInputException();
+			throw new InvalidInputException("cannot remove table due to existing reservations");
 		}
 
 		List<Order> orders = service.getCurrentOrders();
@@ -293,7 +293,7 @@ public class Controller {
 		for(Order order: orders){
 			tables = order.getTables();
 			if(tables.contains(foundTable))
-				throw InvalidInputException();
+				throw new InvalidInputException("table contains orders");
 		}
 		service.removeCurrentTable(foundTable);
 		RestoApplication.save();
