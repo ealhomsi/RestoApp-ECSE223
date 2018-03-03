@@ -280,6 +280,7 @@ public class Controller {
 		if(foundTable == null){
 			throw new InvalidInputException("no such table exists");
 		}
+		
 		//if the table has reservations, it cannot be removed
 		//due to the inability to remove table, throw exception
 		if(foundTable.hasReservations()){
