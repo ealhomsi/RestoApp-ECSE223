@@ -16,12 +16,25 @@ public class RemoveTablePanel extends SidePanel implements ActionListener{
 
 	//JLabels
 	private JLabel title;
-	private JLabel removeTable;
+	private JLabel removeTableLabel;
 	private JComboBox<Integer> tables;
 
 	public RemoveTablePanel(Controller controller, RestoAppPage page) {
 		super(controller, page);
 		this.setLayout(null);
+
+		//title label properties
+		title = new JLabel("Remove Table");
+		title.setFont(new Font("Comic sans MS", Font.BOLD, 50));
+		title.setForeground(new Color(102, 255, 153));
+		title.setBounds(50, 50, 650, 150);
+
+
+		//removeTableLabel properties
+		removeTableLabel = new JLabel("select the table to remove");
+		title.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
+		title.setForeground(new Color(102, 255, 153));
+		title.setBounds(300, 425, 200, 50);
 
 		//back button properties
 		back = new JButton("back");
@@ -41,11 +54,13 @@ public class RemoveTablePanel extends SidePanel implements ActionListener{
 
 		updateView();
 
-
+		this.add(title);
 		this.add(submit);
 		this.add(back);
 		this.add(tables);
+
 		this.setVisible(true);
+
 
 	}
 
