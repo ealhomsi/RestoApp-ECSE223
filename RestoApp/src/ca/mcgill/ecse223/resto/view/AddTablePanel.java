@@ -9,9 +9,13 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
+import java.util.ArrayList;
+import java.util.List;
 
 import ca.mcgill.ecse223.resto.controller.Controller;
+import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 
 @SuppressWarnings("serial")
 
@@ -33,13 +37,12 @@ public class AddTablePanel extends SidePanel implements ActionListener{
 	private JLabel yLabel;
 	private JLabel title;
 	private JSeparator divider;
+
 	
 	
 	public AddTablePanel(Controller c, RestoAppPage p) {
 		// TODO Auto-generated constructor stub
 		super(c, p);
-		
-		this.setLayout(null);
 		
 		this.setLayout(null);
 		
@@ -122,6 +125,7 @@ public class AddTablePanel extends SidePanel implements ActionListener{
 	@Override
 	public void updateView() {
 
+
 	}
 
 	@Override
@@ -130,6 +134,22 @@ public class AddTablePanel extends SidePanel implements ActionListener{
 		if(e.getSource() == backButton) {
 			this.page.setRightIndex(0);
 			this.page.updateSidePanels();
+		}else if(e.getSource() == addButton){
+			try{
+				int tableId = Integer.parseInt(tableNumber.getText());
+				int xCoordinate = Integer.parseInt(xPos.getText());
+				int yCoordinate = Integer.parseInt(yPos.getText());
+				int widthValue = Integer.parseInt(width.getText());
+				int lengthValue = Integer.parseInt(length.getText());
+				int numberOfSeats = Integer.parseInt(seatNumber.getText());
+				controller.addTable(tableId, xCoordinate, yCoordinate, widthValue, lengthValue, numberOfSeats);
+				page.updateSidePanels();
+
+			}catch(NumberFormatException e2){
+				JOptionPane.showMessageDialog(this, "please enter integer values");
+			}catch(InvalidInputException e3){
+				JOptionPane.showMessageDialog(this, e3.getMessage());
+			}
 		}
 		
 	}

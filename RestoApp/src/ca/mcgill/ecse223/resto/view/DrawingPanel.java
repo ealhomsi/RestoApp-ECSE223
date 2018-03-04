@@ -22,7 +22,7 @@ public class DrawingPanel extends SidePanel  {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		for (TableView tv : controller.getAllTables()) {
+		for (TableView tv : controller.getAllCurrentTables()) {
 			tv.drawTable(g);
 			for (SeatView sv : tv.getSeats()) {
 				sv.drawSeat(g);

@@ -74,7 +74,9 @@ public class Controller {
 			newt.addSeat();
 		}
 
+		//add table to currentTable
 		service.addCurrentTable(newt);
+		service.addTable(newt);
 		// saving
 		RestoApplication.save();
 
@@ -86,9 +88,9 @@ public class Controller {
 	 * 
 	 * @return list of all table views
 	 */
-	public List<TableView> getAllTables() {
+	public List<TableView> getAllCurrentTables() {
 		List<TableView> tvs = new ArrayList<TableView>();
-		for (Table t : service.getTables()) {
+		for (Table t : service.getCurrentTables()) {
 			System.out.println(t.getNumber());
 			tvs.add(convertToViewObject(t));
 		}

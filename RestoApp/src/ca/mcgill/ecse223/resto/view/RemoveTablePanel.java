@@ -17,7 +17,9 @@ public class RemoveTablePanel extends SidePanel implements ActionListener{
 	//JLabels
 	private JLabel title;
 	private JLabel removeTableLabel;
+	private JLabel removeCurrentTableLabel;
 	private JComboBox<Integer> tables;
+	private JComboBox<Integer> currentTables;
 
 	public RemoveTablePanel(Controller controller, RestoAppPage page) {
 		super(controller, page);
@@ -31,10 +33,13 @@ public class RemoveTablePanel extends SidePanel implements ActionListener{
 
 
 		//removeTableLabel properties
-		removeTableLabel = new JLabel("select the table to remove", SwingConstants.CENTER);
+		removeTableLabel = new JLabel("select the current table to remove", SwingConstants.CENTER);
 		removeTableLabel.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
-		title.setForeground(Color.decode("#00BF9A"));
-		removeTableLabel.setBounds(0, 425, 750, 50);
+		removeTableLabel.setBounds(0, 300, 750, 50);
+
+		removeCurrentTableLabel = new JLabel("select the table to remove", SwingConstants.CENTER);
+		removeCurrentTableLabel.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
+		removeCurrentTableLabel.setBounds(0, 475, 750, 50);
 
 		//back button properties
 		back = new JButton("back");
@@ -48,9 +53,15 @@ public class RemoveTablePanel extends SidePanel implements ActionListener{
 		submit.setBounds(200, 600, 150, 50);
 		submit.addActionListener(this);
 
+		//tables ComboBox properties
 		tables = new JComboBox<Integer>();
 		tables.setBounds(300, 500, 200, 50);
 		tables.addActionListener(this);
+
+		//currentTables ComboBox properties
+		currentTables = new JComboBox<Integer>();
+		currentTables.setBounds(300, 375, 200, 50);
+		currentTables.addActionListener(this);
 
 		//adding components to JPanel
 		this.add(title);
@@ -70,6 +81,9 @@ public class RemoveTablePanel extends SidePanel implements ActionListener{
 	public void updateView() {
 		tables.removeAllItems();
 		for(Integer tableId : controller.getAllCurrentTableNumbers()){
+			currentTables.addItem(tableId);
+		}
+		for(Integer tableId : controller.getAllTableNumbers()){
 			tables.addItem(tableId);
 		}
 		revalidate();
