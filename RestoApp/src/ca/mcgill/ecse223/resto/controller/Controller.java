@@ -62,7 +62,7 @@ public class Controller {
 		Rectangle rect = new Rectangle(x, y, width, length);
 
 		// check if the table clash
-		for (Table t : service.getTables()) {
+		for (Table t : service.getCurrentTables()) {
 			if (tableOverLap(tableToRectangle(t), rect)) {
 				throw new InvalidInputException("the table overlaps with another table");
 			}
@@ -76,7 +76,6 @@ public class Controller {
 
 		//add table to currentTable
 		service.addCurrentTable(newt);
-		service.addTable(newt);
 		// saving
 		RestoApplication.save();
 
@@ -310,8 +309,7 @@ public class Controller {
 
 
 		//remove table completely, temp solution
-		foundTable.delete();
-		service.removeTable(foundTable);
+		service.removeCurrentTable(foundTable);
 		RestoApplication.save();
 	}
 }

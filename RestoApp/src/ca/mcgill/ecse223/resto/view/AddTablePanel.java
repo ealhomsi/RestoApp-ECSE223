@@ -50,6 +50,7 @@ public class AddTablePanel extends SidePanel implements ActionListener{
 		addButton.setBounds(550,650,100,50);
 		addButton.setBackground(Color.white);
 		addButton.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
+		addButton.addActionListener(this);
 		this.add(addButton);
 		
 		backButton = new JButton("Back");
@@ -124,8 +125,8 @@ public class AddTablePanel extends SidePanel implements ActionListener{
 
 	@Override
 	public void updateView() {
-
-
+		repaint();
+		revalidate();
 	}
 
 	@Override
@@ -134,7 +135,7 @@ public class AddTablePanel extends SidePanel implements ActionListener{
 		if(e.getSource() == backButton) {
 			this.page.setRightIndex(0);
 			this.page.updateSidePanels();
-		}else if(e.getSource() == addButton){
+		}else if(e.getActionCommand().equals("Add")){
 			try{
 				int tableId = Integer.parseInt(tableNumber.getText());
 				int xCoordinate = Integer.parseInt(xPos.getText());
