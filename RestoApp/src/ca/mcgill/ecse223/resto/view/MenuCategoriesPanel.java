@@ -23,10 +23,11 @@ import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
 public class MenuCategoriesPanel extends SidePanel implements ActionListener{
-	private ItemCategoryPanel itemsPanel;
+	private ItemCategoryPanel itemPanel;
 	private static JScrollPane itemDisplay;
 	private HashMap<JButton, ItemCategory> itemCategories = new HashMap<JButton, ItemCategory>();
-	private JButton back;
+	private JButton btnBack;
+	
 	
 	public Controller getController() {
 		return controller;
@@ -36,6 +37,8 @@ public class MenuCategoriesPanel extends SidePanel implements ActionListener{
 		this.controller = controller;
 	}
 	
+	
+	
 	public MenuCategoriesPanel(Controller c, RestoAppPage p) {
 		super(c,p);
 		this.setBorder(new BorderUIResource.LineBorderUIResource(Color.BLACK));
@@ -43,9 +46,7 @@ public class MenuCategoriesPanel extends SidePanel implements ActionListener{
 		
 		ArrayList<ItemCategory> categories = (ArrayList<ItemCategory>) controller.getItemCategories();
 
-		
-		
-		
+		//creating the buttons and modyfing its appearance
 		JButton btnAppetizer = new JButton(categories.get(0).toString().toUpperCase());
 		btnAppetizer.setBounds(50, 140, 200, 60);
 		btnAppetizer.setFont(new Font("Comic sans MS", Font.PLAIN, 26));
@@ -87,20 +88,21 @@ public class MenuCategoriesPanel extends SidePanel implements ActionListener{
 		labelMenu.setBounds(25, 30, 300, 100);
 		labelMenu.setFont(new Font("Comic Sans MS", Font.PLAIN, 30));
 		
-		back = new JButton("Back");
-		back.setBackground(Color.WHITE);
-		back.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
-		back.setBounds(25, 600, 115, 50);
-		back.addActionListener(this);	
+		btnBack = new JButton("Back");
+		btnBack.setBackground(Color.WHITE);
+		btnBack.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
+		btnBack.setBounds(25, 600, 115, 50);
+		btnBack.addActionListener(this);	
 		
-		itemsPanel = new ItemCategoryPanel(c, p);
-		itemDisplay = new JScrollPane(itemsPanel, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		
-		itemDisplay.setViewportView(itemsPanel);
+		//creating a panel to display the items of a category
+		itemPanel = new ItemCategoryPanel(c, p);
+		itemDisplay = new JScrollPane(itemPanel,
+					JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		itemDisplay.setViewportView(itemPanel);
 		itemDisplay.setBorder(new BorderUIResource.LineBorderUIResource(Color.BLACK));
 		
 		
-		
+		//adding the buttons to a Group Layout 
 		GroupLayout layout = new GroupLayout(this);
 		this.setLayout(layout);
 		layout.setAutoCreateGaps(true);
@@ -115,7 +117,7 @@ public class MenuCategoriesPanel extends SidePanel implements ActionListener{
 						.addComponent(btnAlcohol)
 						.addComponent(btnNonAlcohol))
 				.addComponent(itemDisplay,500,700,700)
-				.addComponent(back));
+				.addComponent(btnBack));
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				.addComponent(labelMenu)
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
@@ -126,7 +128,7 @@ public class MenuCategoriesPanel extends SidePanel implements ActionListener{
 						.addComponent(btnAlcohol)
 						.addComponent(btnNonAlcohol))
 				.addComponent(itemDisplay,500,700,700)
-				.addComponent(back));
+				.addComponent(btnBack));
 		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAppetizer, btnMains,btnDesserts});
 		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAlcohol, btnNonAlcohol});
 		
@@ -136,7 +138,7 @@ public class MenuCategoriesPanel extends SidePanel implements ActionListener{
 	@Override
 	public void updateView() {
 		// TODO Auto-generated method stub
-		itemDisplay.setViewportView(itemsPanel);
+		itemDisplay.setViewportView(itemPanel);
 
 		
 		itemDisplay.setVisible(true);
@@ -158,18 +160,18 @@ public class MenuCategoriesPanel extends SidePanel implements ActionListener{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		if(selectedButton == back) {
+		if(selectedButton == btnBack) {
 			this.page.setRightIndex(0);
 			this.page.updateSidePanels();
 		}
 		else
 		{
 		
-		itemsPanel.setSelectedCategory(selectedCategory);
+		itemPanel.setSelectedCategory(selectedCategory);
 		ItemCategoryPanel.createItemCategoryPanel(selectedCategoryItems);
-		itemsPanel.removeAll();
-		for(JButton button : ItemCategoryPanel.buttonsList) {
-			itemsPanel.add(button);
+		itemPanel.removeAll();
+		for(JButton button : ItemCategoryPanel.itemButtonsList) {
+			itemPanel.add(button);
 		}
 		updateView();
 	}
