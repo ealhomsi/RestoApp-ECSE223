@@ -240,6 +240,8 @@ public class Controller {
 		return new Rectangle(t.getX(), t.getY(), t.getWidth(), t.getLength());
 	}
 	
+	
+	
 	public List<ItemCategory> getItemCategories()
 	{
 		ArrayList<ItemCategory> categories = new ArrayList<ItemCategory>();
@@ -251,17 +253,33 @@ public class Controller {
 		return categories;
 	}
 	
+	/**
+	 * Method for displaying the menu categories and the menu items
+	 */
+	
+	public List<ItemCategory> getItemCategories()
+	{
+		ArrayList<ItemCategory> menuCategories = new ArrayList<ItemCategory>();
+		ItemCategory[] itemCategories = ItemCategory.values();
+		for(int i = 0; i < itemCategories.length; i++) {
+			ItemCategory category = itemCategories[i];
+			menuCategories.add(category);
+		}
+		return menuCategories;
+	}
+	
 	public ArrayList<MenuItem> getMenuItems (ItemCategory selectedItemCategory) throws InvalidInputException
 	{
 		ArrayList<MenuItem> categoryItemsList = new ArrayList<MenuItem>();
-		RestoApp r = RestoApplication.getRestoApp();
+		RestoApp restoApp = RestoApplication.getRestoApp();
 		
-		for(MenuItem menuItem: r.getMenu().getMenuItems())
+		for(MenuItem menuItem: restoApp.getMenu().getMenuItems())
 		{
 			String error = "";
-			//ItemCategory foundCategory = menuItem.getItemCategory();
+			
+			
 			if(menuItem.getItemCategory() == null) {
-				error = "Item has no category";
+				error = "This item does not belong to any category";
 				throw new InvalidInputException(error.trim());
 			}
 			else if(menuItem.getItemCategory().equals(selectedItemCategory) && menuItem.hasCurrentPricedMenuItem())
