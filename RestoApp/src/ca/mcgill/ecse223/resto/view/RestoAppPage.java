@@ -69,6 +69,7 @@ public class RestoAppPage extends JFrame {
 
 	public void updateSidePanels() {
 		this.sidePanels[5].updateView();
+		this.sidePanels[4].updateView();
 		this.sidePanels[3].updateView();
 		body.removeAll();
 		body.setLayout(new GridLayout(1, 2));

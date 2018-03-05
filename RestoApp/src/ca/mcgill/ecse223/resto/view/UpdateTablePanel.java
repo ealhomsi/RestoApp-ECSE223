@@ -124,7 +124,10 @@ public class UpdateTablePanel extends SidePanel implements ActionListener {
 				return;
 			}
 			updateView();
+			newTableNumber.setText("");
+			newNumberOfSeats.setText("");
 			this.page.updateSidePanels();
+			
 			
 		}else{
 			if(e.getActionCommand().equals("Back")){
