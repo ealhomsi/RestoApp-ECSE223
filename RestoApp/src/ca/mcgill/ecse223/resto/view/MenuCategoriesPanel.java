@@ -1,21 +1,33 @@
 package ca.mcgill.ecse223.resto.view;
 
+
+import javax.swing.plaf.BorderUIResource;
+
+import ca.mcgill.ecse223.resto.controller.Controller;
+import ca.mcgill.ecse223.resto.controller.InvalidInputException;
+import ca.mcgill.ecse223.resto.model.MenuItem;
+import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.HashMap;
 
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.plaf.BorderUIResource;
-
-import ca.mcgill.ecse223.resto.controller.Controller;
+import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
-public class MenuCategoriesPanel extends SidePanel implements ActionListener {
-	private JButton btnBack;
-	private JButton btnAppetizer;
-
+public class MenuCategoriesPanel extends SidePanel implements ActionListener{
+	private ItemCategoryPanel itemsPanel;
+	private static JScrollPane itemDisplay;
+	private HashMap<JButton, ItemCategory> itemCategories = new HashMap<JButton, ItemCategory>();
+	private JButton back;
+	
 	public Controller getController() {
 		return controller;
 	}
@@ -23,75 +35,143 @@ public class MenuCategoriesPanel extends SidePanel implements ActionListener {
 	public void setController(Controller controller) {
 		this.controller = controller;
 	}
-
+	
 	public MenuCategoriesPanel(Controller c, RestoAppPage p) {
-		super(c, p);
-		setLayout(null);
+		super(c,p);
 		this.setBorder(new BorderUIResource.LineBorderUIResource(Color.BLACK));
+		
+		
+		ArrayList<ItemCategory> categories = (ArrayList<ItemCategory>) controller.getItemCategories();
 
-		btnAppetizer = new JButton("APPETIZERS");
-		btnAppetizer.setBounds(220, 300, 200, 90);
+		
+		
+		
+		JButton btnAppetizer = new JButton(categories.get(0).toString().toUpperCase());
+		btnAppetizer.setBounds(50, 140, 200, 60);
 		btnAppetizer.setFont(new Font("Comic sans MS", Font.PLAIN, 26));
 		btnAppetizer.setBackground(Color.decode("#FF6666"));
-		this.add(btnAppetizer);
+		btnAppetizer.addActionListener(this);
+		itemCategories.put(btnAppetizer, categories.get(0));
 
-		JButton btnMains = new JButton("MAINS");
-		btnMains.setBounds(509, 300, 200, 90);
+		JButton btnMains = new JButton(categories.get(1).toString().toUpperCase());
+		btnMains.setBounds(270, 140, 200, 60);
 		btnMains.setFont(new Font("Comic sans MS", Font.PLAIN, 26));
 		btnMains.setBackground(Color.decode("#CC66CC"));
-		this.add(btnMains);
-
-		JButton btnDesserts = new JButton("DESSERTS");
-		btnDesserts.setBounds(822, 300, 200, 90);
+		btnMains.addActionListener(this);
+		itemCategories.put(btnMains, categories.get(1));
+		
+		JButton btnDesserts = new JButton(categories.get(2).toString().toUpperCase());
+		btnDesserts.setBounds(490, 140,200, 60);
 		btnDesserts.setFont(new Font("Comic sans MS", Font.PLAIN, 26));
 		btnDesserts.setBackground(Color.decode("#66FF99"));
-		this.add(btnDesserts);
-
-		JButton btnAlcohol = new JButton("ALCOHOLIC BEVERAGE");
-		btnAlcohol.setBounds(409, 458, 200, 90);
-		btnAlcohol.setFont(new Font("Comic Sans MS", Font.PLAIN, 15));
-		btnAlcohol.setBackground(Color.decode("#FFCC00"));
-		this.add(btnAlcohol);
-
-		JButton btnNonAlcohol = new JButton("NON ALCOHOLIC BEVERAGE");
-		btnNonAlcohol.setBounds(692, 460, 200, 90);
-		btnNonAlcohol.setFont(new Font("Comic Sans MS", Font.PLAIN, 10));
-		btnNonAlcohol.setBackground(Color.decode("#33CCFF"));
-		this.add(btnNonAlcohol);
-
-		JLabel labelMenu = new JLabel("MENU");
-		labelMenu.setBounds(150, 163, 300, 100);
-		labelMenu.setFont(new Font("Comic Sans MS", Font.PLAIN, 50));
-		this.add(labelMenu);
-
-		btnBack = new JButton("Back");
-		btnBack.setBackground(Color.WHITE);
-		btnBack.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
-		btnBack.setBounds(150, 97, 115, 50);
-		this.add(btnBack);
+		btnDesserts.addActionListener(this);
+		itemCategories.put(btnDesserts, categories.get(2));
 		
-		//action listeners
-		btnBack.addActionListener(this);
-		btnAppetizer.addActionListener(this);
-
+		JButton btnAlcohol = new JButton(categories.get(3).toString().toUpperCase());
+		btnAlcohol.setText("<html>ALCOHOLIC<BR />BEVERAGE</HTML>");
+		btnAlcohol.setBounds(125, 220, 200, 60);
+		btnAlcohol.setFont(new Font("Comic Sans MS", Font.PLAIN, 24));
+		btnAlcohol.setBackground(Color.decode("#FFCC00"));
+		btnAlcohol.addActionListener(this);
+		itemCategories.put(btnAlcohol, categories.get(3));
+		
+		JButton btnNonAlcohol = new JButton(categories.get(4).toString().toUpperCase());
+		btnNonAlcohol.setText("<html>NON ALCOHOLIC<br />BEVERAGE</html>");
+		btnNonAlcohol.setBounds(350, 220, 200, 60);
+		btnNonAlcohol.setFont(new Font("Comic Sans MS", Font.PLAIN, 24));
+		btnNonAlcohol.setBackground(Color.decode("#33CCFF"));
+		btnNonAlcohol.addActionListener(this);
+		itemCategories.put(btnNonAlcohol, categories.get(4));
+		
+		JLabel labelMenu = new JLabel("MENU");
+		labelMenu.setBounds(25, 30, 300, 100);
+		labelMenu.setFont(new Font("Comic Sans MS", Font.PLAIN, 30));
+		
+		back = new JButton("Back");
+		back.setBackground(Color.WHITE);
+		back.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
+		back.setBounds(25, 600, 115, 50);
+		back.addActionListener(this);	
+		
+		itemsPanel = new ItemCategoryPanel(c, p);
+		itemDisplay = new JScrollPane(itemsPanel, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		
+		itemDisplay.setViewportView(itemsPanel);
+		itemDisplay.setBorder(new BorderUIResource.LineBorderUIResource(Color.BLACK));
+		
+		
+		
+		GroupLayout layout = new GroupLayout(this);
+		this.setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+		layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+				.addComponent(labelMenu)
+				.addGroup(layout.createSequentialGroup()
+								.addComponent(btnAppetizer, 240,240,400)
+								.addComponent(btnMains)
+								.addComponent(btnDesserts))
+				.addGroup(layout.createSequentialGroup()
+						.addComponent(btnAlcohol)
+						.addComponent(btnNonAlcohol))
+				.addComponent(itemDisplay,500,700,700)
+				.addComponent(back));
+		layout.setVerticalGroup(layout.createSequentialGroup()
+				.addComponent(labelMenu)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+						.addComponent(btnAppetizer)
+						.addComponent(btnMains)
+						.addComponent(btnDesserts))
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+						.addComponent(btnAlcohol)
+						.addComponent(btnNonAlcohol))
+				.addComponent(itemDisplay,500,700,700)
+				.addComponent(back));
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAppetizer, btnMains,btnDesserts});
+		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAlcohol, btnNonAlcohol});
+		
+		
 	}
 
 	@Override
 	public void updateView() {
 		// TODO Auto-generated method stub
+		itemDisplay.setViewportView(itemsPanel);
 
+		
+		itemDisplay.setVisible(true);
+		itemDisplay.validate();
+		this.revalidate();
+		this.repaint();
+		
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		if (e.getSource() == btnBack) {
+		ArrayList<MenuItem> selectedCategoryItems = new ArrayList<MenuItem>(); 
+		JButton selectedButton = (JButton) e.getSource();
+		ItemCategory selectedCategory = itemCategories.get(selectedButton);
+		try {
+			selectedCategoryItems = (ArrayList<MenuItem>) controller.getMenuItems(selectedCategory);
+		} catch (InvalidInputException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		if(selectedButton == back) {
 			this.page.setRightIndex(0);
 			this.page.updateSidePanels();
-		}else if(e.getSource() == btnAppetizer) {
-			this.page.setRightIndex(7);
-			this.page.updateSidePanels();
 		}
-
+		else
+		{
+		
+		itemsPanel.setSelectedCategory(selectedCategory);
+		ItemCategoryPanel.createItemCategoryPanel(selectedCategoryItems);
+		itemsPanel.removeAll();
+		for(JButton button : ItemCategoryPanel.buttonsList) {
+			itemsPanel.add(button);
+		}
+		updateView();
+	}
 	}
 }
