@@ -23,6 +23,7 @@ public class AddTablePanel extends SidePanel implements ActionListener{
 
 	private JButton addButton;
 	private JButton backButton;
+	private JButton clear;
 	private JTextField seatNumber;
 	private JTextField tableNumber;
 	private JTextField width;
@@ -57,8 +58,15 @@ public class AddTablePanel extends SidePanel implements ActionListener{
 		backButton.setBounds(150,650,100,50); 
 		backButton.setBackground(Color.white);
 		backButton.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
-		this.add(backButton);
 		backButton.addActionListener(this);
+		this.add(backButton);
+		
+		clear = new JButton("Clear");
+		clear.setBounds(350, 650, 100, 50);
+		clear.setBackground(Color.white);
+		clear.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
+		clear.addActionListener(this);
+		this.add(clear);
 		
 		seatNumber = new JTextField();
 		seatNumber.setBounds(250, 200, 300, 50);
@@ -122,6 +130,16 @@ public class AddTablePanel extends SidePanel implements ActionListener{
 		this.add(title);
 		
 	}
+	
+	public void clearInputs() {
+		tableNumber.setText(null);
+		seatNumber.setText(null);
+		xPos.setText(null);
+		yPos.setText(null);
+		width.setText(null);
+		length.setText(null);
+		this.page.updateSidePanels();
+	}
 
 	@Override
 	public void updateView() {
@@ -131,10 +149,17 @@ public class AddTablePanel extends SidePanel implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		//git test comment
 		if(e.getSource() == backButton) {
 			this.page.setRightIndex(0);
 			this.page.updateSidePanels();
-		}else if(e.getActionCommand().equals("Add")){
+		}
+		else if(e.getSource() == clear) {
+			this.clearInputs();
+			
+		}
+		
+		else if(e.getActionCommand().equals("Add")){
 			try{
 				int tableId = Integer.parseInt(tableNumber.getText());
 				int xCoordinate = Integer.parseInt(xPos.getText());
@@ -143,6 +168,7 @@ public class AddTablePanel extends SidePanel implements ActionListener{
 				int lengthValue = Integer.parseInt(length.getText());
 				int numberOfSeats = Integer.parseInt(seatNumber.getText());
 				controller.addTable(tableId, xCoordinate, yCoordinate, widthValue, lengthValue, numberOfSeats);
+				this.clearInputs();
 				page.updateSidePanels();
 
 				for(Integer i : controller.getAllCurrentTableNumbers())
