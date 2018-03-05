@@ -32,9 +32,9 @@ public class RemoveTablePanel extends SidePanel implements ActionListener{
 		title.setBounds(50, 0, 650, 200);
 
 		//removeCurrentTable label properties
-		removeCurrentTableLabel = new JLabel("select the table to remove", SwingConstants.CENTER);
+		removeCurrentTableLabel = new JLabel("select the table to be remove", SwingConstants.CENTER);
 		removeCurrentTableLabel.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
-		removeCurrentTableLabel.setBounds(0, 475, 750, 50);
+		removeCurrentTableLabel.setBounds(0, 400, 750, 50);
 
 		//back button properties
 		back = new JButton("back");
@@ -51,7 +51,7 @@ public class RemoveTablePanel extends SidePanel implements ActionListener{
 
 		//currentTables ComboBox properties
 		currentTables = new JComboBox<Integer>();
-		currentTables.setBounds(300, 375, 200, 50);
+		currentTables.setBounds(300, 475, 200, 50);
 		currentTables.addActionListener(this);
 
 		//adding components to JPanel
