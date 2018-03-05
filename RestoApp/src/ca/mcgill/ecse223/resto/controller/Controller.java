@@ -29,7 +29,7 @@ public class Controller {
 
 	/**
 	 * This method adds a new table to the system
-	 * 
+	 *
 	 * @param number:
 	 *            table number
 	 * @param x:
@@ -54,15 +54,15 @@ public class Controller {
 		}
 
 		// check if another table has the same number
-		for (Table t : service.getTables()) {
+		for (Table t : service.getCurrentTables()) {
 			if (t.getNumber() == number)
-				throw new InvalidInputException("the table number already exsits");
+				throw new InvalidInputException("the table number already exists");
 		}
 
 		Rectangle rect = new Rectangle(x, y, width, length);
 
 		// check if the table clash
-		for (Table t : service.getTables()) {
+		for (Table t : service.getCurrentTables()) {
 			if (tableOverLap(tableToRectangle(t), rect)) {
 				throw new InvalidInputException("the table overlaps with another table");
 			}
@@ -74,8 +74,11 @@ public class Controller {
 			newt.addSeat();
 		}
 
+		//add table to currentTable
+		service.addCurrentTable(newt);
 		// saving
 		RestoApplication.save();
+
 
 		return convertToViewObject(newt);
 	}
@@ -85,9 +88,9 @@ public class Controller {
 	 * 
 	 * @return list of all table views
 	 */
-	public List<TableView> getAllTables() {
+	public List<TableView> getAllCurrentTables() {
 		List<TableView> tvs = new ArrayList<TableView>();
-		for (Table t : service.getTables()) {
+		for (Table t : service.getCurrentTables()) {
 			System.out.println(t.getNumber());
 			tvs.add(convertToViewObject(t));
 		}
@@ -102,7 +105,7 @@ public class Controller {
 	 * @param newX:
 	 *            new coordinates
 	 * @param newY:
-	 *            new coordiantes
+	 *            new coordinates
 	 * @throws InvalidInputException
 	 *             thrown when arguments are wrong or on overlap
 	 */
@@ -112,7 +115,7 @@ public class Controller {
 			throw new InvalidInputException("arguments are wrong");
 
 		Table found = null;
-		for (Table t : service.getTables()) {
+		for (Table t : service.getCurrentTables()) {
 			if (t.getNumber() == number) {
 				found = t;
 				break;
@@ -126,7 +129,7 @@ public class Controller {
 		Rectangle rect = new Rectangle(newX, newY, found.getX(), found.getY());
 
 		// check for collision
-		for (Table t : service.getTables()) {
+		for (Table t : service.getCurrentTables()) {
 			if (t == found)
 				continue;
 			if (tableOverLap(rect, tableToRectangle(t)))
@@ -140,6 +143,7 @@ public class Controller {
 		// saving
 		RestoApplication.save();
 
+
 	}
 
 	/**
@@ -152,6 +156,16 @@ public class Controller {
 		for (Table t : service.getTables())
 			list.add(t.getNumber());
 
+		return list;
+	}
+
+	//corrected method
+	public List<Integer> getAllCurrentTableNumbers(){
+		List<Integer> list = new ArrayList<>();
+		for(Table t : service.getCurrentTables()){
+			list.add(t.getNumber());
+			System.out.println(t.getNumber());
+		}
 		return list;
 	}
 	
@@ -183,11 +197,11 @@ public class Controller {
 	 * @param first:
 	 *            coordinate of the first point
 	 * @param firstWidth:
-	 *            the length of the first line segement
+	 *            the length of the first line segment
 	 * @param second:
 	 *            coordinate of the second point
 	 * @param secondWidth:
-	 *            coordinate of the second line segement
+	 *            coordinate of the second line segment
 	 * @return boolean: overlap or not
 	 */
 	private boolean linearIntersection(double first, double firstWidth, double second, double secondWidth) {
@@ -258,7 +272,7 @@ public class Controller {
 		try{
 			table.setNumber(newNumber);
 		}catch(Exception e){
-			throw new InvalidInputException("Dublicate number");
+			throw new InvalidInputException("Duplicate number");
 		}
 		for(int count=0 ; count<numberOfSeats-table.numberOfCurrentSeats();count++){
 			Seat seat = table.addSeat();
@@ -297,8 +311,9 @@ public class Controller {
 
 
 		//remove table completely, temp solution
-		foundTable.delete();
-		service.removeTable(foundTable);
+		service.removeCurrentTable(foundTable);
 		RestoApplication.save();
+
 	}
+
 }

@@ -100,7 +100,14 @@ public class TableView {
 	private List<Point> getListOfSeatCoordinates() throws InvalidInputException {
 		int seatSize = SeatView.getRadius() * 2;
 		int numberOfSeats = this.table.numberOfSeats();
+		if(numberOfSeats == 1)
+		{
+			List<Point> tmmp = new ArrayList<Point>();
+			tmmp.add(new Point(table.getX(), table.getY()));
+			return tmmp;
 
+		}
+			
 		int a = table.getWidth();
 		int b = table.getLength();
 		int step = SeatView.getRadius() * 2;

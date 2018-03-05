@@ -16,25 +16,25 @@ public class RemoveTablePanel extends SidePanel implements ActionListener{
 
 	//JLabels
 	private JLabel title;
-	private JLabel removeTableLabel;
-	private JComboBox<Integer> tables;
+	private JLabel removeCurrentTableLabel;
+
+	//ComboBoxes
+	private JComboBox<Integer> currentTables;
 
 	public RemoveTablePanel(Controller controller, RestoAppPage page) {
 		super(controller, page);
 		this.setLayout(null);
 
 		//title label properties
-		title = new JLabel("Remove Table");
+		title = new JLabel("Remove Table", SwingConstants.CENTER);
 		title.setFont(new Font("Comic sans MS", Font.BOLD, 50));
-		title.setForeground(new Color(102, 255, 153));
-		title.setBounds(50, 50, 650, 150);
+		title.setForeground(Color.decode("#00BF9A"));
+		title.setBounds(50, 0, 650, 200);
 
-
-		//removeTableLabel properties
-		removeTableLabel = new JLabel("select the table to remove");
-		title.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
-		title.setForeground(new Color(102, 255, 153));
-		title.setBounds(300, 425, 200, 50);
+		//removeCurrentTable label properties
+		removeCurrentTableLabel = new JLabel("select the table to remove", SwingConstants.CENTER);
+		removeCurrentTableLabel.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
+		removeCurrentTableLabel.setBounds(0, 475, 750, 50);
 
 		//back button properties
 		back = new JButton("back");
@@ -48,16 +48,20 @@ public class RemoveTablePanel extends SidePanel implements ActionListener{
 		submit.setBounds(200, 600, 150, 50);
 		submit.addActionListener(this);
 
-		tables = new JComboBox<Integer>();
-		tables.setBounds(300, 500, 200, 50);
-		tables.addActionListener(this);
 
-		updateView();
+		//currentTables ComboBox properties
+		currentTables = new JComboBox<Integer>();
+		currentTables.setBounds(300, 375, 200, 50);
+		currentTables.addActionListener(this);
 
+		//adding components to JPanel
 		this.add(title);
+		this.add(removeCurrentTableLabel);
 		this.add(submit);
 		this.add(back);
-		this.add(tables);
+		this.add(currentTables);
+
+		updateView();
 
 		this.setVisible(true);
 
@@ -66,9 +70,9 @@ public class RemoveTablePanel extends SidePanel implements ActionListener{
 
 	@Override
 	public void updateView() {
-		tables.removeAllItems();
-		for(Integer tableId : controller.getAllTableNumbers()){
-			tables.addItem(tableId);
+		currentTables.removeAllItems();
+		for(Integer tableId : controller.getAllCurrentTableNumbers()){
+			currentTables.addItem(tableId);
 		}
 		revalidate();
 		repaint();
@@ -79,7 +83,7 @@ public class RemoveTablePanel extends SidePanel implements ActionListener{
 			page.setRightIndex(0);
 			page.updateSidePanels();
 		}else if(e.getActionCommand().equals("submit")){
-			int tableId = (Integer)tables.getSelectedItem();
+			int tableId = (Integer)currentTables.getSelectedItem();
 			try {
 				controller.removeTable(tableId);
 				updateView();

@@ -9,9 +9,13 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
+import java.util.ArrayList;
+import java.util.List;
 
 import ca.mcgill.ecse223.resto.controller.Controller;
+import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 
 @SuppressWarnings("serial")
 
@@ -33,6 +37,7 @@ public class AddTablePanel extends SidePanel implements ActionListener{
 	private JLabel yLabel;
 	private JLabel title;
 	private JSeparator divider;
+
 	
 	
 	public AddTablePanel(Controller c, RestoAppPage p) {
@@ -41,12 +46,11 @@ public class AddTablePanel extends SidePanel implements ActionListener{
 		
 		this.setLayout(null);
 		
-		this.setLayout(null);
-		
 		addButton = new JButton("Add");
 		addButton.setBounds(550,650,100,50);
 		addButton.setBackground(Color.white);
 		addButton.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
+		addButton.addActionListener(this);
 		this.add(addButton);
 		
 		backButton = new JButton("Back");
@@ -130,6 +134,25 @@ public class AddTablePanel extends SidePanel implements ActionListener{
 		if(e.getSource() == backButton) {
 			this.page.setRightIndex(0);
 			this.page.updateSidePanels();
+		}else if(e.getActionCommand().equals("Add")){
+			try{
+				int tableId = Integer.parseInt(tableNumber.getText());
+				int xCoordinate = Integer.parseInt(xPos.getText());
+				int yCoordinate = Integer.parseInt(yPos.getText());
+				int widthValue = Integer.parseInt(width.getText());
+				int lengthValue = Integer.parseInt(length.getText());
+				int numberOfSeats = Integer.parseInt(seatNumber.getText());
+				controller.addTable(tableId, xCoordinate, yCoordinate, widthValue, lengthValue, numberOfSeats);
+				page.updateSidePanels();
+
+				for(Integer i : controller.getAllCurrentTableNumbers())
+					System.out.println(i);
+
+			}catch(NumberFormatException e2){
+				JOptionPane.showMessageDialog(this, "please enter integer values");
+			}catch(InvalidInputException e3){
+				JOptionPane.showMessageDialog(this, e3.getMessage());
+			}
 		}
 		
 	}
