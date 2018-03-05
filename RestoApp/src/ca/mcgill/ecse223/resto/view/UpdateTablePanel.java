@@ -100,6 +100,7 @@ public class UpdateTablePanel extends SidePanel implements ActionListener {
 		seatTitle.setBackground(Color.lightGray);
 		seatTitle.setBounds(400,370,300,75);
 		this.add(seatTitle);
+		
 	}
 
 	@Override
@@ -116,7 +117,7 @@ public class UpdateTablePanel extends SidePanel implements ActionListener {
 				return;
 			}
 			try{
-				Table table = Table.getWithNumber(selectedTable.getItemAt(selectedTable.getSelectedIndex()));
+				Table table = Table.getWithNumber((int) selectedTable.getSelectedItem());
 				c.updateTable(table, newNumber, newNumberSeats);
 			}catch(Exception j){
 				JOptionPane.showMessageDialog(this, j.getMessage());

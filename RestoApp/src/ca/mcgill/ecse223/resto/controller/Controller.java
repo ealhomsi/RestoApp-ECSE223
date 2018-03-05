@@ -272,6 +272,7 @@ public class Controller {
 		}
 		return categoryItemsList;
 	}
+	
 	public void updateTable(Table table, int newNumber, int numberOfSeats) throws InvalidInputException{
 		if(table == null || newNumber < 0 || numberOfSeats < 0 || table.hasReservations())
 			throw new InvalidInputException("Wrong Input");
@@ -281,16 +282,17 @@ public class Controller {
 			if(tables.contains(table))
 				throw new InvalidInputException("Table has current orders");			
 		}
-		try{
-			table.setNumber(newNumber);
-		}catch(Exception e){
+		
+		if(!table.setNumber(newNumber))
 			throw new InvalidInputException("Duplicate number");
-		}
-		for(int count=0 ; count<numberOfSeats-table.numberOfCurrentSeats();count++){
+		
+		int currentNumberOfSeats = table.numberOfCurrentSeats();
+		
+		for(int count=0 ; count<numberOfSeats-currentNumberOfSeats;count++){
 			Seat seat = table.addSeat();
 			table.addCurrentSeat(seat);
 		}
-		for(int count=0 ; count<table.numberOfCurrentSeats()-numberOfSeats ; count++){
+		for(int count=0 ; count<currentNumberOfSeats-numberOfSeats ; count++){
 			Seat seat = table.getCurrentSeat(0);
 			table.removeCurrentSeat(seat);
 		}
