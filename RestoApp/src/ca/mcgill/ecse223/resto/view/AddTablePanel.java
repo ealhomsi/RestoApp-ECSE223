@@ -125,8 +125,7 @@ public class AddTablePanel extends SidePanel implements ActionListener{
 
 	@Override
 	public void updateView() {
-		repaint();
-		revalidate();
+
 	}
 
 	@Override
@@ -145,6 +144,9 @@ public class AddTablePanel extends SidePanel implements ActionListener{
 				int numberOfSeats = Integer.parseInt(seatNumber.getText());
 				controller.addTable(tableId, xCoordinate, yCoordinate, widthValue, lengthValue, numberOfSeats);
 				page.updateSidePanels();
+
+				for(Integer i : controller.getAllCurrentTableNumbers())
+					System.out.println(i);
 
 			}catch(NumberFormatException e2){
 				JOptionPane.showMessageDialog(this, "please enter integer values");

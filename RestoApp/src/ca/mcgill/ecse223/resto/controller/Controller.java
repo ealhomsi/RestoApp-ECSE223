@@ -56,7 +56,7 @@ public class Controller {
 		// check if another table has the same number
 		for (Table t : service.getTables()) {
 			if (t.getNumber() == number)
-				throw new InvalidInputException("the table number already exsits");
+				throw new InvalidInputException("the table number already exists");
 		}
 
 		Rectangle rect = new Rectangle(x, y, width, length);
@@ -78,6 +78,7 @@ public class Controller {
 		service.addCurrentTable(newt);
 		// saving
 		RestoApplication.save();
+
 
 		return convertToViewObject(newt);
 	}
@@ -104,7 +105,7 @@ public class Controller {
 	 * @param newX:
 	 *            new coordinates
 	 * @param newY:
-	 *            new coordiantes
+	 *            new coordinates
 	 * @throws InvalidInputException
 	 *             thrown when arguments are wrong or on overlap
 	 */
@@ -141,6 +142,7 @@ public class Controller {
 
 		// saving
 		RestoApplication.save();
+
 
 	}
 
@@ -195,11 +197,11 @@ public class Controller {
 	 * @param first:
 	 *            coordinate of the first point
 	 * @param firstWidth:
-	 *            the length of the first line segement
+	 *            the length of the first line segment
 	 * @param second:
 	 *            coordinate of the second point
 	 * @param secondWidth:
-	 *            coordinate of the second line segement
+	 *            coordinate of the second line segment
 	 * @return boolean: overlap or not
 	 */
 	private boolean linearIntersection(double first, double firstWidth, double second, double secondWidth) {
@@ -270,7 +272,7 @@ public class Controller {
 		try{
 			table.setNumber(newNumber);
 		}catch(Exception e){
-			throw new InvalidInputException("Dublicate number");
+			throw new InvalidInputException("Duplicate number");
 		}
 		for(int count=0 ; count<numberOfSeats-table.numberOfCurrentSeats();count++){
 			Seat seat = table.addSeat();
@@ -311,5 +313,7 @@ public class Controller {
 		//remove table completely, temp solution
 		service.removeCurrentTable(foundTable);
 		RestoApplication.save();
+
 	}
+
 }

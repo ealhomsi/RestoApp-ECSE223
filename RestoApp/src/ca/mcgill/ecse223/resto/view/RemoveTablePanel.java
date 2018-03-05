@@ -51,7 +51,7 @@ public class RemoveTablePanel extends SidePanel implements ActionListener{
 
 		//currentTables ComboBox properties
 		currentTables = new JComboBox<Integer>();
-		currentTables.setBounds(550, 375, 200, 50);
+		currentTables.setBounds(300, 375, 200, 50);
 		currentTables.addActionListener(this);
 
 		//adding components to JPanel
@@ -60,11 +60,10 @@ public class RemoveTablePanel extends SidePanel implements ActionListener{
 		this.add(submit);
 		this.add(back);
 		this.add(currentTables);
-		
-
-		this.setVisible(true);
 
 		updateView();
+
+		this.setVisible(true);
 
 
 	}
