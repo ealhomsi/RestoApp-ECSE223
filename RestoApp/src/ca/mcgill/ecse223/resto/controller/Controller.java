@@ -54,7 +54,7 @@ public class Controller {
 		}
 
 		// check if another table has the same number
-		for (Table t : service.getTables()) {
+		for (Table t : service.getCurrentTables()) {
 			if (t.getNumber() == number)
 				throw new InvalidInputException("the table number already exists");
 		}
