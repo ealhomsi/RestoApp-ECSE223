@@ -71,7 +71,7 @@ public class Controller {
 		// passwed all checks
 		Table newt = new Table(number, x, y, width, length, service);
 		for (int i = 0; i < numberOfSeats; i++) {
-			newt.addSeat();
+			newt.addCurrentSeat(new Seat(newt));
 		}
 
 		//add table to currentTable

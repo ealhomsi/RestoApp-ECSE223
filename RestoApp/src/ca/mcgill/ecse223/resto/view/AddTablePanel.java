@@ -150,7 +150,7 @@ public class AddTablePanel extends SidePanel implements ActionListener{
 
 			}catch(NumberFormatException e2){
 				JOptionPane.showMessageDialog(this, "please enter integer values");
-			}catch(InvalidInputException e3){
+			}catch(Exception e3){
 				JOptionPane.showMessageDialog(this, e3.getMessage());
 			}
 		}

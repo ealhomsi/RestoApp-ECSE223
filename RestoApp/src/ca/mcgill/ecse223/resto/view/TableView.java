@@ -39,7 +39,7 @@ public class TableView {
 		}
 
 		int i = 0;
-		for (Seat s : table.getSeats()) {
+		for (Seat s : table.getCurrentSeats()) {
 			this.seats.add(new SeatView(s, points.get(i).x, points.get(i).y));
 			i++;
 		}
@@ -99,7 +99,7 @@ public class TableView {
 	/** Helper methods for automatic seats placing **/
 	private List<Point> getListOfSeatCoordinates() throws InvalidInputException {
 		int seatSize = SeatView.getRadius() * 2;
-		int numberOfSeats = this.table.numberOfSeats();
+		int numberOfSeats = this.table.numberOfCurrentSeats();
 		if(numberOfSeats == 1)
 		{
 			List<Point> tmmp = new ArrayList<Point>();
