@@ -17,6 +17,7 @@ import javax.swing.plaf.BorderUIResource;
 import ca.mcgill.ecse223.resto.controller.Controller;
 import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 
+@SuppressWarnings("serial")
 public class ChangeTableLocationPanel extends SidePanel implements ActionListener {
 	private JComboBox<Integer> tables;
 	private JLabel promptLabel;
@@ -122,7 +123,7 @@ public class ChangeTableLocationPanel extends SidePanel implements ActionListene
 			int newY = Integer.parseInt(newYField.getText());
 			try {
 				controller.changeTableLocation((Integer) tables.getSelectedItem(), newX, newY);
-				
+
 				TableView t = controller.getTableByNumber((Integer) tables.getSelectedItem());
 
 				if (t == null)
@@ -141,6 +142,8 @@ public class ChangeTableLocationPanel extends SidePanel implements ActionListene
 			this.page.setRightIndex(0);
 			this.page.updateSidePanels();
 		} else if (e.getSource() == tables) {
+			if (tables.getSelectedItem() == null)
+				return;
 			int tableNumber = (Integer) tables.getSelectedItem();
 			TableView t = controller.getTableByNumber(tableNumber);
 
@@ -151,24 +154,25 @@ public class ChangeTableLocationPanel extends SidePanel implements ActionListene
 			currentTableLocY.setText("Y: " + t.getTable().getY());
 			currentTableWidth.setText("W: " + t.getTable().getWidth());
 			currentTableHeight.setText("H: " + t.getTable().getLength());
-			
+
 		}
 
 	}
 
 	@Override
 	public void updateView() {
-		//null check => hani
-		if(tables.getSelectedItem() == null)
-			return;
-
 
 		this.tables.removeAllItems();
 		for (Integer item : controller.getAllCurrentTableNumbers()) {
 			tables.addItem(item);
 		}
+		
+		// null check => hani
+		if (tables.getSelectedItem() == null)
+			return;
 
 		int tableNumber = (Integer) tables.getSelectedItem();
+
 		TableView t = controller.getTableByNumber(tableNumber);
 
 		if (t == null)

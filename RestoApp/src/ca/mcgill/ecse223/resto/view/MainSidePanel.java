@@ -80,8 +80,7 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
-		// if the source is combo box
+	// if the source is combo box
 		if (e.getSource() == comboBox) {
 			int option = comboBox.getSelectedIndex();
 			this.page.setRightIndex(++option);
