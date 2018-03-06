@@ -96,6 +96,7 @@ public class TableView {
 		g.drawString(text, x, y);
 	}
 
+	
 	/** Helper methods for automatic seats placing **/
 	private List<Point> getListOfSeatCoordinates() throws InvalidInputException {
 		int seatSize = SeatView.getRadius() * 2;
