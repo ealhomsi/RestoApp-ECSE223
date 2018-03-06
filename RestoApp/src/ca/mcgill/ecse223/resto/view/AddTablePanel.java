@@ -1,21 +1,17 @@
 package ca.mcgill.ecse223.resto.view;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
-import java.util.ArrayList;
-import java.util.List;
+import javax.swing.JTextField;
 
 import ca.mcgill.ecse223.resto.controller.Controller;
-import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 
 @SuppressWarnings("serial")
 
@@ -167,6 +163,8 @@ public class AddTablePanel extends SidePanel implements ActionListener{
 				int widthValue = Integer.parseInt(width.getText());
 				int lengthValue = Integer.parseInt(length.getText());
 				int numberOfSeats = Integer.parseInt(seatNumber.getText());
+				if(numberOfSeats <=0)
+					throw new Exception();
 				controller.addTable(tableId, xCoordinate, yCoordinate, widthValue, lengthValue, numberOfSeats);
 				this.clearInputs();
 				page.updateSidePanels();
