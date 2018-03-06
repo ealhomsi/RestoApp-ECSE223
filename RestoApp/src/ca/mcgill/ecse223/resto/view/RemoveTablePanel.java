@@ -83,6 +83,8 @@ public class RemoveTablePanel extends SidePanel implements ActionListener{
 			page.setRightIndex(0);
 			page.updateSidePanels();
 		}else if(e.getActionCommand().equals("submit")){
+			if(currentTables.getSelectedItem() == null)
+				return;
 			int tableId = (Integer)currentTables.getSelectedItem();
 			try {
 				controller.removeTable(tableId);
