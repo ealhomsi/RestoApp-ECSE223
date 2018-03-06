@@ -83,6 +83,8 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 	// if the source is combo box
 		if (e.getSource() == comboBox) {
 			int option = comboBox.getSelectedIndex();
+			if(option == 0)
+				return;
 			this.page.setRightIndex(++option);
 			this.page.updateSidePanels();
 		} else if(e.getSource() == btnMenu) {
