@@ -103,7 +103,7 @@ public class TableView {
 		if(numberOfSeats == 1)
 		{
 			List<Point> tmmp = new ArrayList<Point>();
-			tmmp.add(new Point(table.getX(), table.getY()));
+			tmmp.add(new Point(table.getX() - seatSize/2, table.getY()));
 			return tmmp;
 
 		}
