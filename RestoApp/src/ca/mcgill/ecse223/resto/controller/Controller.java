@@ -241,18 +241,6 @@ public class Controller {
 	}
 	
 	
-	
-	public List<ItemCategory> getItemCategories()
-	{
-		ArrayList<ItemCategory> categories = new ArrayList<ItemCategory>();
-		ItemCategory[] itemCategories = ItemCategory.values();
-		for(int i = 0; i < itemCategories.length; i++) {
-			ItemCategory category = itemCategories[i];
-			categories.add(category);
-		}
-		return categories;
-	}
-	
 	/**
 	 * Method for displaying the menu categories and the menu items
 	 */
@@ -290,7 +278,6 @@ public class Controller {
 		}
 		return categoryItemsList;
 	}
-	
 	public void updateTable(Table table, int newNumber, int numberOfSeats) throws InvalidInputException{
 		if(table == null || newNumber < 0 || numberOfSeats < 0 || table.hasReservations())
 			throw new InvalidInputException("Wrong Input");
