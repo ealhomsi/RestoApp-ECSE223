@@ -288,7 +288,7 @@ public class Controller {
 				throw new InvalidInputException("Table has current orders");			
 		}
 		
-		if(!table.setNumber(newNumber))
+		if(!table.setNumber(newNumber) && table.getNumber() != newNumber)
 			throw new InvalidInputException("Duplicate number");
 		
 		int currentNumberOfSeats = table.numberOfCurrentSeats();

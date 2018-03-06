@@ -24,27 +24,27 @@ public class UpdateTablePanel extends SidePanel implements ActionListener {
 	private JTextField mainTitle;
 	private JTextField tableTitle;
 	private JTextField seatTitle;
-	
+
 	public UpdateTablePanel(Controller controller, RestoAppPage page) {
 		super(controller, page);
 		c = controller;
-				
+
 		this.setLayout(null);
-		
+
 		button = new JButton("Apply");
 		button.setBackground(Color.white);
 		button.setBounds(445, 600, 200, 75);
 		button.setFont(new Font("Comic sans MS",Font.PLAIN,30));
 		this.add(button);
 		button.addActionListener(this);
-		
+
 		back = new JButton("Back");
 		back.setBackground(Color.white);
 		back.setBounds(75, 600, 200, 75);
 		back.setFont(new Font("Comic sans MS",Font.PLAIN,30));
 		this.add(back);
 		back.addActionListener(this);
-		
+
 		newTableNumber = new JTextField("");
 		newTableNumber.setEditable(true);
 		newTableNumber.setFont(new Font("Comic sans MS",Font.PLAIN,25));
@@ -52,7 +52,7 @@ public class UpdateTablePanel extends SidePanel implements ActionListener {
 		newTableNumber.setBackground(Color.white);
 		newTableNumber.setHorizontalAlignment(JTextField.CENTER);
 		this.add(newTableNumber);
-		
+
 		newNumberOfSeats = new JTextField("");
 		newNumberOfSeats.setEditable(true);
 		newNumberOfSeats.setFont(new Font("Comic sans MS",Font.PLAIN,25));
@@ -60,7 +60,7 @@ public class UpdateTablePanel extends SidePanel implements ActionListener {
 		newNumberOfSeats.setBackground(Color.white);
 		newNumberOfSeats.setHorizontalAlignment(JTextField.CENTER);
 		this.add(newNumberOfSeats);
-		
+
 		selectedTable = new JComboBox<Integer>();
 		selectedTable.setEditable(true);
 		selectedTable.setFont(new Font("Comic sans MS",Font.PLAIN,25));
@@ -68,7 +68,7 @@ public class UpdateTablePanel extends SidePanel implements ActionListener {
 		selectedTable.setBackground(Color.white);
 		this.updateView();
 		this.add(selectedTable);
-		
+
 		oldTableTitle = new JTextField("Number Of Selected Table");
 		oldTableTitle.setFont(new Font("Comic sans MS",Font.PLAIN,20));
 		oldTableTitle.setBounds(225,180,260,75);
@@ -76,7 +76,7 @@ public class UpdateTablePanel extends SidePanel implements ActionListener {
 		oldTableTitle.setHorizontalAlignment(JTextField.CENTER);
 		oldTableTitle.setBackground(Color.lightGray);
 		this.add(oldTableTitle);
-		
+
 		mainTitle = new JTextField("Update Table Number And Number Of Seats");
 		mainTitle.setFont(new Font("Comic sans MS",Font.PLAIN,30));
 		mainTitle.setBounds(25,50,700,100);
@@ -84,7 +84,7 @@ public class UpdateTablePanel extends SidePanel implements ActionListener {
 		mainTitle.setHorizontalAlignment(JTextField.CENTER);
 		mainTitle.setBackground(Color.pink);
 		this.add(mainTitle);
-		
+
 		tableTitle = new JTextField("Enter new Table Number");
 		tableTitle.setEditable(false);
 		tableTitle.setFont(new Font("Comic sans MS",Font.PLAIN,20));
@@ -92,7 +92,7 @@ public class UpdateTablePanel extends SidePanel implements ActionListener {
 		tableTitle.setBackground(Color.lightGray);
 		tableTitle.setBounds(50,370,250,75);
 		this.add(tableTitle);
-		
+
 		seatTitle = new JTextField("Enter new Number Of Seats");
 		seatTitle.setEditable(false);
 		seatTitle.setFont(new Font("Comic sans MS",Font.PLAIN,20));
@@ -100,7 +100,7 @@ public class UpdateTablePanel extends SidePanel implements ActionListener {
 		seatTitle.setBackground(Color.lightGray);
 		seatTitle.setBounds(400,370,300,75);
 		this.add(seatTitle);
-		
+
 	}
 
 	@Override
@@ -109,13 +109,41 @@ public class UpdateTablePanel extends SidePanel implements ActionListener {
 		if(e.getActionCommand().equals("Apply")){
 			int newNumber;
 			int newNumberSeats;
-			try{
-				newNumber =Integer.parseInt( newTableNumber.getText());
-				newNumberSeats = Integer.parseInt(newNumberOfSeats.getText());
-			}catch(Exception j){
+
+			if(!newTableNumber.getText().equals("") && !newNumberOfSeats.getText().equals("")){
+				try{
+					newNumber =Integer.parseInt( newTableNumber.getText());
+					newNumberSeats = Integer.parseInt(newNumberOfSeats.getText());
+				}catch(Exception j){
+					JOptionPane.showMessageDialog(this,"Wrong Input");
+					return;
+				}
+			}else if(!newTableNumber.getText().equals("") && newNumberOfSeats.getText().equals("")){
+				Table table;
+				try{
+					newNumber =Integer.parseInt( newTableNumber.getText());
+					table = Table.getWithNumber((int) selectedTable.getSelectedItem());
+				}catch(Exception j){
+					JOptionPane.showMessageDialog(this,"Wrong Input");
+					return;
+				}
+				newNumberSeats = table.numberOfCurrentSeats();
+			}else if(newTableNumber.getText().equals("") && !newNumberOfSeats.getText().equals("")){
+				Table table;
+				try{
+					table = Table.getWithNumber((int) selectedTable.getSelectedItem());
+					newNumberSeats = Integer.parseInt(newNumberOfSeats.getText());
+				}catch(Exception j){
+					JOptionPane.showMessageDialog(this,"Wrong Input");
+					return;
+				}
+				newNumber = table.getNumber();
+			}else{
 				JOptionPane.showMessageDialog(this,"Wrong Input");
 				return;
 			}
+
+
 			try{
 				Table table = Table.getWithNumber((int) selectedTable.getSelectedItem());
 				c.updateTable(table, newNumber, newNumberSeats);
@@ -123,12 +151,13 @@ public class UpdateTablePanel extends SidePanel implements ActionListener {
 				JOptionPane.showMessageDialog(this, j.getMessage());
 				return;
 			}
+
 			updateView();
 			newTableNumber.setText("");
 			newNumberOfSeats.setText("");
 			this.page.updateSidePanels();
-			
-			
+
+
 		}else{
 			if(e.getActionCommand().equals("Back")){
 				this.page.setRightIndex(0);
