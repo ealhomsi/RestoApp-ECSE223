@@ -170,7 +170,7 @@ public class MenuCategoriesPanel extends SidePanel implements ActionListener{
 		itemPanel.setSelectedCategory(selectedCategory);
 		ItemCategoryPanel.createItemCategoryPanel(selectedCategoryItems);
 		itemPanel.removeAll();
-		for(JButton button : ItemCategoryPanel.itemButtonsList) {
+		for(JButton button : ItemCategoryPanel.buttonsList) {
 			itemPanel.add(button);
 		}
 		updateView();
