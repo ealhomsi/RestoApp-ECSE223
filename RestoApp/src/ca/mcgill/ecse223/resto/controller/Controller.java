@@ -367,5 +367,42 @@ public class Controller {
 		service.addCurrentOrder(newOrder);
 		RestoApplication.save();
 	}
+	
+	public static void endOrder(Order order) throws InvalidInputException {
+		
+		RestoApp r = RestoApplication.getRestoApp();
+		List<Order> currentOrders = r.getCurrentOrders();
+		
+		if(order == null) { 
+			throw new InvalidInputException("Order is invalid");
+		}
+		
+		if(!currentOrders.contains(order)) {
+			throw new InvalidInputException("Order being ended does not exist");
+		}
+		
+		List<Table> tables = order.getTables();
+		
+		for(Table table : tables) 
+			table.endOrder(order);
+		
+		
+		if(allTablesAvailableOrDifferentCurrentOrder(tables, order))
+			r.removeCurrentOrder(order);
+		
+		RestoApplication.save();
+	}
+	
+	public static boolean allTablesAvailableOrDifferentCurrentOrder(List <Table> tables, Order order) {
+		RestoApp r = RestoApplication.getRestoApp();
+		boolean result = false;
+		
+		for(Table table : tables) {
+			if( table.getStatusFullName().contentEquals("Available") || !table.getOrder(table.numberOfOrders()-1).equals(order)) {
+				result = true;
+			}
+		}
+		return result;
+}
 
 }
