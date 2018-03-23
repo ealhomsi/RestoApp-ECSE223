@@ -334,5 +334,38 @@ public class Controller {
 		RestoApplication.save();
 
 	}
+	public static void startOrder(List<Table> tables) throws InvalidInputException{
+		RestoApp service = RestoApplication.getRestoApp();
+		if(tables == null)
+			throw new InvalidInputException("No tables given");
+		List<Table> currentTables = service.getCurrentTables();
+		for(Table t: currentTables){
+			boolean contains = currentTables.contains(t);
+			if(contains == false)
+			throw new InvalidInputException("Table given not in currentTables");
+		}
+		boolean orderCreated = false;
+		Order newOrder = null;
+		for(Table t : tables){
+			if(orderCreated){
+				t.addToOrder(newOrder);
+			}else{
+				Order lastOrder = null;
+				if(t.numberOfOrders() >0){
+					lastOrder = t.getOrder(t.numberOfOrders()-1);
+				}
+				t.startOrder();
+				if(t.numberOfOrders() >0 && !t.getOrder(t.numberOfOrders()-1).equals(lastOrder)){
+					orderCreated = true;
+					newOrder = t.getOrder(t.numberOfOrders()-1);
+				}
+			}
+		}
+		if(!orderCreated){
+			throw new InvalidInputException("The order couldn't be created");
+		}
+		service.addCurrentOrder(newOrder);
+		RestoApplication.save();
+	}
 
 }
