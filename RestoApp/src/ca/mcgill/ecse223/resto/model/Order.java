@@ -7,7 +7,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.*;
 
-// line 77 "../../../../../RestoAppPersistence.ump"
+// line 76 "../../../../../RestoAppPersistence.ump"
 // line 41 "../../../../../RestoApp v3.ump"
 public class Order implements Serializable
 {
@@ -517,10 +517,9 @@ public class Order implements Serializable
     }
   }
 
-  // line 83 "../../../../../RestoAppPersistence.ump"
+  // line 82 "../../../../../RestoAppPersistence.ump"
    public static  void reinitializeAutouniqueNumber(List<Order> orders){
-    nextNumber = 0;
-	for (Order order : orders) {
+    for (Order order : orders) {
 	if (order.getNumber() > nextNumber) {
 	nextNumber = order.getNumber(); }
 	}
@@ -540,7 +539,7 @@ public class Order implements Serializable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 80 "../../../../../RestoAppPersistence.ump"
+  // line 79 "../../../../../RestoAppPersistence.ump"
   private static final long serialVersionUID = -3900912597282882073L ;
 
   

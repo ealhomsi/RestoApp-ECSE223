@@ -211,7 +211,7 @@ public class Table implements Serializable
     switch (aStatus)
     {
       case NothingOrdered:
-        if (quantityNotNegative(quantity))
+        if (quantityIsPositive(quantity))
         {
         // line 14 "../../../../../RestoAppTableStateMachine.ump"
           // create a new order item with the provided quantity, order, seat, and priced menu item
@@ -221,7 +221,7 @@ public class Table implements Serializable
         }
         break;
       case Ordered:
-        if (quantityNotNegative(quantity))
+        if (quantityIsPositive(quantity))
         {
         // line 29 "../../../../../RestoAppTableStateMachine.ump"
           // create a new order item with the provided quantity, order, seat, and priced menu item
@@ -916,7 +916,7 @@ public class Table implements Serializable
    * check that the provided quantity is an integer greater than 0
    */
   // line 61 "../../../../../RestoAppTableStateMachine.ump"
-   private boolean quantityNotNegative(int quantity){
+   private boolean quantityIsPositive(int quantity){
     // TODO
       return false;
   }

@@ -359,8 +359,7 @@ public class Reservation implements Serializable
 
   // line 66 "../../../../../RestoAppPersistence.ump"
    public static  void reinitializeAutouniqueNumber(List<Reservation> reservations){
-    nextReservationNumber = 0;
-	for (Reservation reservation : reservations) {
+    for (Reservation reservation : reservations) {
 	if (reservation.getReservationNumber() > nextReservationNumber) {
 	nextReservationNumber = reservation.getReservationNumber(); }
 	}

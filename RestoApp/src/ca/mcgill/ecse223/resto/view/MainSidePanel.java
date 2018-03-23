@@ -31,7 +31,7 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		this.add(btnMenu);
 		btnMenu.addActionListener(this);
 
-		JButton btnReserved = new JButton("RESERVED");
+		JButton btnReserved = new JButton("RESERVATION");
 		btnReserved.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
 		btnReserved.setBackground(Color.white);
 		btnReserved.setBounds(100, 435, 240, 80);
