@@ -7,7 +7,7 @@ import java.util.*;
 
 // line 15 "../../../../../RestoAppPersistence.ump"
 // line 3 "../../../../../RestoAppTableStateMachine.ump"
-// line 28 "../../../../../RestoApp v3.ump"
+// line 31 "../../../../../RestoApp v3.ump"
 public class Table implements Serializable
 {
 
@@ -214,7 +214,10 @@ public class Table implements Serializable
         if (quantityIsPositive(quantity))
         {
         // line 14 "../../../../../RestoAppTableStateMachine.ump"
-          // create a new order item with the provided quantity, order, seat, and priced menu item
+        	Seat[] seat = new Seat[1];
+        	seat[0]=s;
+          OrderItem newOrder = new OrderItem(quantity, i , o , seat);
+            // create a new order item with the provided quantity, order, seat, and priced menu item
           setStatus(Status.Ordered);
           wasEventProcessed = true;
           break;
@@ -223,8 +226,11 @@ public class Table implements Serializable
       case Ordered:
         if (quantityIsPositive(quantity))
         {
-        // line 29 "../../../../../RestoAppTableStateMachine.ump"
-          // create a new order item with the provided quantity, order, seat, and priced menu item
+        // line 32 "../../../../../RestoAppTableStateMachine.ump"
+          Seat[] seats =new Seat[1];
+             seats[0]=s;
+            OrderItem newOrder = new OrderItem(quantity, i , o , seats);
+            // create a new order item with the provided quantity, order, seat, and priced menu item
           setStatus(Status.Ordered);
           wasEventProcessed = true;
           break;
@@ -245,14 +251,18 @@ public class Table implements Serializable
     switch (aStatus)
     {
       case NothingOrdered:
-        // line 17 "../../../../../RestoAppTableStateMachine.ump"
-        // add provided seat to provided order item unless seat has already been added, in which case nothing needs to be done
+        // line 18 "../../../../../RestoAppTableStateMachine.ump"
+        if(i != null && s != null)
+                 s.addOrderItem(i);
+            // add provided seat to provided order item unless seat has already been added, in which case nothing needs to be done
         setStatus(Status.Ordered);
         wasEventProcessed = true;
         break;
       case Ordered:
-        // line 32 "../../../../../RestoAppTableStateMachine.ump"
-        // add provided seat to provided order item unless seat has already been added, in which case nothing needs to be done
+        // line 38 "../../../../../RestoAppTableStateMachine.ump"
+        if(i != null && s != null)
+                s.addOrderItem(i);
+            // add provided seat to provided order item unless seat has already been added, in which case nothing needs to be done
         setStatus(Status.Ordered);
         wasEventProcessed = true;
         break;
@@ -271,7 +281,7 @@ public class Table implements Serializable
     switch (aStatus)
     {
       case NothingOrdered:
-        // line 20 "../../../../../RestoAppTableStateMachine.ump"
+        // line 23 "../../../../../RestoAppTableStateMachine.ump"
         if (!o.removeTable(this)) {
                if (o.numberOfTables() == 1) {
                   o.delete();
@@ -283,7 +293,7 @@ public class Table implements Serializable
       case Ordered:
         if (allSeatsBilled())
         {
-        // line 54 "../../../../../RestoAppTableStateMachine.ump"
+        // line 71 "../../../../../RestoAppTableStateMachine.ump"
           
           setStatus(Status.Available);
           wasEventProcessed = true;
@@ -307,16 +317,20 @@ public class Table implements Serializable
       case Ordered:
         if (iIsLastItem(i))
         {
-        // line 35 "../../../../../RestoAppTableStateMachine.ump"
-          // delete order item
+        // line 43 "../../../../../RestoAppTableStateMachine.ump"
+          if(i !=null)
+                i.delete();
+            // delete order item
           setStatus(Status.NothingOrdered);
           wasEventProcessed = true;
           break;
         }
         if (!(iIsLastItem(i)))
         {
-        // line 38 "../../../../../RestoAppTableStateMachine.ump"
-          // delete order item
+        // line 48 "../../../../../RestoAppTableStateMachine.ump"
+          if(i !=null)
+                i.delete();
+            // delete order item
           setStatus(Status.Ordered);
           wasEventProcessed = true;
           break;
@@ -337,8 +351,13 @@ public class Table implements Serializable
     switch (aStatus)
     {
       case Ordered:
-        // line 41 "../../../../../RestoAppTableStateMachine.ump"
-        // delete all order items of the table
+        // line 53 "../../../../../RestoAppTableStateMachine.ump"
+        for(Order t : orders){
+                List<OrderItem> orderItems = t.getOrderItems();
+                for(OrderItem t1 : orderItems)
+                    t1.delete();
+            }
+            // delete all order items of the table
         setStatus(Status.NothingOrdered);
         wasEventProcessed = true;
         break;
@@ -357,7 +376,7 @@ public class Table implements Serializable
     switch (aStatus)
     {
       case Ordered:
-        // line 44 "../../../../../RestoAppTableStateMachine.ump"
+        // line 61 "../../../../../RestoAppTableStateMachine.ump"
         // create a new bill with the provided order and seat; if the provided seat is already assigned to
             // another bill for the current order, then the seat is first removed from the other bill and if no seats
             // are left for the bill, the bill is deleted
@@ -379,7 +398,7 @@ public class Table implements Serializable
     switch (aStatus)
     {
       case Ordered:
-        // line 49 "../../../../../RestoAppTableStateMachine.ump"
+        // line 66 "../../../../../RestoAppTableStateMachine.ump"
         // add provided seat to provided bill unless seat has already been added, in which case nothing needs
             // to be done; if the provided seat is already assigned to another bill for the current order, then the
             // seat is first removed from the other bill and if no seats are left for the bill, the bill is deleted
@@ -915,9 +934,10 @@ public class Table implements Serializable
   /**
    * check that the provided quantity is an integer greater than 0
    */
-  // line 61 "../../../../../RestoAppTableStateMachine.ump"
+  // line 78 "../../../../../RestoAppTableStateMachine.ump"
    private boolean quantityIsPositive(int quantity){
-    // TODO
+    if(quantity>0)
+        return true;
       return false;
   }
 
@@ -925,20 +945,27 @@ public class Table implements Serializable
   /**
    * check that the provided order item is the last item of the current order of the table
    */
-  // line 67 "../../../../../RestoAppTableStateMachine.ump"
+  // line 85 "../../../../../RestoAppTableStateMachine.ump"
    private boolean iIsLastItem(OrderItem i){
-    // TODO
-      return false;
+    Order aOrder = orders.get(orders.size()-1);
+        return aOrder.getOrderItem(aOrder.numberOfOrderItems()).equals(i);
   }
 
 
   /**
    * check that all seats of the table have a bill that belongs to the current order of the table
    */
-  // line 73 "../../../../../RestoAppTableStateMachine.ump"
+  // line 91 "../../../../../RestoAppTableStateMachine.ump"
    private boolean allSeatsBilled(){
-    // TODO
-      return false;
+    boolean result =false;
+      for(Seat seat : seats){
+          List<Bill> bills = seat.getBills();
+          for(Bill bill : bills){
+              if(!orders.contains(bill.getOrder()))
+                return false;
+          }
+      }
+      return true;
   }
 
 

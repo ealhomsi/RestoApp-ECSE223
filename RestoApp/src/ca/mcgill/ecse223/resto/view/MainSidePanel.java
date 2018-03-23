@@ -35,6 +35,7 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		btnReserved.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
 		btnReserved.setBackground(Color.white);
 		btnReserved.setBounds(100, 435, 240, 80);
+		btnReserved.addActionListener(this);
 		this.add(btnReserved);
 
 		JButton btnBill = new JButton("BILL");
@@ -81,6 +82,7 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 	// if the source is combo box
+//		System.out.println(e.getActionCommand());
 		if (e.getSource() == comboBox) {
 			int option = comboBox.getSelectedIndex();
 			if(option == 0)
@@ -89,6 +91,12 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 			this.page.updateSidePanels();
 		} else if(e.getSource() == btnMenu) {
 			this.page.setRightIndex(6);
+			this.page.updateSidePanels();
+		}
+		
+		if(e.getActionCommand().equals("RESERVATION")){
+//			System.out.print("hello");
+			this.page.setRightIndex(8);
 			this.page.updateSidePanels();
 		}
 	}
