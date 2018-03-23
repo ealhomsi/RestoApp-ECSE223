@@ -12,9 +12,12 @@ class Table {
       }
       NothingOrdered {
          orderItem(int quantity, Order o, Seat s, PricedMenuItem i) [quantityIsPositive(quantity)] / {
+             OrderItem newOrder = new OrderItem(quantity, i , o , new Seat[] = {s});
             // create a new order item with the provided quantity, order, seat, and priced menu item
          } -> Ordered; 
          addToOrderItem(OrderItem i, Seat s) / {
+             if(i != null && s != null)
+                 s.addOrderItem(i);
             // add provided seat to provided order item unless seat has already been added, in which case nothing needs to be done
          } -> Ordered;
          endOrder(Order o) / {
@@ -27,18 +30,32 @@ class Table {
       }
       Ordered {
          orderItem(int quantity, Order o, Seat s, PricedMenuItem i) [quantityIsPositive(quantity)] / {
+             Seat[] seats =new Seats[1];
+             seats[0]=s;
+            OrderItem newOrder = new OrderItem(quantity, i , o , seats);
             // create a new order item with the provided quantity, order, seat, and priced menu item
          } -> Ordered; 
          addToOrderItem(OrderItem i, Seat s) / {
+            if(i != null && s != null)
+                s.addOrderItem(i);
             // add provided seat to provided order item unless seat has already been added, in which case nothing needs to be done
          } -> Ordered;
          cancelOrderItem(OrderItem i) [iIsLastItem(i)] / {
+            if(i !=null)
+                i.delete();
             // delete order item
          } -> NothingOrdered;
          cancelOrderItem(OrderItem i) [!iIsLastItem(i)] / {
+            if(i !=null)
+                i.delete();
             // delete order item
          } -> Ordered;
          cancelOrder() / {
+            for(Order t : orders){
+                List<OrderItem> orderItems = aOrder.getOrderItems();
+                for(OrderItem t : orderItems)
+                    t.delete();
+            }
             // delete all order items of the table
          } -> NothingOrdered;
          billForSeat(Order o, Seat s) / {
@@ -58,20 +75,28 @@ class Table {
    
    // check that the provided quantity is an integer greater than 0
    private boolean quantityIsPositive(int quantity) {
-      // TODO
+      if(quantity>0)
+        return true;
       return false;
    }
 
    // check that the provided order item is the last item of the current order of the table
    private boolean iIsLastItem(OrderItem i) {
-      // TODO
-      return false;
+        Order aOrder = orders[orders.size()-1];
+        return aOrder.getOrderItem(aOrder.numberOfOrderItems()).equals(i);
    }
 
    // check that all seats of the table have a bill that belongs to the current order of the table 
    private boolean allSeatsBilled() {
-      // TODO
-      return false;
+        boolean result =false;
+      for(Seat seat : seats){
+          List<Bill> bills = seat.getBills;
+          for(Bill bill : bills){
+              if(!orders.contain(bill.getOrder()))
+                return false;
+          }
+      }
+      return true;
    }
 
 }
