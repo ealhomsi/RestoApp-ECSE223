@@ -3,6 +3,8 @@ package ca.mcgill.ecse223.resto.controller;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Date;
+import java.sql.Time;
 
 import ca.mcgill.ecse223.resto.application.RestoApplication;
 import ca.mcgill.ecse223.resto.model.MenuItem;
@@ -11,6 +13,7 @@ import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
 import ca.mcgill.ecse223.resto.model.RestoApp;
 import ca.mcgill.ecse223.resto.model.Seat;
 import ca.mcgill.ecse223.resto.model.Table;
+import ca.mcgill.ecse223.resto.model.Reservation;
 import ca.mcgill.ecse223.resto.view.TableView;
 
 public class Controller {
@@ -403,6 +406,60 @@ public class Controller {
 			}
 		}
 		return result;
-}
+	}
+
+	public static void reserve(Date date, Time time, int numberInParty, String contactName, String contactEmailAddress, String contactPhoneNumber, List<Table> tables) throws InvalidInputException{
+		//check for date and time for null values
+		if(date == null || time == null){
+			throw new InvalidInputException("date/time values might be null");
+		}
+		
+		//adds all strings to a list of input to be validated
+		List<String> inputs = new ArrayList<>();
+		inputs.add(contactName);
+		inputs.add(contactEmailAddress);
+		inputs.add(contactPhoneNumber);
+
+		//checks for negative quantity
+		if(numberInParty < 0){
+			throw new InvalidInputException("negative quantity");
+		}
+
+		//checks a list of input for an empty/null Strings
+		checkInput(inputs);
+
+		RestoApp restoApp = RestoApplication.getRestoApp();
+		 
+		int seatCapacity = 0;
+		List<Table> currentTables = restoApp.getCurrentTables();
+		
+		for(Table table : tables){
+			if(!currentTables.contains(table)){
+				throw new InvalidInputException("invalid table parameter");
+			}
+			
+			seatCapacity += table.numberOfCurrentSeats();
+			List<Reservation> reservations = table.getReservations();
+
+			for(Reservation reservation : reservations){
+				if(reservation.doesOverlap(date, time)){
+					throw new InvalidInputException("time/date overlap");
+				}
+			}
+		}
+		if(seatCapacity < numberInParty){
+			throw new InvalidInputException("seat capactiy is less than the number in party");
+		}
+		new Reservation(date, time, numberInParty, contactName, contactEmailAddress, contactPhoneNumber, restoApp, tables.toArray(new Table[tables.size()]));
+		RestoApplication.save();
+
+	} 
+
+	private static void checkInput(List<String> inputs) throws InvalidInputException{
+		for(String input : inputs){
+			if(input == null || input.length() == 0)
+				throw new InvalidInputException("null or empty values");
+		}
+	}
 
 }
