@@ -23,6 +23,9 @@ class Reservation {
    contactPhoneNumber;
    autounique reservationNumber;
    * reservations -- 1..* Table tables; // only from currentTables
+   public boolean doesOverlap(Date date, Time time){
+       return Math.abs((this.date.getTime() + this.time.getTime()) - (date.getTime() + time.getTime())) < 7200000;
+   }
 }
 
 class Table {

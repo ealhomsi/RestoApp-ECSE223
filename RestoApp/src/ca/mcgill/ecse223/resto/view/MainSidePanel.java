@@ -52,6 +52,8 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		comboBox.addItem("Remove Tables");
 		comboBox.addItem("Update Table");
 		comboBox.addItem("Change Table Location");
+		comboBox.addItem("New Order");
+		comboBox.addItem("End Order");
 		comboBox.setFont(new Font("Comiec sans MS", Font.PLAIN, 20));
 		this.add(comboBox);
 		comboBox.addActionListener(this);
@@ -90,13 +92,13 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 			this.page.setRightIndex(++option);
 			this.page.updateSidePanels();
 		} else if(e.getSource() == btnMenu) {
-			this.page.setRightIndex(6);
+			this.page.setRightIndex(8);
 			this.page.updateSidePanels();
 		}
 		
 		if(e.getActionCommand().equals("RESERVATION")){
 //			System.out.print("hello");
-			this.page.setRightIndex(8);
+			this.page.setRightIndex(10);
 			this.page.updateSidePanels();
 		}
 	}

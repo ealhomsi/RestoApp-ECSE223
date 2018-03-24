@@ -33,6 +33,8 @@ public class DrawingPanel extends SidePanel  {
 	@Override
 	public void updateView() {
 		// TODO Auto-generated method stub
+		this.revalidate();
+		this.repaint();
 		
 	}
 }
