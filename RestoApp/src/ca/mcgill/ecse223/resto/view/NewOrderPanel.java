@@ -56,7 +56,7 @@ public class NewOrderPanel extends SidePanel implements ActionListener {
 		tableNumbers.setBounds(250, 400, 300, 50);
 		this.add(tableNumbers);
 
-		TableNumbersLabel = new JLabel("Table Numbers Comma seperated with no spaces");
+		TableNumbersLabel = new JLabel("Table Numbers Comma seperated");
 		TableNumbersLabel.setBounds(75, 200, 700, 300);
 		TableNumbersLabel.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
 		this.add(TableNumbersLabel);
@@ -98,9 +98,6 @@ public class NewOrderPanel extends SidePanel implements ActionListener {
 
 				try {
 					Controller.startOrder(tables);
-					for(TableView view : views) {
-						view.setColor(Color.GREEN);
-					}
 					this.page.updateSidePanels();
 				} catch (InvalidInputException exception) {
 					JOptionPane.showMessageDialog(this, exception.getMessage());

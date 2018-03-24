@@ -109,6 +109,8 @@ public class Controller {
 	public List<OrderView> getAllCurrentOrders() {
 		List<OrderView> orders = new ArrayList<OrderView>();
 		for (Order order : service.getCurrentOrders()) {
+			if(order.getTables().size() == 0)
+				continue;
 			orders.add(convertToViewObject(order));
 		}
 		return orders;

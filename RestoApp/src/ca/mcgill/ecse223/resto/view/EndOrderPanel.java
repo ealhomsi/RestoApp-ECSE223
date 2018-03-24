@@ -89,6 +89,6 @@ public class EndOrderPanel extends SidePanel implements ActionListener {
 			}
 		}
 		
-		this.updateView();
+		this.page.updateSidePanels();
 	}
 }
