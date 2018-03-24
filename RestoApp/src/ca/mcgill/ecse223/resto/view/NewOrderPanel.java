@@ -65,7 +65,6 @@ public class NewOrderPanel extends SidePanel implements ActionListener {
 
 	public void clearInputs() {
 		tableNumbers.setText(null);
-		this.page.updateSidePanels();
 	}
 
 	@Override

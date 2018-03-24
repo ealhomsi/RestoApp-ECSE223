@@ -1,19 +1,20 @@
 package ca.mcgill.ecse223.resto.controller;
 
 import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Date;
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import ca.mcgill.ecse223.resto.application.RestoApplication;
 import ca.mcgill.ecse223.resto.model.MenuItem;
-import ca.mcgill.ecse223.resto.model.Order;
 import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
+import ca.mcgill.ecse223.resto.model.Order;
+import ca.mcgill.ecse223.resto.model.Reservation;
 import ca.mcgill.ecse223.resto.model.RestoApp;
 import ca.mcgill.ecse223.resto.model.Seat;
 import ca.mcgill.ecse223.resto.model.Table;
-import ca.mcgill.ecse223.resto.model.Reservation;
+import ca.mcgill.ecse223.resto.view.OrderView;
 import ca.mcgill.ecse223.resto.view.TableView;
 
 public class Controller {
@@ -98,6 +99,19 @@ public class Controller {
 			tvs.add(convertToViewObject(t));
 		}
 		return tvs;
+	}
+	
+	/**
+	 * Give a list of all Orders views
+	 * 
+	 * @return list of all table views
+	 */
+	public List<OrderView> getAllCurrentOrders() {
+		List<OrderView> orders = new ArrayList<OrderView>();
+		for (Order order : service.getCurrentOrders()) {
+			orders.add(convertToViewObject(order));
+		}
+		return orders;
 	}
 
 	/**
@@ -191,6 +205,10 @@ public class Controller {
 		return new TableView(t);
 	}
 
+	OrderView convertToViewObject(Order t) {
+		return new OrderView(t);
+	}
+	
 	/** HELPER METHODS **/
 
 	/**
@@ -385,6 +403,14 @@ public class Controller {
 		}
 		
 		List<Table> tables = order.getTables();
+		
+		
+		for(int i=0; i<tables.size(); i++) {
+			Table table = tables.get(i);
+			if(table != null) {
+				table.endOrder(order);
+			}
+		}
 		
 		for(Table table : tables) 
 			table.endOrder(order);

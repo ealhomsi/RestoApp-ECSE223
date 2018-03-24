@@ -43,6 +43,18 @@ public class TableView {
 			this.seats.add(new SeatView(s, points.get(i).x, points.get(i).y));
 			i++;
 		}
+		
+		switch(table.getStatus()) {
+		case NothingOrdered:
+			this.color = Color.BLUE;
+			
+		case Ordered:
+			this.color = Color.RED;
+			break;
+			
+		default:
+			break;
+		}
 	}
 
 	public int getNumber() {
