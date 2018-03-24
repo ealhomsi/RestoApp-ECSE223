@@ -57,16 +57,17 @@ public class EndOrderPanel extends SidePanel implements ActionListener {
 		orders.setBounds(120, 240, 400, 50);
 		orders.addActionListener(this);
 		this.add(orders);
-
 	}
 
 	@Override
 	public void updateView() {
+		if(this.page.getRightIndex() != 7)
+			return;
 		this.orders.removeAllItems();
 		for (OrderView t : controller.getAllCurrentOrders()) {
 			orders.addItem(t);
 		}
-
+		this.orders.setSelectedIndex(0);
 		this.revalidate();
 		this.repaint();
 	}
