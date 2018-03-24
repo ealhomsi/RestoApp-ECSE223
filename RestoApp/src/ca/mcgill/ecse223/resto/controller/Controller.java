@@ -10,10 +10,12 @@ import ca.mcgill.ecse223.resto.application.RestoApplication;
 import ca.mcgill.ecse223.resto.model.MenuItem;
 import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
 import ca.mcgill.ecse223.resto.model.Order;
+import ca.mcgill.ecse223.resto.model.PricedMenuItem;
 import ca.mcgill.ecse223.resto.model.Reservation;
 import ca.mcgill.ecse223.resto.model.RestoApp;
 import ca.mcgill.ecse223.resto.model.Seat;
 import ca.mcgill.ecse223.resto.model.Table;
+import ca.mcgill.ecse223.resto.model.Table.Status;
 import ca.mcgill.ecse223.resto.view.OrderView;
 import ca.mcgill.ecse223.resto.view.TableView;
 
@@ -357,16 +359,24 @@ public class Controller {
 		RestoApplication.save();
 
 	}
+	
+	/**
+	 * this method starts an order to a list of tables
+	 * @param tables is the list of tables in question
+	 * @throws InvalidInputException thorws exception on different error cases
+	 */
 	public static void startOrder(List<Table> tables) throws InvalidInputException{
 		RestoApp service = RestoApplication.getRestoApp();
 		if(tables == null)
 			throw new InvalidInputException("No tables given");
+		
 		List<Table> currentTables = service.getCurrentTables();
-		for(Table t: currentTables){
+		for(Table t: tables){
 			boolean contains = currentTables.contains(t);
 			if(contains == false)
 			throw new InvalidInputException("Table given not in currentTables");
 		}
+		
 		boolean orderCreated = false;
 		Order newOrder = null;
 		for(Table t : tables){
@@ -384,17 +394,18 @@ public class Controller {
 				}
 			}
 		}
+		
 		if(!orderCreated){
 			throw new InvalidInputException("The order couldn't be created");
 		}
+		
 		service.addCurrentOrder(newOrder);
 		RestoApplication.save();
 	}
 	
 	public static void endOrder(Order order) throws InvalidInputException {
-		
-		RestoApp r = RestoApplication.getRestoApp();
-		List<Order> currentOrders = r.getCurrentOrders();
+		RestoApp service = RestoApplication.getRestoApp();
+		List<Order> currentOrders = service.getCurrentOrders();
 		
 		if(order == null) { 
 			throw new InvalidInputException("Order is invalid");
@@ -409,33 +420,39 @@ public class Controller {
 		
 		for(int i=0; i<tables.size(); i++) {
 			Table table = tables.get(i);
-			if(table != null) {
+			if(table != null && table.numberOfOrders() >0 && table.getOrder(table.numberOfOrders() -1).equals(order)) {
 				table.endOrder(order);
 			}
 		}
-		
-		for(Table table : tables) 
-			table.endOrder(order);
-		
-		
+	
 		if(allTablesAvailableOrDifferentCurrentOrder(tables, order))
-			r.removeCurrentOrder(order);
+			service.removeCurrentOrder(order);
 		
 		RestoApplication.save();
 	}
 	
 	public static boolean allTablesAvailableOrDifferentCurrentOrder(List <Table> tables, Order order) {
-		RestoApp r = RestoApplication.getRestoApp();
 		boolean result = false;
 		
 		for(Table table : tables) {
-			if( table.getStatusFullName().contentEquals("Available") || !table.getOrder(table.numberOfOrders()-1).equals(order)) {
+			if( table.getStatus() == Status.Available|| !table.getOrder(table.numberOfOrders()-1).equals(order)) {
 				result = true;
 			}
 		}
 		return result;
 	}
 
+	/**
+	 * this method does reservation
+	 * @param date
+	 * @param time
+	 * @param numberInParty
+	 * @param contactName
+	 * @param contactEmailAddress
+	 * @param contactPhoneNumber
+	 * @param tables
+	 * @throws Exception
+	 */
 	public static void reserve(Date date, Time time, int numberInParty, String contactName, String contactEmailAddress, String contactPhoneNumber, List<Table> tables) throws Exception{
 		//check for date and time for null values
 		if(date == null || time == null){
@@ -483,11 +500,27 @@ public class Controller {
 
 	} 
 
+	/**
+	 * this method checks input
+	 * @param inputs
+	 * @throws InvalidInputException
+	 */
 	private static void checkInput(List<String> inputs) throws InvalidInputException{
 		for(String input : inputs){
 			if(input == null || input.length() == 0)
 				throw new InvalidInputException("null or empty values");
 		}
+	}
+	
+	public PricedMenuItem getPricedMenuItem(String name) throws InvalidInputException {
+		
+		for(PricedMenuItem m: this.service.getPricedMenuItems()) {
+			if(m.getMenuItem().getName().equals(name)) {
+				return m;
+			}
+		}
+		
+		throw new InvalidInputException("Priced Menu Item " + name + " was not found");
 	}
 
 }

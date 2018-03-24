@@ -92,7 +92,7 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 			this.page.setRightIndex(++option);
 			this.page.updateSidePanels();
 		} else if(e.getSource() == btnMenu) {
-			this.page.setRightIndex(8);
+			this.page.setRightIndex(9);
 			this.page.updateSidePanels();
 		}
 		

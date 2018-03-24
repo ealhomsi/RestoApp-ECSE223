@@ -93,16 +93,14 @@ public class NewOrderPanel extends SidePanel implements ActionListener {
 			ArrayList<TableView> views = new ArrayList<>();
 			for (int i : numbers) {
 				Table t = this.controller.getTableByNumber(i).getTable();
-				views.add(this.controller.getTableByNumber(i));
 				tables.add(t);
-
-				try {
-					Controller.startOrder(tables);
-					this.page.updateSidePanels();
-				} catch (InvalidInputException exception) {
-					JOptionPane.showMessageDialog(this, exception.getMessage());
-					exception.printStackTrace();
-				}
+			}
+			try {
+				Controller.startOrder(tables);
+				this.page.updateSidePanels();
+			} catch (InvalidInputException exception) {
+				JOptionPane.showMessageDialog(this, exception.getMessage());
+				exception.printStackTrace();
 			}
 		}
 	}

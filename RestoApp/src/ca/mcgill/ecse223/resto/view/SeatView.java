@@ -1,7 +1,9 @@
 package ca.mcgill.ecse223.resto.view;
 
 import java.awt.Color;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 
 import javax.swing.JComponent;
 
@@ -13,26 +15,37 @@ import ca.mcgill.ecse223.resto.model.Seat;
  * @author student
  *
  */
-public class SeatView  {
-	private Seat seat;
+public class SeatView {
+	private int id;
+private Seat seat;
 	private final static int RADIUS = 20;
 	private int x;
 	private int y;
 	private Color color = Color.RED;
 
-	public SeatView(Seat seat, int x, int y) {
+	public SeatView(Seat seat, int x, int y, int id) {
 		super();
 		this.seat = seat;
 		this.x = x;
 		this.y = y;
+		this.id = id;
 	}
 
-	public SeatView(Seat seat, int x, int y, Color color) {
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public SeatView(Seat seat, int x, int y, Color color, int id) {
 		super();
 		this.seat = seat;
 		this.x = x;
 		this.y = y;
 		this.color = color;
+		this.id = id;
 	}
 
 	public int getY() {
@@ -74,5 +87,17 @@ public class SeatView  {
 	public void drawSeat(Graphics g) {
 		g.setColor(color);
 		g.fillOval(x, y, RADIUS, RADIUS);
+
+		// draw text in the middle of the Seat
+		Rectangle rect = new Rectangle(getX(), getY(), getRadius(), getRadius());
+		FontMetrics metrics = g.getFontMetrics(g.getFont());
+		String text = this.getId() + " ";
+		// Determine the X coordinate for the text
+		int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2 + SeatView.getRadius()/8;
+		// Determine the Y coordinate for the text
+		int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
+		g.setColor(Color.WHITE);
+		// Draw the String
+		g.drawString(text, x, y);
 	}
 }

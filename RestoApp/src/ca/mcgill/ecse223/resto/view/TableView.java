@@ -40,18 +40,17 @@ public class TableView {
 
 		int i = 0;
 		for (Seat s : table.getCurrentSeats()) {
-			this.seats.add(new SeatView(s, points.get(i).x, points.get(i).y));
+			this.seats.add(new SeatView(s, points.get(i).x, points.get(i).y, i));
 			i++;
 		}
 		
 		switch(table.getStatus()) {
 		case NothingOrdered:
-			this.color = Color.BLUE;
-			
-		case Ordered:
-			this.color = Color.RED;
+			this.color = Color.lightGray;
 			break;
-			
+		case Ordered:
+			this.color = Color.BLUE;
+			break;
 		default:
 			break;
 		}
@@ -105,7 +104,7 @@ public class TableView {
 		int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
 		g.setColor(Color.WHITE);
 		// Draw the String
-		g.drawString(text, x, y);
+		g.drawString(text , x, y);
 	}
 
 	/** Helper methods for automatic seats placing **/

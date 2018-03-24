@@ -67,6 +67,7 @@ public class EndOrderPanel extends SidePanel implements ActionListener {
 		for (OrderView t : controller.getAllCurrentOrders()) {
 			orders.addItem(t);
 		}
+		
 		this.orders.setSelectedIndex(0);
 		this.revalidate();
 		this.repaint();
@@ -84,12 +85,13 @@ public class EndOrderPanel extends SidePanel implements ActionListener {
 			Order o = ov.getOrder();
 			try {
 				Controller.endOrder(o);
+				this.page.updateSidePanels();
 			} catch (InvalidInputException exception) {
 				JOptionPane.showMessageDialog(this, exception.getMessage());
 				exception.printStackTrace();
 			}
 		}
 		
-		this.page.updateSidePanels();
+		
 	}
 }
