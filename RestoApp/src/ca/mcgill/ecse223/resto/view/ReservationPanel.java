@@ -5,14 +5,18 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
+import java.sql.Date;
+import java.sql.Time;
+import java.util.StringTokenizer;
+import java.util.List;
+import java.util.ArrayList;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
+
+import javax.swing.*;
 
 import ca.mcgill.ecse223.resto.controller.Controller;
-import ca.mcgill.ecse223.resto.model.Reservation;
+import ca.mcgill.ecse223.resto.model.Table;
+
 
 @SuppressWarnings("serial")
 public class ReservationPanel extends SidePanel implements ActionListener{
@@ -196,13 +200,32 @@ public class ReservationPanel extends SidePanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		//JButton selectedButton = (JButton) e.getSource();
 		if(e.getSource() == addBtn){
-			//new Reservation();
-			Calendar eventDate = Calendar.getInstance();
-			//event.set();
+			try {
+				//calendar eventDate object to hold day, month and year
+				Calendar eventDate = Calendar.getInstance();
+				eventDate.set(Integer.parseInt(yearDateField.getText()), Integer.parseInt(monthDateField.getText()) - 1, Integer.parseInt(dayDateField.getText()));
 
+				//eventTime holds the number of milliseconds since the start of the day -- done by converting hours and minutes to milliseconds
+				long eventTime = Long.parseLong(hourTextField.getText()) * 3600000 + Long.parseLong(minuteTextField.getText()) * 60000;
+				Time time = new Time(eventTime);
+
+				//tokenizer to take a list of table number from the user
+				StringTokenizer token = new StringTokenizer(tablesAssignedField.getText(), " ");
+				List<Table> tables = new ArrayList<>();
+
+				//scans over list of input tables
+				while (token.hasMoreTokens()) {
+					tables.add(Table.getWithNumber(Integer.parseInt(token.nextToken())));
+				}
+
+				//calls reserve method in controller
+				this.controller.reserve(eventDate.getTime(), time, Integer.parseInt(numberOfPersonsTextField.getText()),
+						nameTextField.getText(), emailTextField.getText(), phoneNumberTextField.getText(), tables);
+			}catch(Exception e2){
+				JOptionPane.showMessageDialog(this, e2.getMessage());
+			}
 		}
 		if(e.getSource() == backBtn) {
-			System.out.println("e");
 			this.page.setRightIndex(0);
 			this.page.updateSidePanels();
 		}
