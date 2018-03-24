@@ -185,6 +185,7 @@ public class ReservationPanel extends SidePanel implements ActionListener{
 		addBtn.setBounds(330, 603, 220, 50);
 		addBtn.setBackground(Color.white);
 		addBtn.setFont(new Font("Comic sans MS", Font.PLAIN, 18));
+		addBtn.addActionListener(this);
 		add(addBtn);
 		
 		backBtn = new JButton("BACK");
