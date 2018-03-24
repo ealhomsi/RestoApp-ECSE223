@@ -3,7 +3,7 @@ package ca.mcgill.ecse223.resto.controller;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.Date;
+import java.util.Date;
 import java.sql.Time;
 
 import ca.mcgill.ecse223.resto.application.RestoApplication;
@@ -408,7 +408,7 @@ public class Controller {
 		return result;
 	}
 
-	public static void reserve(Date date, Time time, int numberInParty, String contactName, String contactEmailAddress, String contactPhoneNumber, List<Table> tables) throws InvalidInputException{
+	public static void reserve(Date date, Time time, int numberInParty, String contactName, String contactEmailAddress, String contactPhoneNumber, List<Table> tables) throws Exception{
 		//check for date and time for null values
 		if(date == null || time == null){
 			throw new InvalidInputException("date/time values might be null");

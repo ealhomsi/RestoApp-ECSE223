@@ -3,7 +3,7 @@
 
 package ca.mcgill.ecse223.resto.model;
 import java.io.Serializable;
-import java.sql.Date;
+//import java.sql.Date;
 import java.sql.Time;
 import java.util.*;
 
