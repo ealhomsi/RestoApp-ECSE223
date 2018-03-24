@@ -35,8 +35,8 @@ public class ReservationPanel extends SidePanel implements ActionListener{
 	private JLabel tablesAssignedLabel;
 	private JLabel emailLabel;
 
-	private JComboBox hourCombo;
-	private JComboBox minCombo;
+	private JTextField hourTextField;
+	private JTextField minuteTextField;
 
 	private JButton addBtn;
 	private JButton backBtn;
@@ -100,8 +100,9 @@ public class ReservationPanel extends SidePanel implements ActionListener{
 		//month text field
 		monthDateField = new JTextField();
 		monthDateField.setBounds(300, 150, 61, 40);
-		add(monthDateField);
 		monthDateField.setColumns(10);
+		monthDateField.setText("mm");
+		add(monthDateField);
 
 		//name text field
 		nameTextField = new JTextField();
@@ -115,7 +116,7 @@ public class ReservationPanel extends SidePanel implements ActionListener{
 		numberOfPersonsTextField.setBounds(300, 317, 250, 40);
 		add(numberOfPersonsTextField);
 
-		//phonenumber text field
+		//phone number text field
 		phoneNumberTextField = new JTextField();
 		phoneNumberTextField.setColumns(10);
 		phoneNumberTextField.setBounds(300, 373, 250, 40);
@@ -131,12 +132,14 @@ public class ReservationPanel extends SidePanel implements ActionListener{
 		dayDateField = new JTextField();
 		dayDateField.setColumns(10);
 		dayDateField.setBounds(396, 150, 61, 40);
+		dayDateField.setText("dd");
 		add(dayDateField);
 
 		//date field with year value
 		yearDateField = new JTextField();
 		yearDateField.setColumns(10);
 		yearDateField.setBounds(489, 150, 61, 40);
+		yearDateField.setText("yy");
 		add(yearDateField);
 		
 		//label for slash	(between month and day)
@@ -152,15 +155,17 @@ public class ReservationPanel extends SidePanel implements ActionListener{
 		add(secondSlash);
 
 		//
-		hourCombo = new JComboBox();
-		hourCombo.setBounds(300, 207, 100, 40);
-		hourCombo.setBackground(Color.white);
-		add(hourCombo);
+		hourTextField = new JTextField();
+		hourTextField.setBounds(300, 207, 100, 40);
+		//hourCombo.setBackground(Color.white);
+		hourTextField.setText("hh");
+		add(hourTextField);
 		
-		minCombo = new JComboBox();
-		minCombo.setBounds(426, 207, 100, 40);
-		minCombo.setBackground(Color.white);
-		add(minCombo);
+		minuteTextField = new JTextField();
+		minuteTextField.setBounds(426, 207, 100, 40);
+		//minuteTextField.setBackground(Color.white);
+		minuteTextField.setText("mm");
+		add(minuteTextField);
 		
 		JLabel colonLabel = new JLabel(":");
 		colonLabel.setBounds(405, 205, 30, 30);
@@ -192,6 +197,9 @@ public class ReservationPanel extends SidePanel implements ActionListener{
 		//JButton selectedButton = (JButton) e.getSource();
 		if(e.getSource() == addBtn){
 			//new Reservation();
+			Calendar eventDate = Calendar.getInstance();
+			//event.set();
+
 		}
 		if(e.getSource() == backBtn) {
 			System.out.println("e");
