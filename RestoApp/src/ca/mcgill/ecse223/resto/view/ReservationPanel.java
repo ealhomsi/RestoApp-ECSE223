@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -11,20 +12,37 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import ca.mcgill.ecse223.resto.controller.Controller;
+import ca.mcgill.ecse223.resto.model.Reservation;
 
 @SuppressWarnings("serial")
 public class ReservationPanel extends SidePanel implements ActionListener{
 	
 	private JTextField nameTextField;
-	private JTextField dateTextField;
-	private JTextField timeTextField;
+	private JTextField numberOfPersonsTextField;
 	private JTextField phoneNumberTextField;
-	private JTextField tableAssignedTextField;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
+	private JTextField emailTextField;
+	private JTextField monthDateField;
+	private JTextField dayDateField;
+	private JTextField yearDateField;
+	private JTextField tablesAssignedField;
+
+	private JLabel reservationLabel;
+	private JLabel nameLabel;
+	private JLabel numberOfPersonsLabel;
+	private JLabel dateLabel;
+	private JLabel timeLabel;
+	private JLabel phoneNumberLabel;
+	private JLabel tablesAssignedLabel;
+	private JLabel emailLabel;
+
+	private JComboBox hourCombo;
+	private JComboBox minCombo;
+
+	private JButton addBtn;
 	private JButton backBtn;
-	
+
+
+
 	public Controller getController() {
 		return controller;
 	}
@@ -39,118 +57,129 @@ public class ReservationPanel extends SidePanel implements ActionListener{
 		setLayout(null);
 		
 		
-		JLabel reservationLabel = new JLabel("RESERVATION");
+		reservationLabel = new JLabel("RESERVATION");
 		reservationLabel.setBounds(15, 16, 300, 90);
 		reservationLabel.setFont(new Font("Comic sans MS", Font.PLAIN, 30));
 		add(reservationLabel);
 		
-		JLabel label = new JLabel("NAME:");
-		label.setBounds(30, 261, 200, 40);
-		label.setFont(new Font("Comic sans MS", Font.PLAIN, 18));
-		add(label);
+		nameLabel = new JLabel("NAME:");
+		nameLabel.setBounds(30, 261, 200, 40);
+		nameLabel.setFont(new Font("Comic sans MS", Font.PLAIN, 18));
+		add(nameLabel);
 		
-		JLabel label_1 = new JLabel("NUMBER OF PERSONS:");
-		label_1.setBounds(30, 317, 210, 40);
-		label_1.setFont(new Font("Comic sans MS", Font.PLAIN, 18));
-		add(label_1);
+		numberOfPersonsLabel = new JLabel("NUMBER OF PERSONS:");
+		numberOfPersonsLabel.setBounds(30, 317, 210, 40);
+		numberOfPersonsLabel.setFont(new Font("Comic sans MS", Font.PLAIN, 18));
+		add(numberOfPersonsLabel);
 		
-		JLabel label_2 = new JLabel("DATE :");
-		label_2.setBounds(30, 150, 200, 40);
-		label_2.setFont(new Font("Comic sans MS", Font.PLAIN, 18));
-		add(label_2);
+		dateLabel = new JLabel("DATE:");
+		dateLabel.setBounds(30, 150, 200, 40);
+		dateLabel.setFont(new Font("Comic sans MS", Font.PLAIN, 18));
+		add(dateLabel);
 		
-		JLabel label_3 = new JLabel("TIME:");
-		label_3.setBounds(30, 200, 200, 40);
-		label_3.setFont(new Font("Comic sans MS", Font.PLAIN, 18));
-		add(label_3);
+		timeLabel= new JLabel("TIME:");
+		timeLabel.setBounds(30, 200, 200, 40);
+		timeLabel.setFont(new Font("Comic sans MS", Font.PLAIN, 18));
+		add(timeLabel);
 		
-		JLabel label_4 = new JLabel("PHONE NUMBER:");
-		label_4.setBounds(30, 377, 200, 40);
-		label_4.setFont(new Font("Comic sans MS", Font.PLAIN, 18));
-		add(label_4);
+		phoneNumberLabel = new JLabel("PHONE NUMBER:");
+		phoneNumberLabel.setBounds(30, 377, 200, 40);
+		phoneNumberLabel.setFont(new Font("Comic sans MS", Font.PLAIN, 18));
+		add(phoneNumberLabel);
 		
-		JLabel label_5 = new JLabel("TABLE(S) ASSIGNED:");
-		label_5.setBounds(30, 481, 200, 40);
-		label_5.setFont(new Font("Comic sans MS", Font.PLAIN, 18));
-		add(label_5);
+		tablesAssignedLabel = new JLabel("TABLE(S) ASSIGNED:");
+		tablesAssignedLabel.setBounds(30, 481, 200, 40);
+		tablesAssignedLabel.setFont(new Font("Comic sans MS", Font.PLAIN, 18));
+		add(tablesAssignedLabel);
 		
-		JLabel label_6 = new JLabel("EMAIL:");
-		label_6.setBounds(30, 425, 200, 40);
-		label_6.setFont(new Font("Comic sans MS", Font.PLAIN, 18));
-		add(label_6);
-		
+		emailLabel = new JLabel("EMAIL:");
+		emailLabel.setBounds(30, 425, 200, 40);
+		emailLabel.setFont(new Font("Comic sans MS", Font.PLAIN, 18));
+		add(emailLabel);
+
+		//month text field
+		monthDateField = new JTextField();
+		monthDateField.setBounds(300, 150, 61, 40);
+		add(monthDateField);
+		monthDateField.setColumns(10);
+
+		//name text field
 		nameTextField = new JTextField();
-		nameTextField.setBounds(300, 150, 61, 40);
-		add(nameTextField);
 		nameTextField.setColumns(10);
-		
-		dateTextField = new JTextField();
-		dateTextField.setColumns(10);
-		dateTextField.setBounds(300, 261, 250, 40);
-		add(dateTextField);
-		
-		timeTextField = new JTextField();
-		timeTextField.setColumns(10);
-		timeTextField.setBounds(300, 317, 250, 40);
-		add(timeTextField);
-		
+		nameTextField.setBounds(300, 261, 250, 40);
+		add(nameTextField);
+
+		//numberOfPersons text field
+		numberOfPersonsTextField = new JTextField();
+		numberOfPersonsTextField.setColumns(10);
+		numberOfPersonsTextField.setBounds(300, 317, 250, 40);
+		add(numberOfPersonsTextField);
+
+		//phonenumber text field
 		phoneNumberTextField = new JTextField();
 		phoneNumberTextField.setColumns(10);
 		phoneNumberTextField.setBounds(300, 373, 250, 40);
 		add(phoneNumberTextField);
+
+		//email text field
+		emailTextField = new JTextField();
+		emailTextField.setColumns(10);
+		emailTextField.setBounds(300, 433, 250, 40);
+		add(emailTextField);
+
+		//date field with day value
+		dayDateField = new JTextField();
+		dayDateField.setColumns(10);
+		dayDateField.setBounds(396, 150, 61, 40);
+		add(dayDateField);
+
+		//date field with year value
+		yearDateField = new JTextField();
+		yearDateField.setColumns(10);
+		yearDateField.setBounds(489, 150, 61, 40);
+		add(yearDateField);
 		
-		tableAssignedTextField = new JTextField();
-		tableAssignedTextField.setColumns(10);
-		tableAssignedTextField.setBounds(300, 433, 250, 40);
-		add(tableAssignedTextField);
-		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(396, 150, 61, 40);
-		add(textField);
-		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(489, 150, 61, 40);
-		add(textField_1);
-		
-		JLabel lbl1 = new JLabel("/");
-		lbl1.setBounds(370, 140, 30, 50);
-		lbl1.setFont(new Font("Comic sans MS", Font.PLAIN, 40));
-		add(lbl1);
-		
-		JLabel lbl2 = new JLabel("/");
-		lbl2.setBounds(460, 140, 30, 50);
-		lbl2.setFont(new Font("Comic sans MS", Font.PLAIN, 40));
-		add(lbl2);
-		
-		JComboBox hourCombo = new JComboBox();
+		//label for slash	(between month and day)
+		JLabel firstSlash = new JLabel("/");
+		firstSlash.setBounds(370, 140, 30, 50);
+		firstSlash.setFont(new Font("Comic sans MS", Font.PLAIN, 40));
+		add(firstSlash);
+
+		//label for second slash (between day and year)
+		JLabel secondSlash = new JLabel("/");
+		secondSlash.setBounds(460, 140, 30, 50);
+		secondSlash.setFont(new Font("Comic sans MS", Font.PLAIN, 40));
+		add(secondSlash);
+
+		//
+		hourCombo = new JComboBox();
 		hourCombo.setBounds(300, 207, 100, 40);
 		hourCombo.setBackground(Color.white);
 		add(hourCombo);
 		
-		JComboBox minCombo = new JComboBox();
+		minCombo = new JComboBox();
 		minCombo.setBounds(426, 207, 100, 40);
 		minCombo.setBackground(Color.white);
 		add(minCombo);
 		
-		JLabel lbl3 = new JLabel(":");
-		lbl3.setBounds(405, 205, 30, 30);
-		lbl3.setFont(new Font("Comic sans MS", Font.PLAIN, 40));
-		add(lbl3);
+		JLabel colonLabel = new JLabel(":");
+		colonLabel.setBounds(405, 205, 30, 30);
+		colonLabel.setFont(new Font("Comic sans MS", Font.PLAIN, 40));
+		add(colonLabel);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(300, 488, 250, 40);
-		add(textField_2);
+		tablesAssignedField = new JTextField();
+		tablesAssignedField.setColumns(10);
+		tablesAssignedField.setBounds(300, 488, 250, 40);
+		add(tablesAssignedField);
 		
-		JButton addBtn = new JButton("ADD RESERVATION");
+		addBtn = new JButton("ADD RESERVATION");
 		addBtn.setBounds(330, 603, 220, 50);
 		addBtn.setBackground(Color.white);
 		addBtn.setFont(new Font("Comic sans MS", Font.PLAIN, 18));
 		add(addBtn);
 		
-		JButton backBtn = new JButton("BACK");
+		backBtn = new JButton("BACK");
+		backBtn.addActionListener(this);
 		backBtn.setBounds(115, 603, 200, 50);
 		backBtn.setBackground(Color.white);
 		backBtn.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
@@ -160,13 +189,15 @@ public class ReservationPanel extends SidePanel implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		JButton selectedButton = (JButton) e.getSource();
-		
-		if(selectedButton == backBtn) {
+		//JButton selectedButton = (JButton) e.getSource();
+		if(e.getSource() == addBtn){
+			//new Reservation();
+		}
+		if(e.getSource() == backBtn) {
+			System.out.println("e");
 			this.page.setRightIndex(0);
 			this.page.updateSidePanels();
-		}	
+		}
 		updateView();
 	}
 
