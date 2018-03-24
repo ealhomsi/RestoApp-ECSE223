@@ -63,7 +63,6 @@ isA Serializable;
 private static final long serialVersionUID = 2315072607928790501L;
 
 public static void reinitializeAutouniqueNumber(List<Reservation> reservations) { 
-	nextReservationNumber = 0;
 	for (Reservation reservation : reservations) {
 	if (reservation.getReservationNumber() > nextReservationNumber) {
 	nextReservationNumber = reservation.getReservationNumber(); }
@@ -80,7 +79,6 @@ isA Serializable;
 private static final long serialVersionUID = -3900912597282882073L;
 
 public static void reinitializeAutouniqueNumber(List<Order> orders) { 
-	nextNumber = 0;
 	for (Order order : orders) {
 	if (order.getNumber() > nextNumber) {
 	nextNumber = order.getNumber(); }

@@ -53,7 +53,7 @@ public class ItemCategoryPanel extends SidePanel {
 		    JButton button = new JButton();
 		    button.setBackground(Color.WHITE);
 		    button.setFont((new Font("Comic Sans MS", Font.PLAIN, 24)));
-		    button.setText(item.getName());
+		    button.setText(item.getName()+ " " + item.getCurrentPricedMenuItem().getPrice());
 		    buttonsList.add(button);
 		}		
 	}

@@ -3,6 +3,8 @@ package ca.mcgill.ecse223.resto.controller;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Date;
+import java.sql.Time;
 
 import ca.mcgill.ecse223.resto.application.RestoApplication;
 import ca.mcgill.ecse223.resto.model.MenuItem;
@@ -11,6 +13,7 @@ import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
 import ca.mcgill.ecse223.resto.model.RestoApp;
 import ca.mcgill.ecse223.resto.model.Seat;
 import ca.mcgill.ecse223.resto.model.Table;
+import ca.mcgill.ecse223.resto.model.Reservation;
 import ca.mcgill.ecse223.resto.view.TableView;
 
 public class Controller {
@@ -333,6 +336,130 @@ public class Controller {
 		service.removeCurrentTable(foundTable);
 		RestoApplication.save();
 
+	}
+	public static void startOrder(List<Table> tables) throws InvalidInputException{
+		RestoApp service = RestoApplication.getRestoApp();
+		if(tables == null)
+			throw new InvalidInputException("No tables given");
+		List<Table> currentTables = service.getCurrentTables();
+		for(Table t: currentTables){
+			boolean contains = currentTables.contains(t);
+			if(contains == false)
+			throw new InvalidInputException("Table given not in currentTables");
+		}
+		boolean orderCreated = false;
+		Order newOrder = null;
+		for(Table t : tables){
+			if(orderCreated){
+				t.addToOrder(newOrder);
+			}else{
+				Order lastOrder = null;
+				if(t.numberOfOrders() >0){
+					lastOrder = t.getOrder(t.numberOfOrders()-1);
+				}
+				t.startOrder();
+				if(t.numberOfOrders() >0 && !t.getOrder(t.numberOfOrders()-1).equals(lastOrder)){
+					orderCreated = true;
+					newOrder = t.getOrder(t.numberOfOrders()-1);
+				}
+			}
+		}
+		if(!orderCreated){
+			throw new InvalidInputException("The order couldn't be created");
+		}
+		service.addCurrentOrder(newOrder);
+		RestoApplication.save();
+	}
+	
+	public static void endOrder(Order order) throws InvalidInputException {
+		
+		RestoApp r = RestoApplication.getRestoApp();
+		List<Order> currentOrders = r.getCurrentOrders();
+		
+		if(order == null) { 
+			throw new InvalidInputException("Order is invalid");
+		}
+		
+		if(!currentOrders.contains(order)) {
+			throw new InvalidInputException("Order being ended does not exist");
+		}
+		
+		List<Table> tables = order.getTables();
+		
+		for(Table table : tables) 
+			table.endOrder(order);
+		
+		
+		if(allTablesAvailableOrDifferentCurrentOrder(tables, order))
+			r.removeCurrentOrder(order);
+		
+		RestoApplication.save();
+	}
+	
+	public static boolean allTablesAvailableOrDifferentCurrentOrder(List <Table> tables, Order order) {
+		RestoApp r = RestoApplication.getRestoApp();
+		boolean result = false;
+		
+		for(Table table : tables) {
+			if( table.getStatusFullName().contentEquals("Available") || !table.getOrder(table.numberOfOrders()-1).equals(order)) {
+				result = true;
+			}
+		}
+		return result;
+	}
+
+	public static void reserve(Date date, Time time, int numberInParty, String contactName, String contactEmailAddress, String contactPhoneNumber, List<Table> tables) throws InvalidInputException{
+		//check for date and time for null values
+		if(date == null || time == null){
+			throw new InvalidInputException("date/time values might be null");
+		}
+		
+		//adds all strings to a list of input to be validated
+		List<String> inputs = new ArrayList<>();
+		inputs.add(contactName);
+		inputs.add(contactEmailAddress);
+		inputs.add(contactPhoneNumber);
+
+		//checks for negative quantity
+		if(numberInParty < 0){
+			throw new InvalidInputException("negative quantity");
+		}
+
+		//checks a list of input for an empty/null Strings
+		checkInput(inputs);
+
+		RestoApp restoApp = RestoApplication.getRestoApp();
+		 
+		int seatCapacity = 0;
+		List<Table> currentTables = restoApp.getCurrentTables();
+		
+		for(Table table : tables){
+			if(!currentTables.contains(table)){
+				throw new InvalidInputException("invalid table parameter");
+			}
+			
+			seatCapacity += table.numberOfCurrentSeats();
+			List<Reservation> reservations = table.getReservations();
+
+			for(Reservation reservation : reservations){
+				if(reservation.doesOverlap(date, time)){
+					throw new InvalidInputException("time/date overlap");
+				}
+			}
+		}
+		if(seatCapacity < numberInParty){
+			throw new InvalidInputException("seat capactiy is less than the number in party");
+		}
+		new Reservation(date, time, numberInParty, contactName, contactEmailAddress, contactPhoneNumber, restoApp, tables.toArray(new Table[tables.size()]));
+		RestoApplication.save();
+
+	} 
+
+	private static void checkInput(List<String> inputs) throws InvalidInputException{
+		for(String input : inputs){
+			if(input == null || input.length() == 0)
+				throw new InvalidInputException("null or empty values");
+		}
 	}
 
 }
