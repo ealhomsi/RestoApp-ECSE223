@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -16,7 +17,10 @@ import javax.swing.plaf.BorderUIResource;
 
 import ca.mcgill.ecse223.resto.controller.Controller;
 import ca.mcgill.ecse223.resto.controller.InvalidInputException;
+import ca.mcgill.ecse223.resto.model.Order;
 import ca.mcgill.ecse223.resto.model.PricedMenuItem;
+import ca.mcgill.ecse223.resto.model.Seat;
+import ca.mcgill.ecse223.resto.model.Table;
 
 @SuppressWarnings("serial")
 public class OrderItemPanel extends SidePanel implements ActionListener {
@@ -76,8 +80,7 @@ public class OrderItemPanel extends SidePanel implements ActionListener {
 		orders.setBounds(120, 200, 400, 50);
 		orders.addActionListener(this);
 		this.add(orders);
-		
-		
+
 		promptSeats = new JLabel("Enter which Seats format: #Table:#Seat, #Table:#Seat");
 		promptSeats.setBounds(120, 245, 600, 100);
 		promptSeats.setFont((new Font("Comic sans MS", Font.BOLD, 15)));
@@ -85,7 +88,6 @@ public class OrderItemPanel extends SidePanel implements ActionListener {
 		seats = new JTextField("");
 		seats.setBounds(120, 340, 500, 30);
 		this.add(seats);
-
 
 		// updateView
 		updateView();
@@ -97,13 +99,40 @@ public class OrderItemPanel extends SidePanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == submit) {
-			//create new order
+			// grab order
+			OrderView ov = (OrderView) orders.getSelectedItem();
+			Order o = ov.getOrder();
+
+			// grab quantity
+			int quantity = Integer.parseInt(this.quantity.getText());
+
+			// grab seats and tables
+			String input = seats.getText();
+			input = input.trim();
+			String[] seatTableCombination = input.split(",");
+			ArrayList<Table> tables = new ArrayList<>();
+			ArrayList<Seat> seats = new ArrayList<>();
+			for (String item : seatTableCombination) {
+				int tableNumber = Integer.parseInt(item.split(":")[0].trim());
+				int seatNumber = Integer.parseInt(item.split(":")[1].trim());
+
+				Table t = this.controller.getTableByNumber(tableNumber).getTable();
+				tables.add(t);
+				seats.add(t.getCurrentSeat(seatNumber));
+			}
+
+			try {
+				this.controller.orderItem(quantity, o, seats, this.pricedMenuItem);
+				this.page.updateSidePanels();
+			} catch (InvalidInputException e1) {
+				JOptionPane.showMessageDialog(this, e1.getMessage());
+				e1.printStackTrace();
+			}
 		} else if (e.getSource() == back) {
 			this.page.setRightIndex(9);
 			this.page.updateSidePanels();
 
 		}
-
 	}
 
 	@Override

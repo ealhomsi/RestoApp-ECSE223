@@ -75,7 +75,6 @@ public class NewOrderPanel extends SidePanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		// git test comment
 		if (e.getSource() == backButton) {
 			this.page.setRightIndex(0);
 			this.page.updateSidePanels();

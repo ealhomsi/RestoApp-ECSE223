@@ -10,6 +10,7 @@ import ca.mcgill.ecse223.resto.application.RestoApplication;
 import ca.mcgill.ecse223.resto.model.MenuItem;
 import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
 import ca.mcgill.ecse223.resto.model.Order;
+import ca.mcgill.ecse223.resto.model.OrderItem;
 import ca.mcgill.ecse223.resto.model.PricedMenuItem;
 import ca.mcgill.ecse223.resto.model.Reservation;
 import ca.mcgill.ecse223.resto.model.RestoApp;
@@ -80,13 +81,51 @@ public class Controller {
 			newt.addCurrentSeat(new Seat(newt));
 		}
 
-		//add table to currentTable
+		// add table to currentTable
 		service.addCurrentTable(newt);
 		// saving
 		RestoApplication.save();
 
-
 		return convertToViewObject(newt);
+	}
+
+	public void orderItem(int quantity, Order o, List<Seat> seats, PricedMenuItem i) throws InvalidInputException {
+		RestoApp r = this.service;
+
+		// checking quantity
+		if (quantity <= 0)
+			throw new InvalidInputException("quantity has to be > 0");
+
+		// checking for nulls
+		if (o == null || seats == null || i == null)
+			throw new InvalidInputException("Order or seat or menu item is null");
+
+		// check if all seats are contained in one of the tables
+		if (!areSeatsInTables(seats, o.getTables())) {
+			throw new InvalidInputException("One or more of the seats does not belong to a table of that order");
+		}
+
+		new OrderItem(quantity, i, o, seats.toArray(new Seat[seats.size()]));
+
+		// saving
+		RestoApplication.save();
+	}
+
+	public boolean areSeatsInTables(List<Seat> seats, List<Table> tables) {
+		for (Seat s : seats) {
+			boolean found = false;
+			for (Table t : tables) {
+				if (t.getCurrentSeats().contains(s)) {
+					found = true;
+					break;
+				}
+			}
+
+			if (found == false) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -102,7 +141,7 @@ public class Controller {
 		}
 		return tvs;
 	}
-	
+
 	/**
 	 * Give a list of all Orders views
 	 * 
@@ -111,7 +150,7 @@ public class Controller {
 	public List<OrderView> getAllCurrentOrders() {
 		List<OrderView> orders = new ArrayList<OrderView>();
 		for (Order order : service.getCurrentOrders()) {
-			if(order.getTables().size() == 0)
+			if (order.getTables().size() == 0)
 				continue;
 			orders.add(convertToViewObject(order));
 		}
@@ -164,7 +203,6 @@ public class Controller {
 		// saving
 		RestoApplication.save();
 
-
 	}
 
 	/**
@@ -180,24 +218,26 @@ public class Controller {
 		return list;
 	}
 
-	//corrected method
-	public List<Integer> getAllCurrentTableNumbers(){
+	// corrected method
+	public List<Integer> getAllCurrentTableNumbers() {
 		List<Integer> list = new ArrayList<>();
-		for(Table t : service.getCurrentTables()){
+		for (Table t : service.getCurrentTables()) {
 			list.add(t.getNumber());
 			System.out.println(t.getNumber());
 		}
 		return list;
 	}
-	
+
 	/**
 	 * get a table by number
-	 * @param number the number of the table
+	 * 
+	 * @param number
+	 *            the number of the table
 	 * @return a table view object or null if not found
 	 */
 	public TableView getTableByNumber(int number) {
-		for(Table t: service.getTables()) {
-			if(t.getNumber() == number)
+		for (Table t : service.getTables()) {
+			if (t.getNumber() == number)
 				return convertToViewObject(t);
 		}
 		return null;
@@ -212,7 +252,7 @@ public class Controller {
 	OrderView convertToViewObject(Order t) {
 		return new OrderView(t);
 	}
-	
+
 	/** HELPER METHODS **/
 
 	/**
@@ -264,178 +304,175 @@ public class Controller {
 	private Rectangle tableToRectangle(Table t) {
 		return new Rectangle(t.getX(), t.getY(), t.getWidth(), t.getLength());
 	}
-	
-	
+
 	/**
 	 * Method for displaying the menu categories and the menu items
 	 */
-	
-	public List<ItemCategory> getItemCategories()
-	{
+
+	public List<ItemCategory> getItemCategories() {
 		ArrayList<ItemCategory> menuCategories = new ArrayList<ItemCategory>();
 		ItemCategory[] itemCategories = ItemCategory.values();
-		for(int i = 0; i < itemCategories.length; i++) {
+		for (int i = 0; i < itemCategories.length; i++) {
 			ItemCategory category = itemCategories[i];
 			menuCategories.add(category);
 		}
 		return menuCategories;
 	}
-	
-	public ArrayList<MenuItem> getMenuItems (ItemCategory selectedItemCategory) throws InvalidInputException
-	{
+
+	public ArrayList<MenuItem> getMenuItems(ItemCategory selectedItemCategory) throws InvalidInputException {
 		ArrayList<MenuItem> categoryItemsList = new ArrayList<MenuItem>();
 		RestoApp restoApp = RestoApplication.getRestoApp();
-		
-		for(MenuItem menuItem: restoApp.getMenu().getMenuItems())
-		{
+
+		for (MenuItem menuItem : restoApp.getMenu().getMenuItems()) {
 			String error = "";
-			
-			
-			if(menuItem.getItemCategory() == null) {
+
+			if (menuItem.getItemCategory() == null) {
 				error = "This item does not belong to any category";
 				throw new InvalidInputException(error.trim());
-			}
-			else if(menuItem.getItemCategory().equals(selectedItemCategory) && menuItem.hasCurrentPricedMenuItem())
-			{
+			} else if (menuItem.getItemCategory().equals(selectedItemCategory) && menuItem.hasCurrentPricedMenuItem()) {
 				categoryItemsList.add(menuItem);
 			}
-			
+
 		}
 		return categoryItemsList;
 	}
-	public void updateTable(Table table, int newNumber, int numberOfSeats) throws InvalidInputException{
-		if(table == null || newNumber < 0 || numberOfSeats < 0 || table.hasReservations())
+
+	public void updateTable(Table table, int newNumber, int numberOfSeats) throws InvalidInputException {
+		if (table == null || newNumber < 0 || numberOfSeats < 0 || table.hasReservations())
 			throw new InvalidInputException("Wrong Input");
 		List<Order> currentOrders = service.getCurrentOrders();
-		for(Order t : currentOrders){
+		for (Order t : currentOrders) {
 			List<Table> tables = t.getTables();
-			if(tables.contains(table))
-				throw new InvalidInputException("Table has current orders");			
+			if (tables.contains(table))
+				throw new InvalidInputException("Table has current orders");
 		}
-		
-		if(!table.setNumber(newNumber) && table.getNumber() != newNumber)
+
+		if (!table.setNumber(newNumber) && table.getNumber() != newNumber)
 			throw new InvalidInputException("Duplicate number");
-		
+
 		int currentNumberOfSeats = table.numberOfCurrentSeats();
-		
-		for(int count=0 ; count<numberOfSeats-currentNumberOfSeats;count++){
+
+		for (int count = 0; count < numberOfSeats - currentNumberOfSeats; count++) {
 			Seat seat = table.addSeat();
 			table.addCurrentSeat(seat);
 		}
-		for(int count=0 ; count<currentNumberOfSeats-numberOfSeats ; count++){
+		for (int count = 0; count < currentNumberOfSeats - numberOfSeats; count++) {
 			Seat seat = table.getCurrentSeat(0);
 			table.removeCurrentSeat(seat);
 		}
 		RestoApplication.save();
 	}
 
-	public void removeTable(int number) throws InvalidInputException{
-		//retrieve table by its unique id
+	public void removeTable(int number) throws InvalidInputException {
+		// retrieve table by its unique id
 		Table foundTable = Table.getWithNumber(number);
 
-		//if no table by specified id was found => throw exception
-		if(foundTable == null){
+		// if no table by specified id was found => throw exception
+		if (foundTable == null) {
 			throw new InvalidInputException("no such table exists");
 		}
 
-		//table cannot be removed if it has reservations => throw exception
-		if(foundTable.hasReservations()){
+		// table cannot be removed if it has reservations => throw exception
+		if (foundTable.hasReservations()) {
 			throw new InvalidInputException("cannot remove table due to existing reservations");
 		}
 
 		List<Order> orders = service.getCurrentOrders();
 		List<Table> tables;
 
-		//iterate through all orders to check if table is in use (has orders) => throw exception
-		for(Order order: orders){
+		// iterate through all orders to check if table is in use (has orders) => throw
+		// exception
+		for (Order order : orders) {
 			tables = order.getTables();
-			if(tables.contains(foundTable))
+			if (tables.contains(foundTable))
 				throw new InvalidInputException("table contains orders");
 		}
 
-
-		//remove table completely, temp solution
+		// remove table completely, temp solution
 		service.removeCurrentTable(foundTable);
 		RestoApplication.save();
 
 	}
-	
+
 	/**
 	 * this method starts an order to a list of tables
-	 * @param tables is the list of tables in question
-	 * @throws InvalidInputException thorws exception on different error cases
+	 * 
+	 * @param tables
+	 *            is the list of tables in question
+	 * @throws InvalidInputException
+	 *             thorws exception on different error cases
 	 */
-	public static void startOrder(List<Table> tables) throws InvalidInputException{
+	public static void startOrder(List<Table> tables) throws InvalidInputException {
 		RestoApp service = RestoApplication.getRestoApp();
-		if(tables == null)
+		if (tables == null)
 			throw new InvalidInputException("No tables given");
-		
+
 		List<Table> currentTables = service.getCurrentTables();
-		for(Table t: tables){
+		for (Table t : tables) {
 			boolean contains = currentTables.contains(t);
-			if(contains == false)
-			throw new InvalidInputException("Table given not in currentTables");
+			if (contains == false)
+				throw new InvalidInputException("Table given not in currentTables");
 		}
-		
+
 		boolean orderCreated = false;
 		Order newOrder = null;
-		for(Table t : tables){
-			if(orderCreated){
+		for (Table t : tables) {
+			if (orderCreated) {
 				t.addToOrder(newOrder);
-			}else{
+			} else {
 				Order lastOrder = null;
-				if(t.numberOfOrders() >0){
-					lastOrder = t.getOrder(t.numberOfOrders()-1);
+				if (t.numberOfOrders() > 0) {
+					lastOrder = t.getOrder(t.numberOfOrders() - 1);
 				}
 				t.startOrder();
-				if(t.numberOfOrders() >0 && !t.getOrder(t.numberOfOrders()-1).equals(lastOrder)){
+				if (t.numberOfOrders() > 0 && !t.getOrder(t.numberOfOrders() - 1).equals(lastOrder)) {
 					orderCreated = true;
-					newOrder = t.getOrder(t.numberOfOrders()-1);
+					newOrder = t.getOrder(t.numberOfOrders() - 1);
 				}
 			}
 		}
-		
-		if(!orderCreated){
+
+		if (!orderCreated) {
 			throw new InvalidInputException("The order couldn't be created");
 		}
-		
+
 		service.addCurrentOrder(newOrder);
 		RestoApplication.save();
 	}
-	
+
 	public static void endOrder(Order order) throws InvalidInputException {
 		RestoApp service = RestoApplication.getRestoApp();
 		List<Order> currentOrders = service.getCurrentOrders();
-		
-		if(order == null) { 
+
+		if (order == null) {
 			throw new InvalidInputException("Order is invalid");
 		}
-		
-		if(!currentOrders.contains(order)) {
+
+		if (!currentOrders.contains(order)) {
 			throw new InvalidInputException("Order being ended does not exist");
 		}
-		
+
 		List<Table> tables = order.getTables();
-		
-		
-		for(int i=0; i<tables.size(); i++) {
+
+		for (int i = 0; i < tables.size(); i++) {
 			Table table = tables.get(i);
-			if(table != null && table.numberOfOrders() >0 && table.getOrder(table.numberOfOrders() -1).equals(order)) {
+			if (table != null && table.numberOfOrders() > 0
+					&& table.getOrder(table.numberOfOrders() - 1).equals(order)) {
 				table.endOrder(order);
 			}
 		}
-	
-		if(allTablesAvailableOrDifferentCurrentOrder(tables, order))
+
+		if (allTablesAvailableOrDifferentCurrentOrder(tables, order))
 			service.removeCurrentOrder(order);
-		
+
 		RestoApplication.save();
 	}
-	
-	public static boolean allTablesAvailableOrDifferentCurrentOrder(List <Table> tables, Order order) {
+
+	public static boolean allTablesAvailableOrDifferentCurrentOrder(List<Table> tables, Order order) {
 		boolean result = false;
-		
-		for(Table table : tables) {
-			if( table.getStatus() == Status.Available|| !table.getOrder(table.numberOfOrders()-1).equals(order)) {
+
+		for (Table table : tables) {
+			if (table.getStatus() == Status.Available || !table.getOrder(table.numberOfOrders() - 1).equals(order)) {
 				result = true;
 			}
 		}
@@ -444,6 +481,7 @@ public class Controller {
 
 	/**
 	 * this method does reservation
+	 * 
 	 * @param date
 	 * @param time
 	 * @param numberInParty
@@ -453,73 +491,76 @@ public class Controller {
 	 * @param tables
 	 * @throws Exception
 	 */
-	public static void reserve(Date date, Time time, int numberInParty, String contactName, String contactEmailAddress, String contactPhoneNumber, List<Table> tables) throws Exception{
-		//check for date and time for null values
-		if(date == null || time == null){
+	public static void reserve(Date date, Time time, int numberInParty, String contactName, String contactEmailAddress,
+			String contactPhoneNumber, List<Table> tables) throws Exception {
+		// check for date and time for null values
+		if (date == null || time == null) {
 			throw new InvalidInputException("date/time values might be null");
 		}
-		
-		//adds all strings to a list of input to be validated
+
+		// adds all strings to a list of input to be validated
 		List<String> inputs = new ArrayList<>();
 		inputs.add(contactName);
 		inputs.add(contactEmailAddress);
 		inputs.add(contactPhoneNumber);
 
-		//checks for negative quantity
-		if(numberInParty < 0){
+		// checks for negative quantity
+		if (numberInParty < 0) {
 			throw new InvalidInputException("negative quantity");
 		}
 
-		//checks a list of input for an empty/null Strings
+		// checks a list of input for an empty/null Strings
 		checkInput(inputs);
 
 		RestoApp restoApp = RestoApplication.getRestoApp();
-		 
+
 		int seatCapacity = 0;
 		List<Table> currentTables = restoApp.getCurrentTables();
-		
-		for(Table table : tables){
-			if(!currentTables.contains(table)){
+
+		for (Table table : tables) {
+			if (!currentTables.contains(table)) {
 				throw new InvalidInputException("invalid table parameter");
 			}
-			
+
 			seatCapacity += table.numberOfCurrentSeats();
 			List<Reservation> reservations = table.getReservations();
 
-			for(Reservation reservation : reservations){
-				if(reservation.doesOverlap(date, time)){
+			for (Reservation reservation : reservations) {
+				if (reservation.doesOverlap(date, time)) {
 					throw new InvalidInputException("time/date overlap");
 				}
 			}
 		}
-		if(seatCapacity < numberInParty){
+		if (seatCapacity < numberInParty) {
 			throw new InvalidInputException("seat capactiy is less than the number in party");
 		}
-		new Reservation(date, time, numberInParty, contactName, contactEmailAddress, contactPhoneNumber, restoApp, tables.toArray(new Table[tables.size()]));
+		new Reservation(date, time, numberInParty, contactName, contactEmailAddress, contactPhoneNumber, restoApp,
+				tables.toArray(new Table[tables.size()]));
 		RestoApplication.save();
 
-	} 
+	}
 
 	/**
 	 * this method checks input
+	 * 
 	 * @param inputs
 	 * @throws InvalidInputException
 	 */
-	private static void checkInput(List<String> inputs) throws InvalidInputException{
-		for(String input : inputs){
-			if(input == null || input.length() == 0)
+	private static void checkInput(List<String> inputs) throws InvalidInputException {
+		for (String input : inputs) {
+			if (input == null || input.length() == 0)
 				throw new InvalidInputException("null or empty values");
 		}
 	}
-	
+
 	public PricedMenuItem getPricedMenuItem(String name) throws InvalidInputException {
-		
-		for(PricedMenuItem m: this.service.getPricedMenuItems()) {
-			if(m.getMenuItem().getName().equals(name)) {
+
+		for (PricedMenuItem m : this.service.getPricedMenuItems()) {
+			if (m.getMenuItem().getName().equals(name)) {
 				return m;
 			}
 		}
-		
+
 		throw new InvalidInputException("Priced Menu Item " + name + " was not found");
 	}
 

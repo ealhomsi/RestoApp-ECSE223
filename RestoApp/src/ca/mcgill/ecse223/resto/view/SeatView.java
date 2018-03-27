@@ -31,6 +31,11 @@ private Seat seat;
 		this.id = id;
 	}
 
+	private void hasAtLeastOneOrderItem() {
+		if(this.getSeat().getOrderItems().size() > 0) {
+			this.setColor(Color.PINK);
+		}
+	}
 	public int getId() {
 		return id;
 	}
@@ -46,6 +51,7 @@ private Seat seat;
 		this.y = y;
 		this.color = color;
 		this.id = id;
+		this.hasAtLeastOneOrderItem();
 	}
 
 	public int getY() {
@@ -85,6 +91,7 @@ private Seat seat;
 	}
 
 	public void drawSeat(Graphics g) {
+		this.hasAtLeastOneOrderItem();
 		g.setColor(color);
 		g.fillOval(x, y, RADIUS, RADIUS);
 
