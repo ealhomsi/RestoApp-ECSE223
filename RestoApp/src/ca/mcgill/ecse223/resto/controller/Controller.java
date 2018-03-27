@@ -89,8 +89,28 @@ public class Controller {
 		return convertToViewObject(newt);
 	}
 
+	/**
+	 * This method would add an order item to a list of seats
+	 * 
+	 * @param quantity
+	 *            the quantity must be strictly positive
+	 * @param o
+	 *            the order that parents the order item
+	 * @param seats
+	 *            the list of seats for that order item
+	 * @param i
+	 *            the priced menuitem
+	 * @throws InvalidInputException
+	 *             exceptions are thrown on different occasions.
+	 */
+
 	public void orderItem(int quantity, Order o, List<Seat> seats, PricedMenuItem i) throws InvalidInputException {
-		RestoApp r = this.service;
+		// get restoapp
+		RestoApp r = RestoApplication.getRestoApp();
+
+		// check for current tables in order
+		if (!r.getCurrentTables().contains(o.getTables()))
+			throw new InvalidInputException("Some of the tables in the order are not current");
 
 		// checking quantity
 		if (quantity <= 0)
