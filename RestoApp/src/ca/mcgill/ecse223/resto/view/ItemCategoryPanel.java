@@ -54,7 +54,7 @@ public class ItemCategoryPanel extends SidePanel implements ActionListener {
 			JButton button = new JButton();
 			button.setBackground(Color.WHITE);
 			button.setFont((new Font("Comic Sans MS", Font.PLAIN, 24)));
-			button.setText(item.getName() + "@" + item.getCurrentPricedMenuItem().getPrice());
+			button.setText(item.getName() + " - $" + item.getCurrentPricedMenuItem().getPrice());
 			buttonsList.add(button);
 			button.addActionListener(this);
 		}
