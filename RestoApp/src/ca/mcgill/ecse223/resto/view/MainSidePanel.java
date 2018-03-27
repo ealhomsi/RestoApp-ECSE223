@@ -18,6 +18,8 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 	private JButton btnMenu;
 	private JTextField txtSettings;
 	private JComboBox<String> comboBox;
+	private JButton btnStartOrder;
+	private JButton btnEndOrder;
 
 	public MainSidePanel(Controller c, RestoAppPage p) {
 		super(c, p);
@@ -38,11 +40,25 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		btnReserved.addActionListener(this);
 		this.add(btnReserved);
 
+		btnStartOrder = new JButton("START ORDER");
+		btnStartOrder.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
+		btnStartOrder.setBackground(Color.white);
+		btnStartOrder.setBounds(100, 135, 240, 80);
+		btnStartOrder.addActionListener(this);
+		this.add(btnStartOrder);
+
 		JButton btnBill = new JButton("BILL");
 		btnBill.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
 		btnBill.setBackground(Color.white);
 		btnBill.setBounds(380, 435, 240, 80);
 		this.add(btnBill);
+
+		btnEndOrder = new JButton("END ORDER");
+		btnEndOrder.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
+		btnEndOrder.setBackground(Color.white);
+		btnEndOrder.setBounds(380, 135, 240, 80);
+		this.add(btnEndOrder);
+		btnEndOrder.addActionListener(this);
 
 		comboBox = new JComboBox<String>();
 		comboBox.setBackground(Color.white);
@@ -52,8 +68,6 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		comboBox.addItem("Remove Tables");
 		comboBox.addItem("Update Table");
 		comboBox.addItem("Change Table Location");
-		comboBox.addItem("New Order");
-		comboBox.addItem("End Order");
 		comboBox.setFont(new Font("Comiec sans MS", Font.PLAIN, 20));
 		this.add(comboBox);
 		comboBox.addActionListener(this);
@@ -66,6 +80,7 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		this.add(sep);
 
 		txtSettings = new JTextField();
+		txtSettings.setEditable(false);
 		txtSettings.setText("Settings");
 		txtSettings.setBackground(null);
 		txtSettings.setBorder(null);
@@ -83,21 +98,22 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-	// if the source is combo box
-//		System.out.println(e.getActionCommand());
-		if (e.getSource() == comboBox) {
+		if (e.getSource() == comboBox) {	
 			int option = comboBox.getSelectedIndex();
-			if(option == 0)
+			if (option == 0)
 				return;
 			this.page.setRightIndex(++option);
 			this.page.updateSidePanels();
-		} else if(e.getSource() == btnMenu) {
+		} else if (e.getSource() == btnMenu) {
 			this.page.setRightIndex(9);
 			this.page.updateSidePanels();
-		}
-		
-		if(e.getActionCommand().equals("RESERVATION")){
-//			System.out.print("hello");
+		} else if (e.getSource() == btnStartOrder) {
+			this.page.setRightIndex(6);
+			this.page.updateSidePanels();
+		} else if (e.getSource() == btnEndOrder) {
+			this.page.setRightIndex(7);
+			this.page.updateSidePanels();
+		} else if (e.getActionCommand().equals("RESERVATION")) {
 			this.page.setRightIndex(10);
 			this.page.updateSidePanels();
 		}

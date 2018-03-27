@@ -84,17 +84,20 @@ public class NewOrderPanel extends SidePanel implements ActionListener {
 		}
 
 		else if (e.getActionCommand().equals("Add")) {
-			String input = tableNumbers.getText();
-			int[] numbers = Arrays.asList(input.split(",")).stream().map(String::trim).mapToInt(Integer::parseInt)
-					.toArray();
-
-			ArrayList<Table> tables = new ArrayList<>();
-			ArrayList<TableView> views = new ArrayList<>();
-			for (int i : numbers) {
-				Table t = this.controller.getTableByNumber(i).getTable();
-				tables.add(t);
-			}
 			try {
+				String input = tableNumbers.getText();
+				int[] numbers = Arrays.asList(input.split(",")).stream().map(String::trim).mapToInt(Integer::parseInt)
+						.toArray();
+
+				ArrayList<Table> tables = new ArrayList<>();
+				ArrayList<TableView> views = new ArrayList<>();
+				for (int i : numbers) {
+					TableView tv = this.controller.getTableByNumber(i);
+					if (tv == null)
+						throw new InvalidInputException("one of the tables was not found");
+					Table t = tv.getTable();
+					tables.add(t);
+				}
 				Controller.startOrder(tables);
 				this.page.updateSidePanels();
 			} catch (InvalidInputException exception) {
