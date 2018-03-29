@@ -80,7 +80,7 @@ public class ItemCategoryPanel extends SidePanel implements ActionListener {
 
 		if (buttonsList.contains(b)) {
 			try {
-				PricedMenuItem p = this.controller.getPricedMenuItem(b.getText().split("@")[0]);
+				PricedMenuItem p = this.controller.getPricedMenuItem(b.getText().split("-")[0].trim());
 				this.orderPanel = (OrderItemPanel) this.page.getSidePanel(11);
 				this.orderPanel.setPricedMenuItem(p);
 				this.page.setRightIndex(11);

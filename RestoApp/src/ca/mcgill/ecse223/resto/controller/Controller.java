@@ -90,6 +90,20 @@ public class Controller {
 	}
 
 	/**
+	 * Checks if all tables are current
+	 * @return true or false if table are not current
+	 */
+	public boolean checkIfTablesAreCurrent(List<Table> tables) {
+		List<Integer> tableNumbers = this.getAllCurrentTableNumbers();
+		
+		for(Table t: tables) 
+			if(!tableNumbers.contains(t.getNumber()))
+				return false;
+			
+		return true;
+	}
+	
+	/**
 	 * This method would add an order item to a list of seats
 	 * 
 	 * @param quantity
@@ -103,14 +117,13 @@ public class Controller {
 	 * @throws InvalidInputException
 	 *             exceptions are thrown on different occasions.
 	 */
-
 	public void orderItem(int quantity, Order o, List<Seat> seats, PricedMenuItem i) throws InvalidInputException {
 		// get restoapp
 		RestoApp r = RestoApplication.getRestoApp();
-
+		
 		// check for current tables in order
-		if (!r.getCurrentTables().contains(o.getTables()))
-			throw new InvalidInputException("Some of the tables in the order are not current");
+		if (!checkIfTablesAreCurrent(o.getTables()))
+			throw new InvalidInputException("Some of the tables in the order are not current" + r.getCurrentTables().toString() + " " + o.getTables());
 
 		// checking quantity
 		if (quantity <= 0)
