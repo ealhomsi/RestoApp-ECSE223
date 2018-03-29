@@ -68,7 +68,6 @@ public class EndOrderPanel extends SidePanel implements ActionListener {
 			orders.addItem(t);
 		}
 		
-		this.orders.setSelectedIndex(0);
 		this.revalidate();
 		this.repaint();
 	}
