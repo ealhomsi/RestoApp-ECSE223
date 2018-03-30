@@ -24,18 +24,23 @@ public class EndOrderPanel extends SidePanel implements ActionListener {
 	private JButton backButton;
 	private JComboBox<OrderView> orders;
 	private JLabel promptLabel;
+	private JTextField email;
 
 	public EndOrderPanel(Controller c, RestoAppPage p) {
 		// TODO Auto-generated constructor stub
 		super(c, p);
 
 		this.setLayout(null);
-
+		email = new JTextField("put your email here");
+		email.setBounds(120, 350, 400, 50);
+		email.setBackground(Color.white);
+		email.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
+		this.add(email);
+		
 		SubmitButton = new JButton("End Order");
 		SubmitButton.setBounds(550, 650, 100, 50);
 		SubmitButton.setBackground(Color.white);
 		SubmitButton.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
-		SubmitButton.addActionListener(this);
 		this.add(SubmitButton);
 		SubmitButton.addActionListener(this);
 
@@ -80,6 +85,7 @@ public class EndOrderPanel extends SidePanel implements ActionListener {
 			this.page.setRightIndex(0);
 			this.page.updateSidePanels();
 		} else if (e.getSource() == SubmitButton) {
+			String emailAddress = email.getText();  //mia work on this
 			OrderView ov = (OrderView) this.orders.getSelectedItem();
 			Order o = ov.getOrder();
 			try {
