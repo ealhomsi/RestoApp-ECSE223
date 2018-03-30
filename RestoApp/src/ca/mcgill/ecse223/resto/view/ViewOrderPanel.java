@@ -14,7 +14,7 @@ import javax.swing.*;
 public class ViewOrderPanel extends SidePanel implements ActionListener {
 
     private final String htmlOpeningTag = "<html><p>";
-    private final String htmlClosingTag = "</html></p>";
+    private final String htmlClosingTag = "</p></html>";
     private JComboBox<Integer> currentTables;
     private JScrollPane listOfOrderItems;
     private JPanel embeddedPanel;
