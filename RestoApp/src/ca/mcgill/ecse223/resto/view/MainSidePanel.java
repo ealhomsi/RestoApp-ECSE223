@@ -52,6 +52,7 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		comboBox.addItem("Remove Tables");
 		comboBox.addItem("Update Table");
 		comboBox.addItem("Change Table Location");
+		comboBox.addItem("View Orders");
 		comboBox.setFont(new Font("Comiec sans MS", Font.PLAIN, 20));
 		this.add(comboBox);
 		comboBox.addActionListener(this);
@@ -87,8 +88,14 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 			int option = comboBox.getSelectedIndex();
 			if(option == 0)
 				return;
-			this.page.setRightIndex(++option);
-			this.page.updateSidePanels();
+			else if (option == 5){
+				this.page.setRightIndex(9);
+				this.page.updateSidePanels();
+			}
+			else{
+				this.page.setRightIndex(++option);
+				this.page.updateSidePanels();
+			}
 		} else if(e.getSource() == btnMenu) {
 			this.page.setRightIndex(6);
 			this.page.updateSidePanels();

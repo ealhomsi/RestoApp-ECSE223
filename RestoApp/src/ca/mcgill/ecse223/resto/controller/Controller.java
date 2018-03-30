@@ -7,8 +7,11 @@ import java.util.Date;
 import java.sql.Time;
 
 import ca.mcgill.ecse223.resto.application.RestoApplication;
+import ca.mcgill.ecse223.resto.model.Menu;
 import ca.mcgill.ecse223.resto.model.MenuItem;
 import ca.mcgill.ecse223.resto.model.Order;
+import ca.mcgill.ecse223.resto.model.OrderItem;
+import ca.mcgill.ecse223.resto.model.PricedMenuItem;
 import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
 import ca.mcgill.ecse223.resto.model.RestoApp;
 import ca.mcgill.ecse223.resto.model.Seat;
@@ -80,7 +83,21 @@ public class Controller {
 		//add table to currentTable
 		service.addCurrentTable(newt);
 		// saving
+		Order order = new Order(null, null, service, newt);
+		order.addOrderItem(4, new PricedMenuItem(100, service, new MenuItem("4131chicken", service.getMenu())), newt.getSeat(0));
+		order.addOrderItem(4, new PricedMenuItem(50, service, new MenuItem("81312burger", service.getMenu())), newt.getSeat(1));
+		order.addOrderItem(4, new PricedMenuItem(50, service, new MenuItem("31123steak", service.getMenu())), newt.getSeat(2));
+		System.out.print("adding order was successful: " + newt.addOrder(order));
+		service.addCurrentOrder(order);
+
+		for(Order o: newt.getOrders()){
+			for(OrderItem oi: o.getOrderItems()){
+				System.out.println(oi);
+			}
+		}
+
 		RestoApplication.save();
+		
 
 
 		return convertToViewObject(newt);
@@ -462,4 +479,14 @@ public class Controller {
 		}
 	}
 
+
+	public List<OrderItem> getOrderItems(Table table) throws InvalidInputException{
+		if(table.getOrders().size() == 0)
+			throw new InvalidInputException("table has no orders");
+		
+		Order currentOrder = table.getOrder(table.getOrders().size() - 1);
+		if(!service.getCurrentOrders().contains(currentOrder))
+			throw new InvalidInputException("this order is not a current order");
+		return currentOrder.getOrderItems();
+	}
 }
