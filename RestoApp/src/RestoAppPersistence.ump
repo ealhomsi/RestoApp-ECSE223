@@ -3,6 +3,7 @@ external interface Serializable{}
 class RestoApp {
 depend java.io.Serializable;
 isA Serializable;
+
 private static final long serialVersionUID = -2683593616927798071L; 
 	public void reinitialize() { 
 		Table.reinitializeUniqueNumber(this.getTables());
@@ -98,5 +99,12 @@ private static final long serialVersionUID = 2045406856025012133L;
 depend java.io.Serializable;
 isA Serializable;
 private static final long serialVersionUID = 1301576255893682821L;
-
  }
+ 
+ class LoyaltyCard {
+ depend java.io.Serializable;
+ isA Serializable;
+ private static final long serialVersionUID = 5837274928374635219L;
+}
+
+}
