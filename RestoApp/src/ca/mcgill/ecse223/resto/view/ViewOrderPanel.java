@@ -47,8 +47,8 @@ public class ViewOrderPanel extends SidePanel implements ActionListener {
             currentTables.addItem(tableId);
         }
 
-        comboBoxLabel.setBounds(750/2 - 50, 800 - 250, 100, 50);
-        currentTables.setBounds(750/2 - 50, 800 - 175, 100, 50);
+        comboBoxLabel.setBounds(750/2 - 50, 800 - 150, 100, 50);
+        currentTables.setBounds(750/2 - 50, 800 - 100, 100, 50);
 
         //back and submit JButton properties
         back.setBounds(750/2 - 200, 800 - 100, 100, 50);
@@ -108,14 +108,13 @@ public class ViewOrderPanel extends SidePanel implements ActionListener {
                         + htmlClosingTag);
                     labels[index++] = label;
                 }
-                for(JLabel label: labels){
+                for(JLabel label: labels) {
                     embeddedPanel.add(label);
                 }
-
                 listOfOrderItems = new JScrollPane(embeddedPanel);
                 listOfOrderItems.setBounds(25, 100, 700, 800-250);
                 this.add(listOfOrderItems);
-                this.add(embeddedPanel);
+
             }catch(InvalidInputException ex){
                 JOptionPane.showMessageDialog(this, ex.getMessage());
                 ex.printStackTrace();

@@ -87,8 +87,9 @@ public class Controller {
 
 		// add table to currentTable
 		service.addCurrentTable(newt);
-		// saving
-		Order order = new Order(null, null, service, newt);
+		
+		//HANI'S TESTER CODE
+		/*Order order = new Order(null, null, service, newt);
 		order.addOrderItem(4, new PricedMenuItem(100, service, new MenuItem("4131chicken", service.getMenu())), newt.getSeat(0));
 		order.addOrderItem(4, new PricedMenuItem(50, service, new MenuItem("81312burger", service.getMenu())), newt.getSeat(1));
 		order.addOrderItem(4, new PricedMenuItem(50, service, new MenuItem("31123steak", service.getMenu())), newt.getSeat(2));
@@ -99,8 +100,9 @@ public class Controller {
 			for(OrderItem oi: o.getOrderItems()){
 				System.out.println(oi);
 			}
-		}
+		}*/
 
+		// saving
 		RestoApplication.save();
 		
 
@@ -616,10 +618,11 @@ public class Controller {
 	}
 
 	public List<OrderItem> getOrderItems(Table table) throws InvalidInputException{
-		if(table.getOrders().size() == 0)
+		List<Order> orders = table.getOrders();
+		if(orders.size() == 0)
 			throw new InvalidInputException("table has no orders");
 		
-		Order currentOrder = table.getOrder(table.getOrders().size() - 1);
+		Order currentOrder = table.getOrder(orders.size() - 1);
 		if(!service.getCurrentOrders().contains(currentOrder))
 			throw new InvalidInputException("this order is not a current order");
 		return currentOrder.getOrderItems();
