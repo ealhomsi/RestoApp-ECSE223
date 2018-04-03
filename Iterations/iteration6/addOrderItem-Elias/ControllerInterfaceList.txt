@@ -3,3 +3,4 @@ public void orderItem(int quantity, Order o, List<Seat> seats, PricedMenuItem i)
 
 Helper Methods:
 public boolean areSeatsInTables(List<Seat> seats, List<Table> tables)
+public boolean checkIFAllTablesAreCurrent(List<Table> tables)
