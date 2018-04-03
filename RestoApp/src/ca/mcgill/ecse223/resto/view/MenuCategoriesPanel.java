@@ -16,9 +16,11 @@ import java.util.HashMap;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
+import javax.swing.GroupLayout.Alignment;
 
 @SuppressWarnings("serial")
 public class MenuCategoriesPanel extends SidePanel implements ActionListener {
@@ -26,6 +28,8 @@ public class MenuCategoriesPanel extends SidePanel implements ActionListener {
 	private static JScrollPane itemDisplay;
 	private HashMap<JButton, ItemCategory> itemCategories = new HashMap<JButton, ItemCategory>();
 	private JButton btnBack;
+	private JLabel editLabel;
+	private JComboBox<String> editComboBox;
 
 	public Controller getController() {
 		return controller;
@@ -86,8 +90,21 @@ public class MenuCategoriesPanel extends SidePanel implements ActionListener {
 		btnBack = new JButton("Back");
 		btnBack.setBackground(Color.WHITE);
 		btnBack.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
-		btnBack.setBounds(25, 600, 115, 50);
 		btnBack.addActionListener(this);
+		
+		editLabel = new JLabel("                        Edit Menu:");
+		editLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
+		
+		
+		editComboBox = new JComboBox<String>();
+		editComboBox.setBackground(Color.WHITE);
+		editComboBox.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
+		editComboBox.addItem("");
+		editComboBox.addItem("Update Menu Item");
+		editComboBox.addItem("Add Menu Item");
+		editComboBox.addItem("Remove Menu Item");
+		editComboBox.addActionListener(this);
+		this.add(editComboBox);
 
 		// creating a panel to display the items of a category
 		itemPanel = new ItemCategoryPanel(c, p);
@@ -101,20 +118,34 @@ public class MenuCategoriesPanel extends SidePanel implements ActionListener {
 		this.setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
-		layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(labelMenu)
+		layout.setHorizontalGroup(
+				layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+				.addComponent(labelMenu)
 				.addGroup(layout.createSequentialGroup().addComponent(btnAppetizer, 240, 240, 400)
 						.addComponent(btnMains).addComponent(btnDesserts))
 				.addGroup(layout.createSequentialGroup().addComponent(btnAlcohol).addComponent(btnNonAlcohol))
-				.addComponent(itemDisplay, 500, 700, 700).addComponent(btnBack));
-		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(labelMenu)
-				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(btnAppetizer)
+				.addComponent(itemDisplay, 500, 500, 700)
+				.addGroup(layout.createSequentialGroup()
+						.addComponent(btnBack)
+						.addComponent(editLabel)
+						.addComponent(editComboBox, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))
+				);
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addComponent(labelMenu)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(btnAppetizer)
 						.addComponent(btnMains).addComponent(btnDesserts))
-				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(btnAlcohol)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(btnAlcohol)
 						.addComponent(btnNonAlcohol))
-				.addComponent(itemDisplay, 500, 700, 700).addComponent(btnBack));
+				.addComponent(itemDisplay, 500, 500, 700)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(btnBack, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+						.addGap(100)
+						.addComponent(editLabel)
+						.addComponent(editComboBox, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE))
+				);
 		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] { btnAppetizer, btnMains, btnDesserts });
 		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] { btnAlcohol, btnNonAlcohol });
-
 	}
 
 	@Override
