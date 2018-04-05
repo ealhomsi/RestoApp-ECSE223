@@ -91,11 +91,10 @@ public class MenuCategoriesPanel extends SidePanel implements ActionListener {
 		btnBack.setBackground(Color.WHITE);
 		btnBack.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
 		btnBack.addActionListener(this);
-		
+
 		editLabel = new JLabel("                        Edit Menu:");
 		editLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
-		
-		
+
 		editComboBox = new JComboBox<String>();
 		editComboBox.setBackground(Color.WHITE);
 		editComboBox.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
@@ -118,32 +117,23 @@ public class MenuCategoriesPanel extends SidePanel implements ActionListener {
 		this.setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
-		layout.setHorizontalGroup(
-				layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-				.addComponent(labelMenu)
+		layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(labelMenu)
 				.addGroup(layout.createSequentialGroup().addComponent(btnAppetizer, 240, 240, 400)
 						.addComponent(btnMains).addComponent(btnDesserts))
 				.addGroup(layout.createSequentialGroup().addComponent(btnAlcohol).addComponent(btnNonAlcohol))
 				.addComponent(itemDisplay, 500, 500, 700)
-				.addGroup(layout.createSequentialGroup()
-						.addComponent(btnBack)
-						.addComponent(editLabel)
-						.addComponent(editComboBox, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))
-				);
-		layout.setVerticalGroup(
-				layout.createSequentialGroup()
-				.addComponent(labelMenu)
+				.addGroup(layout.createSequentialGroup().addComponent(btnBack).addComponent(editLabel)
+						.addComponent(editComboBox, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)));
+		layout.setVerticalGroup(layout.createSequentialGroup().addComponent(labelMenu)
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(btnAppetizer)
 						.addComponent(btnMains).addComponent(btnDesserts))
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(btnAlcohol)
 						.addComponent(btnNonAlcohol))
 				.addComponent(itemDisplay, 500, 500, 700)
 				.addGroup(layout.createParallelGroup()
-						.addComponent(btnBack, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
-						.addGap(100)
+						.addComponent(btnBack, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE).addGap(100)
 						.addComponent(editLabel)
-						.addComponent(editComboBox, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE))
-				);
+						.addComponent(editComboBox, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)));
 		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] { btnAppetizer, btnMains, btnDesserts });
 		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] { btnAlcohol, btnNonAlcohol });
 	}
@@ -162,19 +152,32 @@ public class MenuCategoriesPanel extends SidePanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		ArrayList<MenuItem> selectedCategoryItems = new ArrayList<MenuItem>();
-		JButton selectedButton = (JButton) e.getSource();
-		ItemCategory selectedCategory = itemCategories.get(selectedButton);
-		try {
-			selectedCategoryItems = (ArrayList<MenuItem>) controller.getMenuItems(selectedCategory);
-		} catch (InvalidInputException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		if (selectedButton == btnBack) {
+		
+
+		if (e.getSource() == editComboBox) {
+
+			if (editComboBox.getSelectedIndex() == 0)
+				return;
+
+			if (editComboBox.getSelectedIndex() == 2) {
+				this.page.setRightIndex(13);
+				this.page.updateSidePanels();
+			}
+		} else if (e.getSource() == btnBack) {
 			this.page.setRightIndex(0);
 			this.page.updateSidePanels();
 		} else {
+			JButton selectedButton = (JButton) e.getSource();
+			ItemCategory selectedCategory = itemCategories.get(selectedButton);
+
+			ArrayList<MenuItem> selectedCategoryItems = new ArrayList<MenuItem>();
+			try {
+				selectedCategoryItems = (ArrayList<MenuItem>) controller.getMenuItems(selectedCategory);
+			} catch (InvalidInputException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
 			itemPanel.setSelectedCategory(selectedCategory);
 			itemPanel.createItemCategoryPanel(selectedCategoryItems);
 			itemPanel.removeAll();
