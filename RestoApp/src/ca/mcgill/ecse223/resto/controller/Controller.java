@@ -505,8 +505,12 @@ public class Controller {
 			throw new InvalidInputException("Order being ended does not exist");
 		}
 
-		List<Table> tables = order.getTables();
-
+		//creating a new list (professor hint)
+		List<Table> tables = new ArrayList<Table> ();
+		for(Table t: order.getTables()) {
+			tables.add(t);
+		}
+		
 		for (int i = 0; i < tables.size(); i++) {
 			Table table = tables.get(i);
 			if (table != null && table.numberOfOrders() > 0
