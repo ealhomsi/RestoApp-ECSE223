@@ -39,7 +39,7 @@ public class RestoAppPage extends JFrame {
 	 * this method would create all side panels needed
 	 */
 	public void initSidePanels() {
-		this.sidePanelsCount = 13;
+		this.sidePanelsCount = 14;
 		sidePanels = new SidePanel[sidePanelsCount];
 		sidePanels[0] = new MainSidePanel(c, this);
 		sidePanels[1] = new DrawingPanel(c, this);
@@ -54,6 +54,7 @@ public class RestoAppPage extends JFrame {
 		sidePanels[10] = new ReservationPanel(c, this);
 		sidePanels[11] = new OrderItemPanel(c, this);
 		sidePanels[12] = new ViewOrderPanel(c, this);
+		sidePanels[13] = new AddMenuItem(c, this);
 	}
 
 	public int getRightIndex() {
