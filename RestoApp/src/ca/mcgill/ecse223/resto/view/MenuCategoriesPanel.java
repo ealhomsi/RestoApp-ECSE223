@@ -158,15 +158,28 @@ public class MenuCategoriesPanel extends SidePanel implements ActionListener {
 
 			if (editComboBox.getSelectedIndex() == 0)
 				return;
+			
+			if(editComboBox.getSelectedIndex() == 1) {
+				this.page.setLeftIndex(15);
+				this.page.updateSidePanels();
+			}
 
 			if (editComboBox.getSelectedIndex() == 2) {
 				this.page.setRightIndex(13);
 				this.page.updateSidePanels();
 			}
-		} else if (e.getSource() == btnBack) {
+			if (editComboBox.getSelectedIndex() == 3) {
+				this.page.setLeftIndex(14);
+				this.page.updateSidePanels();
+			
+			}
+		}
+		
+		else if (e.getSource() == btnBack) {
 			this.page.setRightIndex(0);
 			this.page.updateSidePanels();
-		} else {
+		} 
+		else {
 			JButton selectedButton = (JButton) e.getSource();
 			ItemCategory selectedCategory = itemCategories.get(selectedButton);
 
