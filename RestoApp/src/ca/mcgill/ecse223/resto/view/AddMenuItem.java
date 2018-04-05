@@ -5,16 +5,20 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import ca.mcgill.ecse223.resto.controller.Controller;
 
+@SuppressWarnings("serial")
 public class AddMenuItem extends SidePanel implements ActionListener{
 	private JTextField nameTxt;
 	private JTextField priceTxt;
 	private JComboBox<String> comboBox;
+	private JButton back;
+	private JButton add;
 
 	
 	public Controller getController() {
@@ -63,6 +67,20 @@ public class AddMenuItem extends SidePanel implements ActionListener{
 		category.setFont(new Font("Comic Sans MS", Font.PLAIN, 30));
 		add(category);
 		
+		back = new JButton("Back");
+		back.setBounds(300, 650, 147, 50);
+		back.setBackground(Color.WHITE);
+		back.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
+		add(back);
+		back.addActionListener(this);
+		
+		add = new JButton("Add Item");
+		add.setBounds(500, 650, 147, 50);
+		add.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
+		add.setBackground(Color.WHITE);
+		add(add);
+		
+		
 		comboBox = new JComboBox<String>();
 		comboBox.setBounds(350, 550, 300, 50);
 		comboBox.setBackground(Color.WHITE);
@@ -79,6 +97,11 @@ public class AddMenuItem extends SidePanel implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		
+		if (e.getSource() == back) {
+			this.page.setRightIndex(9);
+			this.page.updateSidePanels();
+		}
 
 	}
 
