@@ -631,5 +631,49 @@ public class Controller {
 			throw new InvalidInputException("this order is not a current order");
 		return currentOrder.getOrderItems();
 	}
+	
+	public void cancelOrderItem(OrderItem orderItem) throws InvalidInputException{
+	List<Seat> seats = orderItem.getSeats();
+	Order order = orderItem.getOrder();
+	List<Table> tables = new ArrayList<Table>();
+	
+	for(Seat s: seats) {
+		Table table = s.getTable();
+		
+		Order lastOrder = null;
+		if(table.numberOfOrders()>0) {
+			lastOrder = table.getOrder(table.numberOfOrders()-1);
+		}
+		else {
+			throw new InvalidInputException("This table has 0 orders");
+		}
+		
+		if(lastOrder.equals(order) && !tables.contains(table)) {
+			tables.add(table);
+		}
+		
+	
+	}
+	for(Table t: tables) {
+		t.cancelOrderItem(orderItem);
+	}
+	RestoApplication.save();
+}
+
+	public void cancelOrder(Table table) throws InvalidInputException{
+	if(table == null)
+		throw new InvalidInputException("Table is null");
+	RestoApp r = RestoApplication.getRestoApp();
+	List<Table> currentTables = r.getCurrentTables();
+	
+	boolean current = currentTables.contains(table);
+	
+	if(!current) {
+		throw new InvalidInputException("Table does not exist in application");
+	}
+	
+	table.cancelOrder();
+	RestoApplication.save();
+}
 
 }
