@@ -1,13 +1,13 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
+/*This code was generated using the UMPLE 1.26.1-f40f105-3613 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.io.Serializable;
 import java.util.*;
 
-// line 15 "../../../../../RestoAppPersistence.ump"
+// line 21 "../../../../../RestoAppPersistence.ump"
 // line 3 "../../../../../RestoAppTableStateMachine.ump"
-// line 31 "../../../../../RestoApp v3.ump"
+// line 33 "../../../../../RestoApp v3.ump"
 public class Table implements Serializable
 {
 
@@ -214,9 +214,7 @@ public class Table implements Serializable
         if (quantityIsPositive(quantity))
         {
         // line 14 "../../../../../RestoAppTableStateMachine.ump"
-        	Seat[] seat = new Seat[1];
-        	seat[0]=s;
-          OrderItem newOrder = new OrderItem(quantity, i , o , seat);
+          OrderItem newOrder = new OrderItem(quantity, i , o , s);
             // create a new order item with the provided quantity, order, seat, and priced menu item
           setStatus(Status.Ordered);
           wasEventProcessed = true;
@@ -354,8 +352,8 @@ public class Table implements Serializable
         // line 53 "../../../../../RestoAppTableStateMachine.ump"
         for(Order t : orders){
                 List<OrderItem> orderItems = t.getOrderItems();
-                for(OrderItem t1 : orderItems)
-                    t1.delete();
+                for(OrderItem i : orderItems)
+                    i.delete();
             }
             // delete all order items of the table
         setStatus(Status.NothingOrdered);
@@ -890,10 +888,7 @@ public class Table implements Serializable
     currentSeats.clear();
     RestoApp placeholderRestoApp = restoApp;
     this.restoApp = null;
-    if(placeholderRestoApp != null)
-    {
-      placeholderRestoApp.removeTable(this);
-    }
+    placeholderRestoApp.removeTable(this);
     ArrayList<Reservation> copyOfReservations = new ArrayList<Reservation>(reservations);
     reservations.clear();
     for(Reservation aReservation : copyOfReservations)
@@ -922,7 +917,7 @@ public class Table implements Serializable
     }
   }
 
-  // line 21 "../../../../../RestoAppPersistence.ump"
+  // line 27 "../../../../../RestoAppPersistence.ump"
    public static  void reinitializeUniqueNumber(List<Table> tables){
     tablesByNumber = new HashMap<Integer, Table>();
 	for (Table table : tables) {
@@ -983,7 +978,7 @@ public class Table implements Serializable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 18 "../../../../../RestoAppPersistence.ump"
+  // line 24 ../../../../../RestoAppPersistence.ump
   private static final long serialVersionUID =  8896099581655989380L ;
 
   

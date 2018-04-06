@@ -1,14 +1,14 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
+/*This code was generated using the UMPLE 1.26.1-f40f105-3613 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.io.Serializable;
-//import java.sql.Date;
+import java.sql.Date;
 import java.sql.Time;
 import java.util.*;
 
-// line 60 "../../../../../RestoAppPersistence.ump"
-// line 17 "../../../../../RestoApp v3.ump"
+// line 66 "../../../../../RestoAppPersistence.ump"
+// line 19 "../../../../../RestoApp v3.ump"
 public class Reservation implements Serializable
 {
 
@@ -351,13 +351,10 @@ public class Reservation implements Serializable
     }
     RestoApp placeholderRestoApp = restoApp;
     this.restoApp = null;
-    if(placeholderRestoApp != null)
-    {
-      placeholderRestoApp.removeReservation(this);
-    }
+    placeholderRestoApp.removeReservation(this);
   }
 
-  // line 66 "../../../../../RestoAppPersistence.ump"
+  // line 72 "../../../../../RestoAppPersistence.ump"
    public static  void reinitializeAutouniqueNumber(List<Reservation> reservations){
     for (Reservation reservation : reservations) {
 	if (reservation.getReservationNumber() > nextReservationNumber) {
@@ -366,8 +363,8 @@ public class Reservation implements Serializable
 	nextReservationNumber++;
   }
 
-  // line 27 "../../../../../RestoApp v3.ump"
-   public boolean doesOverlap(Date date, Time time){
+  // line 29 "../../../../../RestoApp v3.ump"
+   public boolean doesOverlap(java.util.Date date, java.sql.Time time){
     return Math.abs((this.date.getTime() + this.time.getTime()) - (date.getTime() + time.getTime())) < 7200000;
   }
 
@@ -388,7 +385,7 @@ public class Reservation implements Serializable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 63 "../../../../../RestoAppPersistence.ump"
+  // line 69 ../../../../../RestoAppPersistence.ump
   private static final long serialVersionUID = 2315072607928790501L ;
 
   

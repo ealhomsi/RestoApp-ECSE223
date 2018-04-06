@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
+/*This code was generated using the UMPLE 1.26.1-f40f105-3613 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.io.Serializable;
@@ -7,8 +7,8 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.*;
 
-// line 76 "../../../../../RestoAppPersistence.ump"
-// line 44 "../../../../../RestoApp v3.ump"
+// line 82 "../../../../../RestoAppPersistence.ump"
+// line 46 "../../../../../RestoApp v3.ump"
 public class Order implements Serializable
 {
 
@@ -330,7 +330,7 @@ public class Order implements Serializable
   {
     return 0;
   }
-  /* Code from template association_AddManyToOne */
+
   public OrderItem addOrderItem(int aQuantity, PricedMenuItem aPricedMenuItem, Seat... allSeats)
   {
     return new OrderItem(aQuantity, aPricedMenuItem, this, allSeats);
@@ -421,7 +421,7 @@ public class Order implements Serializable
   {
     return 0;
   }
-  /* Code from template association_AddManyToOne */
+
   public Bill addBill(RestoApp aRestoApp, Seat... allIssuedForSeats)
   {
     return new Bill(this, aRestoApp, allIssuedForSeats);
@@ -506,10 +506,7 @@ public class Order implements Serializable
     
     RestoApp placeholderRestoApp = restoApp;
     this.restoApp = null;
-    if(placeholderRestoApp != null)
-    {
-      placeholderRestoApp.removeOrder(this);
-    }
+    placeholderRestoApp.removeOrder(this);
     for(int i=bills.size(); i > 0; i--)
     {
       Bill aBill = bills.get(i - 1);
@@ -517,7 +514,7 @@ public class Order implements Serializable
     }
   }
 
-  // line 82 "../../../../../RestoAppPersistence.ump"
+  // line 88 "../../../../../RestoAppPersistence.ump"
    public static  void reinitializeAutouniqueNumber(List<Order> orders){
     for (Order order : orders) {
 	if (order.getNumber() > nextNumber) {
@@ -539,7 +536,7 @@ public class Order implements Serializable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 79 "../../../../../RestoAppPersistence.ump"
+  // line 85 ../../../../../RestoAppPersistence.ump
   private static final long serialVersionUID = -3900912597282882073L ;
 
   

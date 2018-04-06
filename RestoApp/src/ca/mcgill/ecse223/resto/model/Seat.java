@@ -1,12 +1,12 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
+/*This code was generated using the UMPLE 1.26.1-f40f105-3613 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.io.Serializable;
 import java.util.*;
 
-// line 48 "../../../../../RestoAppPersistence.ump"
-// line 41 "../../../../../RestoApp v3.ump"
+// line 54 "../../../../../RestoAppPersistence.ump"
+// line 43 "../../../../../RestoApp v3.ump"
 public class Seat implements Serializable
 {
 
@@ -301,10 +301,7 @@ public class Seat implements Serializable
   {
     Table placeholderTable = table;
     this.table = null;
-    if(placeholderTable != null)
-    {
-      placeholderTable.removeSeat(this);
-    }
+    placeholderTable.removeSeat(this);
     ArrayList<OrderItem> copyOfOrderItems = new ArrayList<OrderItem>(orderItems);
     orderItems.clear();
     for(OrderItem aOrderItem : copyOfOrderItems)
@@ -337,7 +334,7 @@ public class Seat implements Serializable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 51 "../../../../../RestoAppPersistence.ump"
+  // line 57 ../../../../../RestoAppPersistence.ump
   private static final long serialVersionUID = 386717977557499839L ;
 
   

@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
+/*This code was generated using the UMPLE 1.26.1-f40f105-3613 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.io.Serializable;
@@ -25,6 +25,7 @@ public class RestoApp implements Serializable
   private Menu menu;
   private List<PricedMenuItem> pricedMenuItems;
   private List<Bill> bills;
+  private List<LoyaltyCard> loyaltyCards;
 
   //------------------------
   // CONSTRUCTOR
@@ -44,6 +45,7 @@ public class RestoApp implements Serializable
     menu = aMenu;
     pricedMenuItems = new ArrayList<PricedMenuItem>();
     bills = new ArrayList<Bill>();
+    loyaltyCards = new ArrayList<LoyaltyCard>();
   }
 
   public RestoApp()
@@ -56,6 +58,7 @@ public class RestoApp implements Serializable
     menu = new Menu(this);
     pricedMenuItems = new ArrayList<PricedMenuItem>();
     bills = new ArrayList<Bill>();
+    loyaltyCards = new ArrayList<LoyaltyCard>();
   }
 
   //------------------------
@@ -286,11 +289,41 @@ public class RestoApp implements Serializable
     return index;
   }
 
+  public LoyaltyCard getLoyaltyCard(int index)
+  {
+    LoyaltyCard aLoyaltyCard = loyaltyCards.get(index);
+    return aLoyaltyCard;
+  }
+
+  public List<LoyaltyCard> getLoyaltyCards()
+  {
+    List<LoyaltyCard> newLoyaltyCards = Collections.unmodifiableList(loyaltyCards);
+    return newLoyaltyCards;
+  }
+
+  public int numberOfLoyaltyCards()
+  {
+    int number = loyaltyCards.size();
+    return number;
+  }
+
+  public boolean hasLoyaltyCards()
+  {
+    boolean has = loyaltyCards.size() > 0;
+    return has;
+  }
+
+  public int indexOfLoyaltyCard(LoyaltyCard aLoyaltyCard)
+  {
+    int index = loyaltyCards.indexOf(aLoyaltyCard);
+    return index;
+  }
+
   public static int minimumNumberOfReservations()
   {
     return 0;
   }
-  /* Code from template association_AddManyToOne */
+
   public Reservation addReservation(Date aDate, Time aTime, int aNumberInParty, String aContactName, String aContactEmailAddress, String aContactPhoneNumber, Table... allTables)
   {
     return new Reservation(aDate, aTime, aNumberInParty, aContactName, aContactEmailAddress, aContactPhoneNumber, this, allTables);
@@ -362,7 +395,7 @@ public class RestoApp implements Serializable
   {
     return 0;
   }
-  /* Code from template association_AddManyToOne */
+
   public Table addTable(int aNumber, int aX, int aY, int aWidth, int aLength)
   {
     return new Table(aNumber, aX, aY, aWidth, aLength, this);
@@ -491,7 +524,7 @@ public class RestoApp implements Serializable
   {
     return 0;
   }
-  /* Code from template association_AddManyToOne */
+
   public Order addOrder(Date aDate, Time aTime, Table... allTables)
   {
     return new Order(aDate, aTime, this, allTables);
@@ -620,7 +653,7 @@ public class RestoApp implements Serializable
   {
     return 0;
   }
-  /* Code from template association_AddManyToOne */
+
   public PricedMenuItem addPricedMenuItem(double aPrice, MenuItem aMenuItem)
   {
     return new PricedMenuItem(aPrice, this, aMenuItem);
@@ -692,7 +725,7 @@ public class RestoApp implements Serializable
   {
     return 0;
   }
-  /* Code from template association_AddManyToOne */
+
   public Bill addBill(Order aOrder, Seat... allIssuedForSeats)
   {
     return new Bill(aOrder, this, allIssuedForSeats);
@@ -760,6 +793,78 @@ public class RestoApp implements Serializable
     return wasAdded;
   }
 
+  public static int minimumNumberOfLoyaltyCards()
+  {
+    return 0;
+  }
+
+  public LoyaltyCard addLoyaltyCard(double aPoint, String aClientName, String aPhoneNumber, String aEmailAddress)
+  {
+    return new LoyaltyCard(aPoint, aClientName, aPhoneNumber, aEmailAddress, this);
+  }
+
+  public boolean addLoyaltyCard(LoyaltyCard aLoyaltyCard)
+  {
+    boolean wasAdded = false;
+    if (loyaltyCards.contains(aLoyaltyCard)) { return false; }
+    RestoApp existingRestoApp = aLoyaltyCard.getRestoApp();
+    boolean isNewRestoApp = existingRestoApp != null && !this.equals(existingRestoApp);
+    if (isNewRestoApp)
+    {
+      aLoyaltyCard.setRestoApp(this);
+    }
+    else
+    {
+      loyaltyCards.add(aLoyaltyCard);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeLoyaltyCard(LoyaltyCard aLoyaltyCard)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aLoyaltyCard, as it must always have a restoApp
+    if (!this.equals(aLoyaltyCard.getRestoApp()))
+    {
+      loyaltyCards.remove(aLoyaltyCard);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addLoyaltyCardAt(LoyaltyCard aLoyaltyCard, int index)
+  {  
+    boolean wasAdded = false;
+    if(addLoyaltyCard(aLoyaltyCard))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfLoyaltyCards()) { index = numberOfLoyaltyCards() - 1; }
+      loyaltyCards.remove(aLoyaltyCard);
+      loyaltyCards.add(index, aLoyaltyCard);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveLoyaltyCardAt(LoyaltyCard aLoyaltyCard, int index)
+  {
+    boolean wasAdded = false;
+    if(loyaltyCards.contains(aLoyaltyCard))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfLoyaltyCards()) { index = numberOfLoyaltyCards() - 1; }
+      loyaltyCards.remove(aLoyaltyCard);
+      loyaltyCards.add(index, aLoyaltyCard);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addLoyaltyCardAt(aLoyaltyCard, index);
+    }
+    return wasAdded;
+  }
+
   public void delete()
   {
     while (reservations.size() > 0)
@@ -805,21 +910,32 @@ public class RestoApp implements Serializable
       bills.remove(aBill);
     }
     
+    while (loyaltyCards.size() > 0)
+    {
+      LoyaltyCard aLoyaltyCard = loyaltyCards.get(loyaltyCards.size() - 1);
+      aLoyaltyCard.delete();
+      loyaltyCards.remove(aLoyaltyCard);
+    }
+    
   }
 
-  // line 8 "../../../../../RestoAppPersistence.ump"
+  // line 9 "../../../../../RestoAppPersistence.ump"
    public void reinitialize(){
     Table.reinitializeUniqueNumber(this.getTables());
 	 	MenuItem.reinitializeUniqueName(this.getMenu().getMenuItems()); 
 	 	Order.reinitializeAutouniqueNumber(this.getOrders());
 	 	Reservation.reinitializeAutouniqueNumber(this.getReservations());
+	 	if(loyaltyCards == null){
+	 		loyaltyCards = new ArrayList<LoyaltyCard>();
+	 	}
+	 	LoyaltyCard.reinitializeUniqueEmailAddress(this.getLoyaltyCards());
   }
   
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 6 "../../../../../RestoAppPersistence.ump"
+  // line 7 ../../../../../RestoAppPersistence.ump
   private static final long serialVersionUID = -2683593616927798071L ;
 
   

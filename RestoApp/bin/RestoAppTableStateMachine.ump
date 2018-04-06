@@ -12,7 +12,7 @@ class Table {
       }
       NothingOrdered {
          orderItem(int quantity, Order o, Seat s, PricedMenuItem i) [quantityIsPositive(quantity)] / {
-             OrderItem newOrder = new OrderItem(quantity, i , o , new Seat[] = {s});
+             OrderItem newOrder = new OrderItem(quantity, i , o , s);
             // create a new order item with the provided quantity, order, seat, and priced menu item
          } -> Ordered; 
          addToOrderItem(OrderItem i, Seat s) / {
@@ -30,7 +30,7 @@ class Table {
       }
       Ordered {
          orderItem(int quantity, Order o, Seat s, PricedMenuItem i) [quantityIsPositive(quantity)] / {
-             Seat[] seats =new Seats[1];
+             Seat[] seats =new Seat[1];
              seats[0]=s;
             OrderItem newOrder = new OrderItem(quantity, i , o , seats);
             // create a new order item with the provided quantity, order, seat, and priced menu item
@@ -52,9 +52,9 @@ class Table {
          } -> Ordered;
          cancelOrder() / {
             for(Order t : orders){
-                List<OrderItem> orderItems = aOrder.getOrderItems();
-                for(OrderItem t : orderItems)
-                    t.delete();
+                List<OrderItem> orderItems = t.getOrderItems();
+                for(OrderItem i : orderItems)
+                    i.delete();
             }
             // delete all order items of the table
          } -> NothingOrdered;
@@ -82,7 +82,7 @@ class Table {
 
    // check that the provided order item is the last item of the current order of the table
    private boolean iIsLastItem(OrderItem i) {
-        Order aOrder = orders[orders.size()-1];
+        Order aOrder = orders.get(orders.size()-1);
         return aOrder.getOrderItem(aOrder.numberOfOrderItems()).equals(i);
    }
 
@@ -90,9 +90,9 @@ class Table {
    private boolean allSeatsBilled() {
         boolean result =false;
       for(Seat seat : seats){
-          List<Bill> bills = seat.getBills;
+          List<Bill> bills = seat.getBills();
           for(Bill bill : bills){
-              if(!orders.contain(bill.getOrder()))
+              if(!orders.contains(bill.getOrder()))
                 return false;
           }
       }

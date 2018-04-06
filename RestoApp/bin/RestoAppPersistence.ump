@@ -10,6 +10,11 @@ private static final long serialVersionUID = -2683593616927798071L;
 	 	MenuItem.reinitializeUniqueName(this.getMenu().getMenuItems()); 
 	 	Order.reinitializeAutouniqueNumber(this.getOrders());
 	 	Reservation.reinitializeAutouniqueNumber(this.getReservations());
+	 	if(loyaltyCards == null){
+	 		loyaltyCards = new ArrayList<LoyaltyCard>();
+	 	}
+	 	LoyaltyCard.reinitializeUniqueEmailAddress(this.getLoyaltyCards()); 
+	 	
 	}
 }
 
@@ -105,6 +110,11 @@ private static final long serialVersionUID = 1301576255893682821L;
  depend java.io.Serializable;
  isA Serializable;
  private static final long serialVersionUID = 5837274928374635219L;
+ public static void reinitializeUniqueEmailAddress(List<LoyaltyCard> loyaltyCards) { 
+	loyaltycardsByEmailAddress = new HashMap<String, LoyaltyCard>();
+	for (LoyaltyCard loyaltyCard : loyaltyCards) {
+	loyaltycardsByEmailAddress.put(loyaltyCard.getEmailAddress(), loyaltyCard); 
+	}
 }
 
 }
