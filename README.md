@@ -20,13 +20,13 @@ complete and needs to be extended by you to support all required tasks.
 
 * Brodeur-Urbas, Max
 
-*Damlaj, Hani
+* Damlaj, Hani
 
-*El Khoury, Carl
+* El Khoury, Carl
 
-*Vu, Marie
+* Vu, Marie
 
-*Zhou, Mia
+* Zhou, Mia
 
 
 ## General Architecture
@@ -62,6 +62,11 @@ Once the application is loaded, it remembers its last state by reading the file.
 
 2. The model contains three main parts the class association, persistance and the state machine for table class.
 
+
+
+## SnapShots
+
+![snapshot-1](https://i.imgur.com/pcKN18O.png)
 
 ## References:
 1. Mussbacher, G. (2018). ECSE223 Project - Overview.pdf. McGill's MyCourses: retrieved on 8th of April 2018.
