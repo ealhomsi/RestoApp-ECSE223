@@ -55,10 +55,10 @@ public class RestoAppPage extends JFrame {
 		sidePanels[11] = new OrderItemPanel(c, this);
 		sidePanels[12] = new ViewOrderPanel(c, this);
 		sidePanels[13] = new AddMenuItem(c, this);
-		sidePanels[14] = new RemoveMenuItem(c,this);
-		sidePanels[15] = new UpdateMenuItem(c,this);
-		sidePanels[16] = new LoyaltyCardDisplay(c,this);
-			}
+		sidePanels[14] = new RemoveMenuItem(c, this);
+		sidePanels[15] = new UpdateMenuItem(c, this);
+		sidePanels[16] = new LoyaltyCardDisplay(c, this);
+	}
 
 	public int getRightIndex() {
 		return rightIndex;

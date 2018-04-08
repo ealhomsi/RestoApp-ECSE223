@@ -36,7 +36,7 @@ public class EndOrderPanel extends SidePanel implements ActionListener {
 		email.setBackground(Color.white);
 		email.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
 		this.add(email);
-		
+
 		SubmitButton = new JButton("End Order");
 		SubmitButton.setBounds(550, 650, 100, 50);
 		SubmitButton.setBackground(Color.white);
@@ -66,13 +66,13 @@ public class EndOrderPanel extends SidePanel implements ActionListener {
 
 	@Override
 	public void updateView() {
-		if(this.page.getRightIndex() != 7)
+		if (this.page.getRightIndex() != 7)
 			return;
 		this.orders.removeAllItems();
 		for (OrderView t : controller.getAllCurrentOrders()) {
 			orders.addItem(t);
 		}
-		
+
 		this.revalidate();
 		this.repaint();
 	}
@@ -85,18 +85,17 @@ public class EndOrderPanel extends SidePanel implements ActionListener {
 			this.page.setRightIndex(0);
 			this.page.updateSidePanels();
 		} else if (e.getSource() == SubmitButton) {
-			String emailAddress = email.getText();  //mia work on this
+			String emailAddress = email.getText();
 			OrderView ov = (OrderView) this.orders.getSelectedItem();
 			Order o = ov.getOrder();
 			try {
-				Controller.endOrder(o);
+				this.controller.endOrder(o, emailAddress);
 				this.page.updateSidePanels();
 			} catch (InvalidInputException exception) {
 				JOptionPane.showMessageDialog(this, exception.getMessage());
 				exception.printStackTrace();
 			}
 		}
-		
-		
+
 	}
 }

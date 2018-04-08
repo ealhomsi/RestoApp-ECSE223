@@ -741,9 +741,10 @@ public class Controller {
 	 * @param order
 	 * @throws InvalidInputException
 	 */
-	public static void endOrder(Order order) throws InvalidInputException {
+	public static void endOrder(Order order, String emailAddress) throws InvalidInputException {
 		RestoApp service = RestoApplication.getRestoApp();
 		List<Order> currentOrders = service.getCurrentOrders();
+		LoyaltyCard foundCard = null;
 
 		if (order == null) {
 			throw new InvalidInputException("Order is invalid");
@@ -751,6 +752,15 @@ public class Controller {
 
 		if (!currentOrders.contains(order)) {
 			throw new InvalidInputException("Order being ended does not exist");
+		}
+
+		if (!emailAddress.equals(null)) {
+			boolean hasCard = LoyaltyCard.hasWithEmailAddress(emailAddress);
+			if (!hasCard) {
+				throw new InvalidInputException("Loyalty card with entered email address does not exist.");
+			} else {
+				foundCard = LoyaltyCard.getWithEmailAddress(emailAddress);
+			}
 		}
 
 		// creating a new list (professor hint)
@@ -761,14 +771,16 @@ public class Controller {
 
 		for (int i = 0; i < tables.size(); i++) {
 			Table table = tables.get(i);
-			if (table != null && table.numberOfOrders() > 0
-					&& table.getOrder(table.numberOfOrders() - 1).equals(order)) {
+			if (table != null && table.numberOfOrders() > 0 && table.getOrder(table.numberOfOrders() - 1).equals(order)
+					&& !emailAddress.equals(null)) {
+				foundCard.addOrder(order);
 				table.endOrder(order);
 			}
 		}
 
-		if (allTablesAvailableOrDifferentCurrentOrder(tables, order))
+		if (allTablesAvailableOrDifferentCurrentOrder(tables, order) && !emailAddress.equals(null))
 			service.removeCurrentOrder(order);
+		Controller.calculatePoints(foundCard);
 
 		RestoApplication.save();
 	}
@@ -1160,6 +1172,9 @@ public class Controller {
 				price += price;
 			}
 		}
+		aCard.setPoint(price);
+
 		return price;
+
 	}
 }
