@@ -7,11 +7,9 @@ import java.util.Date;
 import java.util.List;
 
 import ca.mcgill.ecse223.resto.application.RestoApplication;
+import ca.mcgill.ecse223.resto.model.Bill;
 import ca.mcgill.ecse223.resto.model.Menu;
 import ca.mcgill.ecse223.resto.model.MenuItem;
-import ca.mcgill.ecse223.resto.model.Order;
-import ca.mcgill.ecse223.resto.model.OrderItem;
-import ca.mcgill.ecse223.resto.model.PricedMenuItem;
 import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
 import ca.mcgill.ecse223.resto.model.Order;
 import ca.mcgill.ecse223.resto.model.OrderItem;
@@ -60,9 +58,17 @@ public class Controller {
 	public TableView addTable(int number, int x, int y, int width, int length, int numberOfSeats)
 			throws InvalidInputException {
 		// check input
-		if (number < 0 || x < 0 || y < 0 || width <= 0 || length <= 0 || numberOfSeats < 0) {
-			throw new InvalidInputException("one of the inputs is zero or negative");
-		}
+		if (x < 0 || y < 0)
+			throw new InvalidInputException("one of the location parameters is negative");
+
+		if (number < 0)
+			throw new InvalidInputException("table id cannot be negative");
+
+		if (width <= 0 || length <= 0)
+			throw new InvalidInputException("dimensions of table cannot be negative");
+
+		if (numberOfSeats <= 0)
+			throw new InvalidInputException("number of seats is zero or negative");
 
 		// check if another table has the same number
 		for (Table t : service.getCurrentTables()) {
@@ -79,7 +85,7 @@ public class Controller {
 			}
 		}
 
-		// passwed all checks
+		// passed all checks
 		Table newt = new Table(number, x, y, width, length, service);
 		for (int i = 0; i < numberOfSeats; i++) {
 			newt.addCurrentSeat(new Seat(newt));
@@ -87,42 +93,43 @@ public class Controller {
 
 		// add table to currentTable
 		service.addCurrentTable(newt);
-		
-		//HANI'S TESTER CODE
-		/*Order order = new Order(null, null, service, newt);
-		order.addOrderItem(4, new PricedMenuItem(100, service, new MenuItem("4131chicken", service.getMenu())), newt.getSeat(0));
-		order.addOrderItem(4, new PricedMenuItem(50, service, new MenuItem("81312burger", service.getMenu())), newt.getSeat(1));
-		order.addOrderItem(4, new PricedMenuItem(50, service, new MenuItem("31123steak", service.getMenu())), newt.getSeat(2));
-		System.out.print("adding order was successful: " + newt.addOrder(order));
-		service.addCurrentOrder(order);
 
-		for(Order o: newt.getOrders()){
-			for(OrderItem oi: o.getOrderItems()){
-				System.out.println(oi);
-			}
-		}*/
+		// HANI'S TESTER CODE
+		/*
+		 * Order order = new Order(null, null, service, newt); order.addOrderItem(4, new
+		 * PricedMenuItem(100, service, new MenuItem("4131chicken", service.getMenu())),
+		 * newt.getSeat(0)); order.addOrderItem(4, new PricedMenuItem(50, service, new
+		 * MenuItem("81312burger", service.getMenu())), newt.getSeat(1));
+		 * order.addOrderItem(4, new PricedMenuItem(50, service, new
+		 * MenuItem("31123steak", service.getMenu())), newt.getSeat(2));
+		 * System.out.print("adding order was successful: " + newt.addOrder(order));
+		 * service.addCurrentOrder(order);
+		 * 
+		 * for(Order o: newt.getOrders()){ for(OrderItem oi: o.getOrderItems()){
+		 * System.out.println(oi); } }
+		 */
 
 		// saving
 		RestoApplication.save();
-		
 
 		return convertToViewObject(newt);
 	}
 
 	/**
 	 * Checks if all tables are current
+	 * 
 	 * @return true or false if table are not current
 	 */
 	public boolean checkIfTablesAreCurrent(List<Table> tables) {
 		List<Integer> tableNumbers = this.getAllCurrentTableNumbers();
-		
-		for(Table t: tables) 
-			if(!tableNumbers.contains(t.getNumber()))
+
+		for (Table t : tables)
+			if (!tableNumbers.contains(t.getNumber()))
 				return false;
-			
+
 		return true;
 	}
-	
+
 	/**
 	 * This method would add an order item to a list of seats
 	 * 
@@ -140,10 +147,11 @@ public class Controller {
 	public void orderItem(int quantity, Order o, List<Seat> seats, PricedMenuItem i) throws InvalidInputException {
 		// get restoapp
 		RestoApp r = RestoApplication.getRestoApp();
-		
+
 		// check for current tables in order
 		if (!checkIfTablesAreCurrent(o.getTables()))
-			throw new InvalidInputException("Some of the tables in the order are not current" + r.getCurrentTables().toString() + " " + o.getTables());
+			throw new InvalidInputException("Some of the tables in the order are not current"
+					+ r.getCurrentTables().toString() + " " + o.getTables());
 
 		// checking quantity
 		if (quantity <= 0)
@@ -223,9 +231,8 @@ public class Controller {
 	 *             thrown when arguments are wrong or on overlap
 	 */
 	public void changeTableLocation(int number, int newX, int newY) throws InvalidInputException {
-
 		if (newX < 0 || newY < 0)
-			throw new InvalidInputException("arguments are wrong");
+			throw new InvalidInputException("negative coordinates");
 
 		Table found = null;
 		for (Table t : service.getCurrentTables()) {
@@ -391,8 +398,18 @@ public class Controller {
 	}
 
 	public void updateTable(Table table, int newNumber, int numberOfSeats) throws InvalidInputException {
-		if (table == null || newNumber < 0 || numberOfSeats < 0 || table.hasReservations())
+		if (table == null)
 			throw new InvalidInputException("Wrong Input");
+
+		if (table.hasReservations())
+			throw new InvalidInputException("table has reservation");
+
+		if (numberOfSeats <= 0)
+			throw new InvalidInputException("number of seats must be >= 0");
+
+		if (newNumber <= 0)
+			throw new InvalidInputException("the id must be >= 0");
+
 		List<Order> currentOrders = service.getCurrentOrders();
 		for (Order t : currentOrders) {
 			List<Table> tables = t.getTables();
@@ -448,6 +465,44 @@ public class Controller {
 	}
 
 	/**
+	 * public static void addMenuItem(String name, ItemCategory category, double
+	 * price) throws InvalidInputException this method adds a new
+	 * 
+	 * @param name
+	 *            of the new menu item
+	 * @param category
+	 *            the category of the new menu item
+	 * @param price
+	 *            the price of the new item
+	 */
+	public static void addMenuItem(String name, ItemCategory category, double price) throws InvalidInputException {
+		RestoApp r = RestoApplication.getRestoApp();
+		Menu menu = r.getMenu();
+
+		if (price <= 0)
+			throw new InvalidInputException("price must be positive");
+
+		if (name == null || name.length() == 0)
+			throw new InvalidInputException("name is empty");
+
+		if (category == null)
+			throw new InvalidInputException("category is null");
+
+		MenuItem menuItem = null;
+		try {
+			menuItem = new MenuItem(name, menu);
+		} catch (RuntimeException e) {
+			throw new InvalidInputException(e.getMessage());
+		}
+
+		menuItem.setItemCategory(category);
+		PricedMenuItem pmi = menuItem.addPricedMenuItem(price, r);
+		menuItem.setCurrentPricedMenuItem(pmi);
+
+		RestoApplication.save();
+	}
+
+	/**
 	 * this method starts an order to a list of tables
 	 * 
 	 * @param tables
@@ -493,6 +548,198 @@ public class Controller {
 		RestoApplication.save();
 	}
 
+	/**
+	 * This method removes a menu item
+	 * 
+	 * @param menuItem
+	 *            the menuItem to be removed
+	 * @throws InvalidInputException
+	 *             when something is wrong
+	 */
+	public static void removeMenuItem(MenuItem menuItem) throws InvalidInputException {
+		if (menuItem == null)
+			throw new InvalidInputException("menuItem is null");
+
+		boolean current = menuItem.hasCurrentPricedMenuItem();
+		if (!current)
+			throw new InvalidInputException("menuItem does not have current priced menu item");
+
+		menuItem.setCurrentPricedMenuItem(null);
+		RestoApplication.save();
+	}
+
+	/**
+	 * Updates a menu item with the new name and category and price
+	 * 
+	 * @param menuItem
+	 *            the old menu item
+	 * @param name
+	 *            the new name
+	 * @param category
+	 *            the new category
+	 * @param price
+	 *            the new price
+	 * @throws InvalidInputException
+	 *             handles errors in input
+	 */
+	public static void updateMenuItem(MenuItem menuItem, String name, ItemCategory category, double price)
+			throws InvalidInputException {
+		if (price <= 0)
+			throw new InvalidInputException("price must be positive");
+
+		if (name == null || name.length() == 0)
+			throw new InvalidInputException("name is empty");
+
+		if (category == null)
+			throw new InvalidInputException("category is null");
+
+		if (menuItem == null)
+			throw new InvalidInputException("menuItem is null");
+
+		boolean current = menuItem.hasCurrentPricedMenuItem();
+		if (!current)
+			throw new InvalidInputException("menuItem does not have current priced menu item");
+
+		boolean duplicate = menuItem.setName(name);
+
+		if (!duplicate)
+			throw new InvalidInputException("menuItem has duplicate name");
+
+		menuItem.setItemCategory(category);
+
+		if (price != menuItem.getCurrentPricedMenuItem().getPrice()) {
+			RestoApp r = RestoApplication.getRestoApp();
+			PricedMenuItem pmi = menuItem.addPricedMenuItem(price, r);
+			menuItem.setCurrentPricedMenuItem(pmi);
+		}
+		RestoApplication.save();
+
+	}
+
+	/**
+	 * add an orderItem to the order
+	 * 
+	 * @param menuItem
+	 *            which menu item
+	 * @param quantity
+	 *            how many
+	 * @param seats
+	 *            the list of seats that would share the order item
+	 * @throws InvalidInputException
+	 *             when input is wrong
+	 */
+	public static void orderMenuItem(MenuItem menuItem, int quantity, List<Seat> seats) throws InvalidInputException {
+		if (seats == null || seats.size() == 0)
+			throw new InvalidInputException("seats are empty or null");
+
+		if (quantity <= 0)
+			throw new InvalidInputException("quantity should be positive");
+
+		if (menuItem == null)
+			throw new InvalidInputException("menuItem is null");
+
+		RestoApp r = RestoApplication.getRestoApp();
+
+		boolean current = menuItem.hasCurrentPricedMenuItem();
+		if (!current)
+			throw new InvalidInputException("menuItem does not have current priced menu item");
+
+		List<Table> currentTables = r.getCurrentTables();
+		Order lastOrder = null;
+
+		for (Seat seat : seats) {
+			Table table = seat.getTable();
+
+			boolean currentTable = currentTables.contains(table);
+
+			if (!currentTable)
+				throw new InvalidInputException("one of the seats has non-current table");
+
+			if (!table.getCurrentSeats().contains(seat))
+				throw new InvalidInputException("Seat is not current");
+
+			// alt
+			if (lastOrder == null) {
+				if (table.numberOfOrders() > 0) {
+					lastOrder = table.getOrder(table.numberOfOrders() - 1);
+				} else {
+					throw new InvalidInputException("There are no orders on table id :" + table.getNumber());
+				}
+			} else {
+				Order comparedOrder = null;
+				if (table.numberOfOrders() > 0) {
+					comparedOrder = table.getOrder(table.numberOfOrders() - 1);
+				} else {
+					throw new InvalidInputException("There are no orders on table id :" + table.getNumber());
+				}
+
+				if (!comparedOrder.equals(lastOrder)) {
+					throw new InvalidInputException("Compared order with last order mismatch");
+				}
+			}
+		}
+
+		if (lastOrder == null) {
+			throw new InvalidInputException("no order was found on the seats");
+		}
+		// pmi
+		PricedMenuItem pmi = menuItem.getCurrentPricedMenuItem();
+		boolean itemCreated = false;
+		OrderItem newItem = null;
+		for (Seat seat : seats) {
+			Table table = seat.getTable();
+
+			if (itemCreated) {
+				table.addToOrderItem(newItem, seat);
+			} else {
+				OrderItem lastitem = null;
+				if (lastOrder.numberOfOrderItems() > 0) {
+					lastitem = lastOrder.getOrderItem(lastOrder.numberOfOrderItems() - 1);
+				}
+
+				// create order item
+				table.orderItem(quantity, lastOrder, seat, pmi);
+
+				if (lastOrder.numberOfOrderItems() > 0
+						&& !lastOrder.getOrderItem(lastOrder.numberOfOrderItems() - 1).equals(lastitem)) {
+					itemCreated = true;
+					newItem = lastOrder.getOrderItem(lastOrder.numberOfOrderItems() - 1);
+				}
+			}
+		}
+
+		if (!itemCreated) {
+			throw new InvalidInputException("could not create order item successfully");
+		}
+		RestoApplication.save();
+	}
+
+	/**
+	 * overloaded method in case the name of the item was specified instead of the
+	 * item itself
+	 * 
+	 * @param menuItem
+	 * @param quantity
+	 * @param seats
+	 * @throws InvalidInputException
+	 */
+	public static void orderMenuItem(String menuItem, int quantity, List<Seat> seats) throws InvalidInputException {
+		if (menuItem == null || menuItem.length() == 0)
+			throw new InvalidInputException("the name is null or empty");
+
+		MenuItem mi = MenuItem.getWithName(menuItem);
+		if (mi == null)
+			throw new InvalidInputException("menuItem was not found");
+
+		orderMenuItem(mi, quantity, seats);
+	}
+
+	/**
+	 * This methods end an order
+	 * 
+	 * @param order
+	 * @throws InvalidInputException
+	 */
 	public static void endOrder(Order order) throws InvalidInputException {
 		RestoApp service = RestoApplication.getRestoApp();
 		List<Order> currentOrders = service.getCurrentOrders();
@@ -505,12 +752,12 @@ public class Controller {
 			throw new InvalidInputException("Order being ended does not exist");
 		}
 
-		//creating a new list (professor hint)
-		List<Table> tables = new ArrayList<Table> ();
-		for(Table t: order.getTables()) {
+		// creating a new list (professor hint)
+		List<Table> tables = new ArrayList<Table>();
+		for (Table t : order.getTables()) {
 			tables.add(t);
 		}
-		
+
 		for (int i = 0; i < tables.size(); i++) {
 			Table table = tables.get(i);
 			if (table != null && table.numberOfOrders() > 0
@@ -591,8 +838,8 @@ public class Controller {
 		if (seatCapacity < numberInParty) {
 			throw new InvalidInputException("seat capactiy is less than the number in party");
 		}
-		new Reservation((java.sql.Date) date, time, numberInParty, contactName, contactEmailAddress, contactPhoneNumber, restoApp,
-				tables.toArray(new Table[tables.size()]));
+		new Reservation((java.sql.Date) date, time, numberInParty, contactName, contactEmailAddress, contactPhoneNumber,
+				restoApp, tables.toArray(new Table[tables.size()]));
 		RestoApplication.save();
 
 	}
@@ -621,59 +868,184 @@ public class Controller {
 		throw new InvalidInputException("Priced Menu Item " + name + " was not found");
 	}
 
-	public List<OrderItem> getOrderItems(Table table) throws InvalidInputException{
-		List<Order> orders = table.getOrders();
-		if(orders.size() == 0)
-			throw new InvalidInputException("table has no orders");
-		
-		Order currentOrder = table.getOrder(orders.size() - 1);
-		if(!service.getCurrentOrders().contains(currentOrder))
-			throw new InvalidInputException("this order is not a current order");
-		return currentOrder.getOrderItems();
-	}
-	
-	public void cancelOrderItem(OrderItem orderItem) throws InvalidInputException{
-	List<Seat> seats = orderItem.getSeats();
-	Order order = orderItem.getOrder();
-	List<Table> tables = new ArrayList<Table>();
-	
-	for(Seat s: seats) {
-		Table table = s.getTable();
-		
-		Order lastOrder = null;
-		if(table.numberOfOrders()>0) {
-			lastOrder = table.getOrder(table.numberOfOrders()-1);
-		}
-		else {
-			throw new InvalidInputException("This table has 0 orders");
-		}
-		
-		if(lastOrder.equals(order) && !tables.contains(table)) {
-			tables.add(table);
-		}
-		
-	
-	}
-	for(Table t: tables) {
-		t.cancelOrderItem(orderItem);
-	}
-	RestoApplication.save();
-}
+	/**
+	 * this method would get a list of all order items
+	 * 
+	 * @param table
+	 * @return a list of all order items
+	 * @throws InvalidInputException
+	 *             in case of wrong input
+	 */
+	public List<OrderItem> getOrderItems(Table table) throws InvalidInputException {
+		if (table == null)
+			throw new InvalidInputException("the table is null");
 
-	public void cancelOrder(Table table) throws InvalidInputException{
-	if(table == null)
-		throw new InvalidInputException("Table is null");
-	RestoApp r = RestoApplication.getRestoApp();
-	List<Table> currentTables = r.getCurrentTables();
-	
-	boolean current = currentTables.contains(table);
-	
-	if(!current) {
-		throw new InvalidInputException("Table does not exist in application");
+		RestoApp r = RestoApplication.getRestoApp();
+
+		if (!r.getCurrentTables().contains(table)) {
+			throw new InvalidInputException("the table is not current");
+		}
+
+		if (table.getStatus() == Status.Available) {
+			throw new InvalidInputException("the table should not be availble");
+		}
+
+		Order lastOrder = null;
+		if (table.numberOfOrders() > 0) {
+			lastOrder = table.getOrder(table.numberOfOrders() - 1);
+		} else {
+			throw new InvalidInputException("table has no orders");
+			// should never be thrown
+		}
+
+		List<Seat> currentSeats = table.getCurrentSeats();
+
+		List<OrderItem> result = new ArrayList<OrderItem>();
+
+		for (Seat seat : currentSeats) {
+			List<OrderItem> orderitems = seat.getOrderItems();
+
+			for (OrderItem orderitem : orderitems) {
+				Order order = orderitem.getOrder();
+				if (lastOrder.equals(order) && !result.contains(orderitem))
+					result.add(orderitem);
+			}
+		}
+
+		return result;
 	}
-	
-	table.cancelOrder();
-	RestoApplication.save();
-}
+
+	public static void issueBill(List<Seat> seats) throws InvalidInputException {
+		RestoApp r = RestoApplication.getRestoApp();
+
+		if (seats == null || seats.size() == 0) {
+			throw new InvalidInputException("seats are empty or null");
+		}
+
+		Order lastOrder = null;
+		List<Table> currentTables = r.getCurrentTables();
+		for (Seat seat : seats) {
+			if (!currentTables.contains(seat.getTable())) {
+				throw new InvalidInputException("one of the seats belong to non-current table");
+			}
+
+			Table table = seat.getTable();
+
+			if (!table.getCurrentSeats().contains(seat)) {
+				throw new InvalidInputException("one of the seats is not current");
+			}
+
+			if (lastOrder == null) {
+				if (table.numberOfOrders() > 0) {
+					lastOrder = table.getOrder(table.numberOfOrders() - 1);
+				} else {
+					throw new InvalidInputException("table has no orders");
+				}
+			} else {
+				Order comparedOrder = null;
+				if (table.numberOfOrders() > 0) {
+					comparedOrder = table.getOrder(table.numberOfOrders() - 1);
+				} else {
+					throw new InvalidInputException("There are no orders on table id :" + table.getNumber());
+				}
+
+				if (!comparedOrder.equals(lastOrder)) {
+					throw new InvalidInputException("Compared order with last order mismatch");
+				}
+			}
+		}
+
+		if (lastOrder == null)
+			throw new InvalidInputException("order was not found to issue the bill");
+
+		boolean billCreated = false;
+		Bill newBill = null;
+		
+		for(Seat seat: seats) {
+			Table table = seat.getTable();
+			
+			if(billCreated) {
+				table.addToBill(newBill, seat);
+			}else {
+				Bill lastBill = null;
+				if(lastOrder.numberOfBills() > 0)
+					lastBill = lastOrder.getBill(lastOrder.numberOfBills() -1);
+				
+					table.billForSeat(lastOrder, seat);
+					
+					if(lastOrder.numberOfBills() > 0 && !lastOrder.getBill(lastOrder.numberOfBills() -1).equals(lastBill)) {
+						billCreated = true;
+						newBill = lastOrder.getBill(lastOrder.numberOfBills() -1);
+					}
+			}
+		}
+		
+		if(!billCreated)
+			throw new InvalidInputException("bill was not created successfully");
+		
+		RestoApplication.save();
+	}
+
+	/**
+	 * this method cancel an order item
+	 * 
+	 * @param orderItem
+	 *            which order item to cancel
+	 * @throws InvalidInputException
+	 *             in case input is wrong
+	 */
+	public void cancelOrderItem(OrderItem orderItem) throws InvalidInputException {
+
+		if (orderItem == null) {
+			throw new InvalidInputException("orderitem is null");
+		}
+
+		List<Seat> seats = orderItem.getSeats();
+		Order order = orderItem.getOrder();
+		List<Table> tables = new ArrayList<Table>();
+
+		for (Seat s : seats) {
+			Table table = s.getTable();
+
+			Order lastOrder = null;
+			if (table.numberOfOrders() > 0) {
+				lastOrder = table.getOrder(table.numberOfOrders() - 1);
+			} else {
+				throw new InvalidInputException("This table has 0 orders (should never be thrown)");
+			}
+
+			if (lastOrder.equals(order) && !tables.contains(table)) {
+				tables.add(table);
+			}
+
+		}
+		for (Table t : tables) {
+			t.cancelOrderItem(orderItem);
+		}
+		RestoApplication.save();
+	}
+
+	/**
+	 * this method cancels an order
+	 * 
+	 * @param table
+	 *            the table to cancel the order on
+	 * @throws InvalidInputException
+	 */
+	public void cancelOrder(Table table) throws InvalidInputException {
+		if (table == null)
+			throw new InvalidInputException("Table is null");
+		RestoApp r = RestoApplication.getRestoApp();
+		List<Table> currentTables = r.getCurrentTables();
+
+		boolean current = currentTables.contains(table);
+
+		if (!current) {
+			throw new InvalidInputException("Table does not exist as a current table");
+		}
+
+		table.cancelOrder();
+		RestoApplication.save();
+	}
 
 }

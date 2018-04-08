@@ -67,6 +67,7 @@ public class UpdateTablePanel extends SidePanel implements ActionListener {
 		selectedTable.setFont(new Font("Comic sans MS", Font.PLAIN, 25));
 		selectedTable.setBounds(260, 275, 175, 75);
 		selectedTable.setBackground(Color.white);
+		selectedTable.setEditable(false);
 		this.updateView();
 		this.add(selectedTable);
 
