@@ -740,9 +740,10 @@ public class Controller {
 	 * @param order
 	 * @throws InvalidInputException
 	 */
-	public static void endOrder(Order order) throws InvalidInputException {
+		public static void endOrder(Order order, String emailAddress) throws InvalidInputException {
 		RestoApp service = RestoApplication.getRestoApp();
 		List<Order> currentOrders = service.getCurrentOrders();
+		LoyaltyCard foundCard = null;
 
 		if (order == null) {
 			throw new InvalidInputException("Order is invalid");
@@ -750,6 +751,16 @@ public class Controller {
 
 		if (!currentOrders.contains(order)) {
 			throw new InvalidInputException("Order being ended does not exist");
+		}
+		
+		if(!emailAddress.equals(null)) {
+			boolean hasCard = LoyaltyCard.hasWithEmailAddress(emailAddress);
+			if(!hasCard) {
+				throw new InvalidInputException("Loyalty card with entered email address does not exist.");
+			}
+			else {
+				foundCard = LoyaltyCard.getWithEmailAddress(emailAddress);
+			}
 		}
 
 		// creating a new list (professor hint)
@@ -761,13 +772,15 @@ public class Controller {
 		for (int i = 0; i < tables.size(); i++) {
 			Table table = tables.get(i);
 			if (table != null && table.numberOfOrders() > 0
-					&& table.getOrder(table.numberOfOrders() - 1).equals(order)) {
+					&& table.getOrder(table.numberOfOrders() - 1).equals(order) && !emailAddress.equals(null)) {
+				foundCard.addOrder(order);
 				table.endOrder(order);
 			}
 		}
 
-		if (allTablesAvailableOrDifferentCurrentOrder(tables, order))
+		if (allTablesAvailableOrDifferentCurrentOrder(tables, order) && !emailAddress.equals(null))
 			service.removeCurrentOrder(order);
+			Controller.calculatePoints(foundCard);
 
 		RestoApplication.save();
 	}
@@ -1080,23 +1093,24 @@ public void removeExistingLoyaltyCard(String emailAddress) throws InvalidInputEx
 	RestoApplication.save();
 }
 	
-public static double calculatePoints(LoyaltyCard aCard)
-{
-	List<Order> allOrders = aCard.getOrders();
-	Double price = 0.00;
-		
-	for(Order aOrder : allOrders)
+	public static void calculatePoints(LoyaltyCard aCard)
 	{
-		List<OrderItem> orderItems = aOrder.getOrderItems();
-			
-		for(OrderItem orderItem: orderItems)
+		List<Order> allOrders = aCard.getOrders();
+		Double price = 0.00;
+		
+		for(Order aOrder : allOrders)
 		{
-			PricedMenuItem orderItemPrice = orderItem.getPricedMenuItem();
-			price = orderItemPrice.getPrice();
-			price += price;
+			List<OrderItem> orderItems = aOrder.getOrderItems();
+			
+			for(OrderItem orderItem: orderItems)
+			{
+				PricedMenuItem orderItemPrice = orderItem.getPricedMenuItem();
+				price = orderItemPrice.getPrice();
+				price += price;
+			}
 		}
-	}
-	return price;
+		aCard.setPoint(price);
+		RestoApplication.save();
 	}
 }
 
