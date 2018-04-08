@@ -1180,7 +1180,7 @@ public class Controller {
 	 */
 	public static double calculatePoints(LoyaltyCard aCard) {
 		List<Order> allOrders = aCard.getOrders();
-		Double price = 0.00;
+		Double price = aCard.getPoint();
 
 		for (Order aOrder : allOrders) {
 			List<OrderItem> orderItems = aOrder.getOrderItems();
