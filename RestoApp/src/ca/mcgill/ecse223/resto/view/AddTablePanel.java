@@ -181,7 +181,7 @@ public class AddTablePanel extends SidePanel implements ActionListener {
 
 				// checking if there are too many seats
 				if(tooManySeats(numberOfSeats, widthValue, lengthValue)) {
-					throw new Exception("We can't put that many seats arround the table. Please try lowering the number of seats");
+					throw new Exception("We can't put that many seats around the table. Please try lowering the number of seats");
 				}
 				controller.addTable(tableId, xCoordinate, yCoordinate, widthValue, lengthValue, numberOfSeats);
 				this.clearInputs();
