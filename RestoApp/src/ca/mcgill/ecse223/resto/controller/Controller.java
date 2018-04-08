@@ -747,14 +747,14 @@ public class Controller {
 		LoyaltyCard foundCard = null;
 
 		if (order == null) {
-			throw new InvalidInputException("Order is invalid");
+			throw new InvalidInputException("Order is null");
 		}
 
 		if (!currentOrders.contains(order)) {
 			throw new InvalidInputException("Order being ended does not exist");
 		}
 
-		if (!emailAddress.equals(null)) {
+		if (!checkIfStringEmptyOrNull(emailAddress)) {
 			boolean hasCard = LoyaltyCard.hasWithEmailAddress(emailAddress);
 			if (!hasCard) {
 				throw new InvalidInputException("Loyalty card with entered email address does not exist.");
@@ -769,19 +769,29 @@ public class Controller {
 			tables.add(t);
 		}
 
+		//adding points
 		for (int i = 0; i < tables.size(); i++) {
 			Table table = tables.get(i);
 			if (table != null && table.numberOfOrders() > 0 && table.getOrder(table.numberOfOrders() - 1).equals(order)
-					&& !emailAddress.equals(null)) {
-				foundCard.addOrder(order);
+					&& !checkIfStringEmptyOrNull(emailAddress)) {
+				foundCard.addOrder(order);	
+			}
+		}
+
+		Controller.calculatePoints(foundCard);
+		
+		//ending orders
+		for (int i = 0; i < tables.size(); i++) {
+			Table table = tables.get(i);
+			if (table != null && table.numberOfOrders() > 0 && table.getOrder(table.numberOfOrders() - 1).equals(order)
+					&& !checkIfStringEmptyOrNull(emailAddress)) {
 				table.endOrder(order);
 			}
 		}
 
-		if (allTablesAvailableOrDifferentCurrentOrder(tables, order) && !emailAddress.equals(null))
+		if (allTablesAvailableOrDifferentCurrentOrder(tables, order) && !checkIfStringEmptyOrNull(emailAddress))
 			service.removeCurrentOrder(order);
-		Controller.calculatePoints(foundCard);
-
+		
 		RestoApplication.save();
 	}
 
@@ -1104,7 +1114,7 @@ public class Controller {
 		}
 	}
 
-	private boolean checkIfStringEmptyOrNull(String str) {
+	private static boolean checkIfStringEmptyOrNull(String str) {
 		return (str == null || str.length() == 0);
 	}
 

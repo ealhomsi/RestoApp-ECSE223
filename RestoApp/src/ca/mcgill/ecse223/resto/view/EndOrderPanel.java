@@ -89,7 +89,7 @@ public class EndOrderPanel extends SidePanel implements ActionListener {
 			OrderView ov = (OrderView) this.orders.getSelectedItem();
 			Order o = ov.getOrder();
 			try {
-				this.controller.endOrder(o, emailAddress);
+				Controller.endOrder(o, emailAddress);
 				this.page.updateSidePanels();
 			} catch (InvalidInputException exception) {
 				JOptionPane.showMessageDialog(this, exception.getMessage());
