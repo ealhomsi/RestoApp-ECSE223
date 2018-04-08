@@ -960,29 +960,30 @@ public class Controller {
 
 		boolean billCreated = false;
 		Bill newBill = null;
-		
-		for(Seat seat: seats) {
+
+		for (Seat seat : seats) {
 			Table table = seat.getTable();
-			
-			if(billCreated) {
+
+			if (billCreated) {
 				table.addToBill(newBill, seat);
-			}else {
+			} else {
 				Bill lastBill = null;
-				if(lastOrder.numberOfBills() > 0)
-					lastBill = lastOrder.getBill(lastOrder.numberOfBills() -1);
-				
-					table.billForSeat(lastOrder, seat);
-					
-					if(lastOrder.numberOfBills() > 0 && !lastOrder.getBill(lastOrder.numberOfBills() -1).equals(lastBill)) {
-						billCreated = true;
-						newBill = lastOrder.getBill(lastOrder.numberOfBills() -1);
-					}
+				if (lastOrder.numberOfBills() > 0)
+					lastBill = lastOrder.getBill(lastOrder.numberOfBills() - 1);
+
+				table.billForSeat(lastOrder, seat);
+
+				if (lastOrder.numberOfBills() > 0
+						&& !lastOrder.getBill(lastOrder.numberOfBills() - 1).equals(lastBill)) {
+					billCreated = true;
+					newBill = lastOrder.getBill(lastOrder.numberOfBills() - 1);
+				}
 			}
 		}
-		
-		if(!billCreated)
+
+		if (!billCreated)
 			throw new InvalidInputException("bill was not created successfully");
-		
+
 		RestoApplication.save();
 	}
 
