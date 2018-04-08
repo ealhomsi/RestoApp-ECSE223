@@ -737,13 +737,14 @@ public class Controller {
 
 	public static List<String> getAListOfAllEmails() {
 		RestoApp r = RestoApplication.getRestoApp();
-		List<String> list = new ArrayList<String> ();
-		
-		for(LoyaltyCard card: r.getLoyaltyCards())
+		List<String> list = new ArrayList<String>();
+
+		for (LoyaltyCard card : r.getLoyaltyCards())
 			list.add(card.getEmailAddress());
-		
+
 		return list;
 	}
+
 	/**
 	 * This methods end an order
 	 * 
@@ -778,18 +779,18 @@ public class Controller {
 			tables.add(t);
 		}
 
-		//adding points
+		// adding points
 		for (int i = 0; i < tables.size(); i++) {
 			Table table = tables.get(i);
 			if (table != null && table.numberOfOrders() > 0 && table.getOrder(table.numberOfOrders() - 1).equals(order)
 					&& !checkIfStringEmptyOrNull(emailAddress)) {
-				foundCard.addOrder(order);	
+				foundCard.addOrder(order);
 			}
 		}
 
 		Controller.calculatePoints(foundCard);
-		
-		//ending orders
+
+		// ending orders
 		for (int i = 0; i < tables.size(); i++) {
 			Table table = tables.get(i);
 			if (table != null && table.numberOfOrders() > 0 && table.getOrder(table.numberOfOrders() - 1).equals(order)
@@ -800,7 +801,7 @@ public class Controller {
 
 		if (allTablesAvailableOrDifferentCurrentOrder(tables, order) && !checkIfStringEmptyOrNull(emailAddress))
 			service.removeCurrentOrder(order);
-		
+
 		RestoApplication.save();
 	}
 
@@ -1185,14 +1186,13 @@ public class Controller {
 		for (Order aOrder : allOrders) {
 			List<OrderItem> orderItems = aOrder.getOrderItems();
 
-			for (OrderItem orderItem : orderItems) {
-				PricedMenuItem orderItemPrice = orderItem.getPricedMenuItem();
-				price = orderItemPrice.getPrice();
-				price += price;
-			}
+			for (OrderItem orderItem : orderItems)
+				price += orderItem.getPricedMenuItem().getPrice() * orderItem.getQuantity();
+
 		}
 		aCard.setPoint(price);
 
+		RestoApplication.save();
 		return price;
 
 	}
