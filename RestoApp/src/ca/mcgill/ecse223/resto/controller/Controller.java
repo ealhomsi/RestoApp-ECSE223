@@ -1047,5 +1047,56 @@ public class Controller {
 		table.cancelOrder();
 		RestoApplication.save();
 	}
-
+	
+public List<LoyaltyCard> displayLoyaltyCards(){
+		List<LoyaltyCard> cards = service.getLoyaltyCards();
+		return cards;
+	}
+	
+public void registrationForLoyaltyCard(String clientName, String phoneNumber, String emailAddress) throws InvalidInputException {
+	boolean hasLoyaltyCard = LoyaltyCard.hasWithEmailAddress(emailAddress);
+	if(hasLoyaltyCard == true)
+	{
+		throw new InvalidInputException("Loyalty card with entered email already exists.");
+	}
+	else if(clientName.equals(null)) {
+		throw new InvalidInputException("Please enter client name.");
+	}
+	else if(phoneNumber.equals(null)) {
+		throw new InvalidInputException("Please enter client phone number.");
+	}
+	else if(emailAddress.equals(null)) {
+		throw new InvalidInputException("Please enter client email address.");
+	}
+	else {
+		service.addLoyaltyCard(0.00, clientName, phoneNumber, emailAddress);
+		RestoApplication.save();
+	}
+	}
+	
+public void removeExistingLoyaltyCard(String emailAddress) throws InvalidInputException{
+	LoyaltyCard selectedCard = LoyaltyCard.getWithEmailAddress(emailAddress);
+	selectedCard.delete();
+	RestoApplication.save();
 }
+	
+public static double calculatePoints(LoyaltyCard aCard)
+{
+	List<Order> allOrders = aCard.getOrders();
+	Double price = 0.00;
+		
+	for(Order aOrder : allOrders)
+	{
+		List<OrderItem> orderItems = aOrder.getOrderItems();
+			
+		for(OrderItem orderItem: orderItems)
+		{
+			PricedMenuItem orderItemPrice = orderItem.getPricedMenuItem();
+			price = orderItemPrice.getPrice();
+			price += price;
+		}
+	}
+	return price;
+	}
+}
+
