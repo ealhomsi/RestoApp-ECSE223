@@ -8,6 +8,7 @@ import java.util.List;
 
 import ca.mcgill.ecse223.resto.application.RestoApplication;
 import ca.mcgill.ecse223.resto.model.Bill;
+import ca.mcgill.ecse223.resto.model.LoyaltyCard;
 import ca.mcgill.ecse223.resto.model.Menu;
 import ca.mcgill.ecse223.resto.model.MenuItem;
 import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
@@ -1048,56 +1049,117 @@ public class Controller {
 		table.cancelOrder();
 		RestoApplication.save();
 	}
-	
-public List<LoyaltyCard> displayLoyaltyCards(){
+
+	/**
+	 * returns a list of loyalty cards
+	 * 
+	 * @return list
+	 */
+	public List<LoyaltyCard> displayLoyaltyCards() {
 		List<LoyaltyCard> cards = service.getLoyaltyCards();
 		return cards;
 	}
-	
-public void registrationForLoyaltyCard(String clientName, String phoneNumber, String emailAddress) throws InvalidInputException {
-	boolean hasLoyaltyCard = LoyaltyCard.hasWithEmailAddress(emailAddress);
-	if(hasLoyaltyCard == true)
-	{
-		throw new InvalidInputException("Loyalty card with entered email already exists.");
-	}
-	else if(clientName.equals(null)) {
-		throw new InvalidInputException("Please enter client name.");
-	}
-	else if(phoneNumber.equals(null)) {
-		throw new InvalidInputException("Please enter client phone number.");
-	}
-	else if(emailAddress.equals(null)) {
-		throw new InvalidInputException("Please enter client email address.");
-	}
-	else {
-		service.addLoyaltyCard(0.00, clientName, phoneNumber, emailAddress);
-		RestoApplication.save();
-	}
-	}
-	
-public void removeExistingLoyaltyCard(String emailAddress) throws InvalidInputException{
-	LoyaltyCard selectedCard = LoyaltyCard.getWithEmailAddress(emailAddress);
-	selectedCard.delete();
-	RestoApplication.save();
-}
-	
-public static double calculatePoints(LoyaltyCard aCard)
-{
-	List<Order> allOrders = aCard.getOrders();
-	Double price = 0.00;
-		
-	for(Order aOrder : allOrders)
-	{
-		List<OrderItem> orderItems = aOrder.getOrderItems();
-			
-		for(OrderItem orderItem: orderItems)
-		{
-			PricedMenuItem orderItemPrice = orderItem.getPricedMenuItem();
-			price = orderItemPrice.getPrice();
-			price += price;
+
+	/**
+	 * registers loyalty cards
+	 * 
+	 * @param clientName
+	 *            name
+	 * @param phoneNumber
+	 * 
+	 * @param emailAddress
+	 * @throws InvalidInputException
+	 */
+	public void registrationForLoyaltyCard(String clientName, String phoneNumber, String emailAddress)
+			throws InvalidInputException {
+		boolean hasLoyaltyCard = LoyaltyCard.hasWithEmailAddress(emailAddress);
+
+		if (hasLoyaltyCard == true) {
+			throw new InvalidInputException("Loyalty card with entered email already exists.");
+		} else if (checkIfStringEmptyOrNull(clientName)) {
+			throw new InvalidInputException("Please enter client name.");
+		} else if (checkIfStringEmptyOrNull(phoneNumber)) {
+			throw new InvalidInputException("Please enter client phone number.");
+		} else if (checkIfStringEmptyOrNull(emailAddress)) {
+			throw new InvalidInputException("Please enter client email address.");
+		} else if (!isValidEmailAddress(emailAddress)) {
+			throw new InvalidInputException("non-valid email address <>@<>.<>");
+		} else if (!isValidPhoneNumber(phoneNumber)) {
+			throw new InvalidInputException("non-valid phone number must be 10 digits example: 5149903943");
+		} else {
+			service.addLoyaltyCard(0.00, clientName, phoneNumber, emailAddress);
+			RestoApplication.save();
 		}
 	}
-	return price;
+
+	private boolean checkIfStringEmptyOrNull(String str) {
+		return (str == null || str.length() == 0);
+	}
+
+	/**
+	 * checks for valid email
+	 * 
+	 * @param email
+	 * @return
+	 */
+	private boolean isValidEmailAddress(String email) {
+		String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+		java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
+		java.util.regex.Matcher m = p.matcher(email);
+		return m.matches();
+	}
+
+	/**
+	 * checks for valid phone number
+	 * 
+	 * @param phone
+	 * @return
+	 */
+	private boolean isValidPhoneNumber(String phone) {
+		if (phone.length() != 10)
+			return false;
+
+		for (int i = 0; i < 10; i++) {
+			if (!Character.isDigit(phone.charAt(i)))
+				return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * remove a loyalty card using email
+	 * 
+	 * @param emailAddress
+	 * @throws InvalidInputException
+	 */
+	public void removeExistingLoyaltyCard(String emailAddress) throws InvalidInputException {
+		LoyaltyCard selectedCard = LoyaltyCard.getWithEmailAddress(emailAddress);
+		if (selectedCard == null)
+			throw new InvalidInputException("card was not found");
+		selectedCard.delete();
+		RestoApplication.save();
+	}
+
+	/**
+	 * calculate the points for the loyalty card
+	 * 
+	 * @param aCard
+	 * @return
+	 */
+	public static double calculatePoints(LoyaltyCard aCard) {
+		List<Order> allOrders = aCard.getOrders();
+		Double price = 0.00;
+
+		for (Order aOrder : allOrders) {
+			List<OrderItem> orderItems = aOrder.getOrderItems();
+
+			for (OrderItem orderItem : orderItems) {
+				PricedMenuItem orderItemPrice = orderItem.getPricedMenuItem();
+				price = orderItemPrice.getPrice();
+				price += price;
+			}
+		}
+		return price;
 	}
 }
-
