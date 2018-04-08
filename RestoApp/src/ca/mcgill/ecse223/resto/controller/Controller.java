@@ -735,6 +735,15 @@ public class Controller {
 		orderMenuItem(mi, quantity, seats);
 	}
 
+	public static List<String> getAListOfAllEmails() {
+		RestoApp r = RestoApplication.getRestoApp();
+		List<String> list = new ArrayList<String> ();
+		
+		for(LoyaltyCard card: r.getLoyaltyCards())
+			list.add(card.getEmailAddress());
+		
+		return list;
+	}
 	/**
 	 * This methods end an order
 	 * 
