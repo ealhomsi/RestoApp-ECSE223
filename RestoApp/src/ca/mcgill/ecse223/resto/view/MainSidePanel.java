@@ -52,6 +52,7 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		btnBill.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
 		btnBill.setBackground(Color.white);
 		btnBill.setBounds(275, 435, 173, 80);
+		btnBill.addActionListener(this);
 		this.add(btnBill);
 
 		btnEndOrder = new JButton("END ORDER");
@@ -134,7 +135,9 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		} else if (e.getSource() == btnLoyaltyCard) {
 			this.page.setRightIndex(16);
 			this.page.updateSidePanels();
+		}else if(e.getActionCommand().equals("BILL")){
+			this.page.setRightIndex(17);
+			this.page.updateSidePanels();
 		}
-	}
 
 }
