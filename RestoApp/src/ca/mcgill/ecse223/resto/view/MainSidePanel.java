@@ -136,8 +136,9 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 			this.page.setRightIndex(16);
 			this.page.updateSidePanels();
 		}else if(e.getActionCommand().equals("BILL")){
-			this.page.setRightIndex(17);
+			this.page.setRightIndex(19);
 			this.page.updateSidePanels();
 		}
 
+	}
 }
