@@ -132,7 +132,7 @@ public class CancelOrderPanel extends SidePanel implements ActionListener {
 				a.printStackTrace();
 				return;
 			}
-			updateView();
+
 		}
 
 		if (e.getSource() == CancelItem) {
@@ -143,7 +143,7 @@ public class CancelOrderPanel extends SidePanel implements ActionListener {
 				selectedOrder = controller.getAllCurrentOrders().get(index).getOrder();
 
 			} catch (Exception a) {
-				JOptionPane.showMessageDialog(this,"error : " + a.getMessage());
+				JOptionPane.showMessageDialog(this, "error : " + a.getMessage());
 				a.printStackTrace();
 				return;
 			}
@@ -155,15 +155,13 @@ public class CancelOrderPanel extends SidePanel implements ActionListener {
 				selectedOrderItem = selectedOrder.getOrderItem(index2);
 				controller.cancelOrderItem(selectedOrderItem);
 			} catch (Exception a1) {
-				JOptionPane.showMessageDialog(this,"error : " +  a1.getMessage());
+				JOptionPane.showMessageDialog(this, "error : " + a1.getMessage());
 				a1.printStackTrace();
 				return;
 
 			}
-			updateView();
-
 		}
-
+		this.page.updateSidePanels();
 	}
 
 	@Override
@@ -175,7 +173,6 @@ public class CancelOrderPanel extends SidePanel implements ActionListener {
 		for (OrderView t : controller.getAllCurrentOrders()) {
 			orders.addItem(t);
 		}
-		this.page.updateSidePanels();
 	}
 
 }
