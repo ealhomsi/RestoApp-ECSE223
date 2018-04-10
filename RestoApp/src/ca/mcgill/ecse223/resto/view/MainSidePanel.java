@@ -35,7 +35,7 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		btnMenu.addActionListener(this);
 
 		JButton btnReserved = new JButton("RESERVATION");
-		btnReserved.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
+		btnReserved.setFont(new Font("Comic sans MS", Font.PLAIN, 17));
 		btnReserved.setBackground(Color.white);
 		btnReserved.setBounds(100, 435, 173, 80);
 		btnReserved.addActionListener(this);
@@ -53,7 +53,6 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		btnBill.setBackground(Color.white);
 		btnBill.setBounds(275, 435, 173, 80);
 		this.add(btnBill);
-		btnBill.addActionListener(this);
 
 		btnEndOrder = new JButton("END ORDER");
 		btnEndOrder.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
@@ -65,7 +64,7 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		btnLoyaltyCard = new JButton("LOYALTY CARD");
 		btnLoyaltyCard.setBounds(450, 435, 173, 80);
 		btnLoyaltyCard.setBackground(Color.white);
-		btnLoyaltyCard.setFont(new Font("Comic sans MS", Font.PLAIN, 19));
+		btnLoyaltyCard.setFont(new Font("Comic sans MS", Font.PLAIN, 17));
 		this.add(btnLoyaltyCard);
 		btnLoyaltyCard.addActionListener(this);
 
@@ -134,9 +133,6 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 			this.page.updateSidePanels();
 		} else if (e.getSource() == btnLoyaltyCard) {
 			this.page.setRightIndex(16);
-			this.page.updateSidePanels();
-		}else if(e.getActionCommand().equals("BILL")){
-			this.page.setRightIndex(17);
 			this.page.updateSidePanels();
 		}
 	}
