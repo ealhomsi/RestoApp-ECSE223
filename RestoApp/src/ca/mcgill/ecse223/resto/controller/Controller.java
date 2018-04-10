@@ -95,20 +95,22 @@ public class Controller {
 		// add table to currentTable
 		service.addCurrentTable(newt);
 
-		// HANI'S TESTER CODE
-		/*
-		 * Order order = new Order(null, null, service, newt); order.addOrderItem(4, new
-		 * PricedMenuItem(100, service, new MenuItem("4131chicken", service.getMenu())),
-		 * newt.getSeat(0)); order.addOrderItem(4, new PricedMenuItem(50, service, new
-		 * MenuItem("81312burger", service.getMenu())), newt.getSeat(1));
-		 * order.addOrderItem(4, new PricedMenuItem(50, service, new
-		 * MenuItem("31123steak", service.getMenu())), newt.getSeat(2));
-		 * System.out.print("adding order was successful: " + newt.addOrder(order));
-		 * service.addCurrentOrder(order);
-		 * 
-		 * for(Order o: newt.getOrders()){ for(OrderItem oi: o.getOrderItems()){
-		 * System.out.println(oi); } }
-		 */
+//		// HANI'S TESTER CODE
+//		Order order = new Order(null, null, service, newt);
+//		order.addOrderItem(4, new PricedMenuItem(100, service, new MenuItem("4131chicken", service.getMenu())),
+//				newt.getSeat(0));
+//		order.addOrderItem(4, new PricedMenuItem(50, service, new MenuItem("81312burger", service.getMenu())),
+//				newt.getSeat(1));
+//		order.addOrderItem(4, new PricedMenuItem(50, service, new MenuItem("31123steak", service.getMenu())),
+//				newt.getSeat(2));
+//		System.out.print("adding order was successful: " + newt.addOrder(order));
+//		service.addCurrentOrder(order);
+
+//		for (Order o : newt.getOrders()) {
+//			for (OrderItem oi : o.getOrderItems()) {
+//				System.out.println(oi);
+//			}
+//		}
 
 		// saving
 		RestoApplication.save();
