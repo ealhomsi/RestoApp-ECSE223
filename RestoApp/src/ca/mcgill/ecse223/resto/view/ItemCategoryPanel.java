@@ -19,6 +19,7 @@ import ca.mcgill.ecse223.resto.model.PricedMenuItem;
 @SuppressWarnings("serial")
 public class ItemCategoryPanel extends SidePanel implements ActionListener {
 	private OrderItemPanel orderPanel = null;
+	private RemoveMenuItem removeMenuItem = null;
 	private ItemCategory aCategory = null;
 	static ArrayList<JButton> buttonsList = new ArrayList<JButton>();
 
@@ -61,16 +62,29 @@ public class ItemCategoryPanel extends SidePanel implements ActionListener {
 	}
 
 	public void setSelectedCategory(ItemCategory aCategory) {
-		if (aCategory != null) {
+		if (aCategory != null)
 			this.aCategory = aCategory;
-		}
-
 	}
 
 	@Override
 	public void updateView() {
 		// TODO Auto-generated method stub
-
+		setSize(200, 100);
+		this.orderPanel = (OrderItemPanel) this.page.getSidePanel(11);
+		this.setBackground(Color.white);
+		GridLayout display = new GridLayout(3, 2);
+		this.setLayout(display);
+		this.setVisible(true);
+		this.setEnabled(true);
+		display.setVgap(10);
+		display.setHgap(10);
+		
+		try {
+			this.createItemCategoryPanel(this.controller.getMenuItems(aCategory));
+		} catch (InvalidInputException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -78,12 +92,52 @@ public class ItemCategoryPanel extends SidePanel implements ActionListener {
 		// TODO Auto-generated method stub
 		JButton b = (JButton) arg0.getSource();
 
-		if (buttonsList.contains(b)) {
+		if (MenuCategoriesPanel.selectedComboBox == 3 && buttonsList.contains(b)) {
+			int result = JOptionPane.showConfirmDialog(this, "Do you wanna delete this menu item good sir?");
+			if (result == JOptionPane.OK_OPTION) {
+				try {
+					PricedMenuItem p = this.controller.getPricedMenuItem(b.getText().split("-")[0].trim());
+					Controller.removeMenuItem(p.getMenuItem());
+					this.page.getSidePanel(9).updateView();
+					System.out.println("updated");
+				} catch (InvalidInputException e) {
+					JOptionPane.showConfirmDialog(this, "we are dommed");
+					e.printStackTrace();
+				}
+
+			}
+		}
+		if (buttonsList.contains(b) && this.page.getLeftIndex() != 15 && this.page.getLeftIndex() != 14
+				&& this.page.getLeftIndex() != 17 && this.page.getLeftIndex() != 18) {
 			try {
 				PricedMenuItem p = this.controller.getPricedMenuItem(b.getText().split("-")[0].trim());
 				this.orderPanel = (OrderItemPanel) this.page.getSidePanel(11);
 				this.orderPanel.setPricedMenuItem(p);
 				this.page.setRightIndex(11);
+				this.page.updateSidePanels();
+			} catch (InvalidInputException e) {
+				JOptionPane.showMessageDialog(this, e.getMessage());
+				e.printStackTrace();
+			}
+		}
+
+		if (buttonsList.contains(b) && (this.page.getLeftIndex() == 14 || this.page.getLeftIndex() == 18)) {
+			try {
+				PricedMenuItem p = this.controller.getPricedMenuItem(b.getText().split("-")[0].trim());
+				MenuCategoriesPanel.selectedMenu = b.getText().split("-")[0].trim();
+				this.page.setLeftIndex(18);
+				this.page.updateSidePanels();
+			} catch (InvalidInputException e) {
+				JOptionPane.showMessageDialog(this, e.getMessage());
+				e.printStackTrace();
+			}
+
+		}
+		if (buttonsList.contains(b) && (this.page.getLeftIndex() == 15 || this.page.getLeftIndex() == 17)) {
+			try {
+				PricedMenuItem p = this.controller.getPricedMenuItem(b.getText().split("-")[0].trim());
+				MenuCategoriesPanel.selectedMenu = b.getText().split("-")[0].trim();
+				this.page.setLeftIndex(17);
 				this.page.updateSidePanels();
 			} catch (InvalidInputException e) {
 				JOptionPane.showMessageDialog(this, e.getMessage());

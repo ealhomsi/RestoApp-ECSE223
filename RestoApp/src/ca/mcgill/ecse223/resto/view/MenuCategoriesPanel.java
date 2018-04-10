@@ -25,6 +25,9 @@ import javax.swing.GroupLayout.Alignment;
 @SuppressWarnings("serial")
 public class MenuCategoriesPanel extends SidePanel implements ActionListener {
 	private ItemCategoryPanel itemPanel;
+	private JButton selectedButton;
+	public static int selectedComboBox = 0;
+	public static String selectedMenu = null;
 	private static JScrollPane itemDisplay;
 	private HashMap<JButton, ItemCategory> itemCategories = new HashMap<JButton, ItemCategory>();
 	private JButton btnBack;
@@ -152,45 +155,46 @@ public class MenuCategoriesPanel extends SidePanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
 
 		if (e.getSource() == editComboBox) {
 
+			selectedComboBox = editComboBox.getSelectedIndex();
 			if (editComboBox.getSelectedIndex() == 0)
-				return;
-			
-			if(editComboBox.getSelectedIndex() == 1) {
+				this.page.setLeftIndex(1);
+				this.page.updateSidePanels();
+
+			if (editComboBox.getSelectedIndex() == 1) {
 				this.page.setLeftIndex(15);
 				this.page.updateSidePanels();
 			}
 
 			if (editComboBox.getSelectedIndex() == 2) {
 				this.page.setRightIndex(13);
+				this.page.setLeftIndex(1);
 				this.page.updateSidePanels();
 			}
 			if (editComboBox.getSelectedIndex() == 3) {
 				this.page.setLeftIndex(14);
 				this.page.updateSidePanels();
-			
+
 			}
 		}
-		
+
 		else if (e.getSource() == btnBack) {
 			this.page.setRightIndex(0);
+			this.page.setLeftIndex(1);
+			editComboBox.setSelectedIndex(0);
 			this.page.updateSidePanels();
-		} 
-		else {
-			JButton selectedButton = (JButton) e.getSource();
-			ItemCategory selectedCategory = itemCategories.get(selectedButton);
 
+		} else {
+			ItemCategory selectedCategory = itemCategories.get(((JButton) e.getSource()));
 			ArrayList<MenuItem> selectedCategoryItems = new ArrayList<MenuItem>();
 			try {
 				selectedCategoryItems = (ArrayList<MenuItem>) controller.getMenuItems(selectedCategory);
 			} catch (InvalidInputException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			
+
 			itemPanel.setSelectedCategory(selectedCategory);
 			itemPanel.createItemCategoryPanel(selectedCategoryItems);
 			itemPanel.removeAll();
