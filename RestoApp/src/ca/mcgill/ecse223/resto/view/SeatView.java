@@ -18,7 +18,7 @@ import ca.mcgill.ecse223.resto.model.Seat;
 public class SeatView {
 	private int id;
 private Seat seat;
-	private final static int RADIUS = 20;
+	private final static int RADIUS = 10;
 	private int x;
 	private int y;
 	private Color color = Color.RED;

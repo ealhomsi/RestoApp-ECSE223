@@ -125,7 +125,6 @@ public class ItemCategoryPanel extends SidePanel implements ActionListener {
 			try {
 				PricedMenuItem p = this.controller.getPricedMenuItem(b.getText().split("-")[0].trim());
 				MenuCategoriesPanel.selectedMenu = b.getText().split("-")[0].trim();
-				this.page.setLeftIndex(18);
 				this.page.updateSidePanels();
 			} catch (InvalidInputException e) {
 				JOptionPane.showMessageDialog(this, e.getMessage());

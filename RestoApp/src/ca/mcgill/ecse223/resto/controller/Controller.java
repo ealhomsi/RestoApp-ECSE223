@@ -95,22 +95,25 @@ public class Controller {
 		// add table to currentTable
 		service.addCurrentTable(newt);
 
-//		// HANI'S TESTER CODE
-//		Order order = new Order(null, null, service, newt);
-//		order.addOrderItem(4, new PricedMenuItem(100, service, new MenuItem("4131chicken", service.getMenu())),
-//				newt.getSeat(0));
-//		order.addOrderItem(4, new PricedMenuItem(50, service, new MenuItem("81312burger", service.getMenu())),
-//				newt.getSeat(1));
-//		order.addOrderItem(4, new PricedMenuItem(50, service, new MenuItem("31123steak", service.getMenu())),
-//				newt.getSeat(2));
-//		System.out.print("adding order was successful: " + newt.addOrder(order));
-//		service.addCurrentOrder(order);
+		// // HANI'S TESTER CODE
+		// Order order = new Order(null, null, service, newt);
+		// order.addOrderItem(4, new PricedMenuItem(100, service, new
+		// MenuItem("4131chicken", service.getMenu())),
+		// newt.getSeat(0));
+		// order.addOrderItem(4, new PricedMenuItem(50, service, new
+		// MenuItem("81312burger", service.getMenu())),
+		// newt.getSeat(1));
+		// order.addOrderItem(4, new PricedMenuItem(50, service, new
+		// MenuItem("31123steak", service.getMenu())),
+		// newt.getSeat(2));
+		// System.out.print("adding order was successful: " + newt.addOrder(order));
+		// service.addCurrentOrder(order);
 
-//		for (Order o : newt.getOrders()) {
-//			for (OrderItem oi : o.getOrderItems()) {
-//				System.out.println(oi);
-//			}
-//		}
+		// for (Order o : newt.getOrders()) {
+		// for (OrderItem oi : o.getOrderItems()) {
+		// System.out.println(oi);
+		// }
+		// }
 
 		// saving
 		RestoApplication.save();
@@ -168,9 +171,15 @@ public class Controller {
 		if (!areSeatsInTables(seats, o.getTables())) {
 			throw new InvalidInputException("One or more of the seats does not belong to a table of that order");
 		}
-
-		new OrderItem(quantity, i, o, seats.toArray(new Seat[seats.size()]));
-
+		
+		//create the order item
+		OrderItem orderItem = 	new OrderItem(quantity, i, o, seats.toArray(new Seat[seats.size()]));
+		
+		//adding the order item to all tables
+		for(Seat s: seats) {
+			s.getTable().addToOrderItem(orderItem, s);
+		}
+	
 		// saving
 		RestoApplication.save();
 	}
@@ -837,16 +846,27 @@ public class Controller {
 			throw new InvalidInputException("date/time values might be null");
 		}
 
-		// adds all strings to a list of input to be validated
-		List<String> inputs = new ArrayList<>();
-		inputs.add(contactName);
-		inputs.add(contactEmailAddress);
-		inputs.add(contactPhoneNumber);
+		if (checkIfStringEmptyOrNull(contactName)) {
+			throw new InvalidInputException("contact name is empty or null");
+		}
+
+		if (checkIfStringEmptyOrNull(contactEmailAddress)) {
+			throw new InvalidInputException("contactEmailAddress  is empty or null");
+		}
+
+		if (!isValidEmailAddress(contactEmailAddress)) {
+			throw new InvalidInputException("email format is wrong");
+		}
 
 		// checks for negative quantity
 		if (numberInParty < 0) {
 			throw new InvalidInputException("negative quantity");
 		}
+		// adds all strings to a list of input to be validated
+		List<String> inputs = new ArrayList<>();
+		inputs.add(contactName);
+		inputs.add(contactEmailAddress);
+		inputs.add(contactPhoneNumber);
 
 		// checks a list of input for an empty/null Strings
 		checkInput(inputs);
@@ -876,7 +896,6 @@ public class Controller {
 		new Reservation((java.sql.Date) date, time, numberInParty, contactName, contactEmailAddress, contactPhoneNumber,
 				restoApp, tables.toArray(new Table[tables.size()]));
 		RestoApplication.save();
-
 	}
 
 	/**
@@ -1136,7 +1155,7 @@ public class Controller {
 	 * @param email
 	 * @return
 	 */
-	private boolean isValidEmailAddress(String email) {
+	private static boolean isValidEmailAddress(String email) {
 		String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
 		java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
 		java.util.regex.Matcher m = p.matcher(email);

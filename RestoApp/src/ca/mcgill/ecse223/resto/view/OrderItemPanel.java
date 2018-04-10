@@ -128,6 +128,10 @@ public class OrderItemPanel extends SidePanel implements ActionListener {
 				JOptionPane.showMessageDialog(this, e1.getMessage());
 				e1.printStackTrace();
 			}
+			
+			//go back
+			this.page.setRightIndex(9);
+			this.page.updateSidePanels();
 		} else if (e.getSource() == back) {
 			this.page.setRightIndex(9);
 			this.page.updateSidePanels();

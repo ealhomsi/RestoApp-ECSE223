@@ -43,15 +43,19 @@ public class TableView {
 			this.seats.add(new SeatView(s, points.get(i).x, points.get(i).y, i));
 			i++;
 		}
-		
-		switch(table.getStatus()) {
+
+		switch (table.getStatus()) {
 		case NothingOrdered:
 			this.color = Color.lightGray;
 			break;
 		case Ordered:
 			this.color = Color.BLUE;
 			break;
+		case Available:
+			this.color = Color.DARK_GRAY;
+			break;
 		default:
+			System.err.println("There was an error unkown table status");
 			break;
 		}
 	}
@@ -59,6 +63,7 @@ public class TableView {
 	public int getNumber() {
 		return table.getNumber();
 	}
+
 	public Color getColor() {
 		return color;
 	}
@@ -104,21 +109,20 @@ public class TableView {
 		int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
 		g.setColor(Color.WHITE);
 		// Draw the String
-		g.drawString(text , x, y);
+		g.drawString(text, x, y);
 	}
 
 	/** Helper methods for automatic seats placing **/
 	private List<Point> getListOfSeatCoordinates() throws InvalidInputException {
 		int seatSize = SeatView.getRadius() * 2;
 		int numberOfSeats = this.table.numberOfCurrentSeats();
-		if(numberOfSeats == 1)
-		{
+		if (numberOfSeats == 1) {
 			List<Point> tmmp = new ArrayList<Point>();
-			tmmp.add(new Point(table.getX() - seatSize/2, table.getY()));
+			tmmp.add(new Point(table.getX() - seatSize / 2, table.getY()));
 			return tmmp;
 
 		}
-			
+
 		int a = table.getWidth();
 		int b = table.getLength();
 		int step = SeatView.getRadius() * 2;
@@ -148,9 +152,7 @@ public class TableView {
 
 	@Override
 	public String toString() {
-		return table.getNumber()+ "";
+		return table.getNumber() + "";
 	}
-	
-	
 
 }

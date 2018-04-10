@@ -28,7 +28,7 @@ public class RemoveMenuItem extends SidePanel implements ActionListener{
 		super(c,p);
 		setLayout(null);
 		
-		JLabel label = new JLabel("Please select a menu item to remove");
+		JLabel label = new JLabel("Please click on a menu item to remove");
 		label.setBounds(150, 250, 450, 250);
 		label.setFont(new Font("Comic Sans MS", Font.PLAIN, 25));
 		add(label);

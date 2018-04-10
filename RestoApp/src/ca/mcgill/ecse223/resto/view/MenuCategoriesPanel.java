@@ -18,6 +18,7 @@ import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.GroupLayout.Alignment;
@@ -32,6 +33,7 @@ public class MenuCategoriesPanel extends SidePanel implements ActionListener {
 	private HashMap<JButton, ItemCategory> itemCategories = new HashMap<JButton, ItemCategory>();
 	private JButton btnBack;
 	private JLabel editLabel;
+	private ItemCategory selectedCategory = null;
 	private JComboBox<String> editComboBox;
 
 	public Controller getController() {
@@ -143,6 +145,21 @@ public class MenuCategoriesPanel extends SidePanel implements ActionListener {
 
 	@Override
 	public void updateView() {
+		if (selectedCategory != null) {
+			ArrayList<MenuItem> selectedCategoryItems = new ArrayList<MenuItem>();
+			try {
+				selectedCategoryItems = (ArrayList<MenuItem>) controller.getMenuItems(selectedCategory);
+			} catch (InvalidInputException e1) {
+				e1.printStackTrace();
+			}
+
+			itemPanel.setSelectedCategory(selectedCategory);
+			itemPanel.createItemCategoryPanel(selectedCategoryItems);
+			itemPanel.removeAll();
+			for (JButton button : ItemCategoryPanel.buttonsList) {
+				itemPanel.add(button);
+			}
+		}
 		// TODO Auto-generated method stub
 		itemDisplay.setViewportView(itemPanel);
 		itemDisplay.setVisible(true);
@@ -155,13 +172,11 @@ public class MenuCategoriesPanel extends SidePanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-
 		if (e.getSource() == editComboBox) {
-
 			selectedComboBox = editComboBox.getSelectedIndex();
 			if (editComboBox.getSelectedIndex() == 0)
 				this.page.setLeftIndex(1);
-				this.page.updateSidePanels();
+			this.page.updateSidePanels();
 
 			if (editComboBox.getSelectedIndex() == 1) {
 				this.page.setLeftIndex(15);
@@ -176,31 +191,15 @@ public class MenuCategoriesPanel extends SidePanel implements ActionListener {
 			if (editComboBox.getSelectedIndex() == 3) {
 				this.page.setLeftIndex(14);
 				this.page.updateSidePanels();
-
 			}
-		}
-
-		else if (e.getSource() == btnBack) {
+		} else if (e.getSource() == btnBack) {
 			this.page.setRightIndex(0);
 			this.page.setLeftIndex(1);
 			editComboBox.setSelectedIndex(0);
 			this.page.updateSidePanels();
 
 		} else {
-			ItemCategory selectedCategory = itemCategories.get(((JButton) e.getSource()));
-			ArrayList<MenuItem> selectedCategoryItems = new ArrayList<MenuItem>();
-			try {
-				selectedCategoryItems = (ArrayList<MenuItem>) controller.getMenuItems(selectedCategory);
-			} catch (InvalidInputException e1) {
-				e1.printStackTrace();
-			}
-
-			itemPanel.setSelectedCategory(selectedCategory);
-			itemPanel.createItemCategoryPanel(selectedCategoryItems);
-			itemPanel.removeAll();
-			for (JButton button : ItemCategoryPanel.buttonsList) {
-				itemPanel.add(button);
-			}
+			selectedCategory = itemCategories.get(((JButton) e.getSource()));
 			updateView();
 		}
 	}
