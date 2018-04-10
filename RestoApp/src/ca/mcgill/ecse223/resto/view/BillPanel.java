@@ -12,12 +12,14 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 
 import ca.mcgill.ecse223.resto.controller.Controller;
+import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.model.Bill;
 import ca.mcgill.ecse223.resto.model.Order;
 import ca.mcgill.ecse223.resto.model.OrderItem;
@@ -222,8 +224,6 @@ public class BillPanel extends SidePanel implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if(arg0.getActionCommand().equals("Add")){
-			if(selectedSeat.size() == 0)
-				return;
 			if(seatCombo.getSelectedObjects() == null)
 				return;
 			Object[] addStr = seatCombo.getSelectedObjects();
@@ -231,7 +231,7 @@ public class BillPanel extends SidePanel implements ActionListener{
 			String[] addSt = str.split(" ");
 			Object[] adds = {addSt[1],addSt[3]};
 			selectedSeats.addRow(adds);
-			Seat addSeat = Table.getWithNumber(Integer.parseInt(addSt[1])).getCurrentSeat(Integer.parseInt(addSt[2]));
+			Seat addSeat = Table.getWithNumber(Integer.parseInt(addSt[1])).getCurrentSeat(Integer.parseInt(addSt[3]));
 			selectedSeat.add(addSeat);
 		}
 		if(arg0.getActionCommand().equals("Clear")){
@@ -245,6 +245,15 @@ public class BillPanel extends SidePanel implements ActionListener{
 		if(arg0.getActionCommand().equals("Back")){
 			page.setRightIndex(0);
 			page.updateSidePanels();
+		}
+		if(arg0.getActionCommand().equals("Submit")){
+			if(selectedSeat.size() == 0)
+				return;
+			try {
+				c.issueBill(selectedSeat);
+			} catch (InvalidInputException e) {
+				System.out.println(e.getMessage());
+			}
 		}
 	}
 
