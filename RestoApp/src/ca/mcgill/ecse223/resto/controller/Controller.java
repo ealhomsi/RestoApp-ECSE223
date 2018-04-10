@@ -171,15 +171,15 @@ public class Controller {
 		if (!areSeatsInTables(seats, o.getTables())) {
 			throw new InvalidInputException("One or more of the seats does not belong to a table of that order");
 		}
-		
-		//create the order item
-		OrderItem orderItem = 	new OrderItem(quantity, i, o, seats.toArray(new Seat[seats.size()]));
-		
-		//adding the order item to all tables
-		for(Seat s: seats) {
+
+		// create the order item
+		OrderItem orderItem = new OrderItem(quantity, i, o, seats.toArray(new Seat[seats.size()]));
+
+		// adding the order item to all tables
+		for (Seat s : seats) {
 			s.getTable().addToOrderItem(orderItem, s);
 		}
-	
+
 		// saving
 		RestoApplication.save();
 	}
@@ -760,6 +760,9 @@ public class Controller {
 	 * This methods end an order
 	 * 
 	 * @param order
+	 *            the order
+	 * @param email
+	 *            the email address which would have the points
 	 * @throws InvalidInputException
 	 */
 	public static void endOrder(Order order, String emailAddress) throws InvalidInputException {
@@ -816,6 +819,54 @@ public class Controller {
 		RestoApplication.save();
 	}
 
+	/**
+	 * This methods end an order
+	 * 
+	 * @param order
+	 *            the order
+	 * @param email
+	 *            the email address which would have the points
+	 * @throws InvalidInputException
+	 */
+	public static void endOrder(Order order) throws InvalidInputException {
+		RestoApp service = RestoApplication.getRestoApp();
+		List<Order> currentOrders = service.getCurrentOrders();
+		if (order == null) {
+			throw new InvalidInputException("Order is null");
+		}
+
+		if (!currentOrders.contains(order)) {
+			throw new InvalidInputException("Order being ended does not exist");
+		}
+
+		// creating a new list (professor hint)
+		List<Table> tables = new ArrayList<Table>();
+		for (Table t : order.getTables()) {
+			tables.add(t);
+		}
+
+		// ending orders
+		for (int i = 0; i < tables.size(); i++) {
+			Table table = tables.get(i);
+			if (table != null && table.numberOfOrders() > 0
+					&& table.getOrder(table.numberOfOrders() - 1).equals(order)) {
+				table.endOrder(order);
+			}
+		}
+
+		if (allTablesAvailableOrDifferentCurrentOrder(tables, order))
+			service.removeCurrentOrder(order);
+
+		RestoApplication.save();
+	}
+
+	/**
+	 * helper method
+	 * 
+	 * @param tables
+	 * @param order
+	 * @return
+	 */
 	public static boolean allTablesAvailableOrDifferentCurrentOrder(List<Table> tables, Order order) {
 		boolean result = false;
 

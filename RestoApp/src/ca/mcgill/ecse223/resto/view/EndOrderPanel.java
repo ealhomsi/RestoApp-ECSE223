@@ -73,6 +73,7 @@ public class EndOrderPanel extends SidePanel implements ActionListener {
 			orders.addItem(t);
 		}
 		this.email.removeAllItems();
+		this.email.addItem("Assign it to none");
 		for(String item: Controller.getAListOfAllEmails())
 			email.addItem(item);
 
@@ -92,7 +93,12 @@ public class EndOrderPanel extends SidePanel implements ActionListener {
 			OrderView ov = (OrderView) this.orders.getSelectedItem();
 			Order o = ov.getOrder();
 			try {
-				Controller.endOrder(o, emailAddress);
+				if(this.email.getSelectedIndex() == 0) {
+					Controller.endOrder(o);
+				}else {
+					Controller.endOrder(o, emailAddress);
+				}
+				
 				this.page.updateSidePanels();
 			} catch (InvalidInputException exception) {
 				JOptionPane.showMessageDialog(this, exception.getMessage());

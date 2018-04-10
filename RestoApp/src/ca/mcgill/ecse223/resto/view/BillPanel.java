@@ -247,8 +247,10 @@ public class BillPanel extends SidePanel implements ActionListener{
 			page.updateSidePanels();
 		}
 		if(arg0.getActionCommand().equals("Submit")){
-			if(selectedSeat.size() == 0)
+			if(selectedSeat.size() == 0) {
+				JOptionPane.showConfirmDialog(this, "select some seats");
 				return;
+			}
 			try {
 				c.issueBill(selectedSeat);
 			} catch (InvalidInputException e) {

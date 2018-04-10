@@ -83,12 +83,12 @@ class Table {
    // check that the provided order item is the last item of the current order of the table
    private boolean iIsLastItem(OrderItem i) {
         Order aOrder = orders.get(orders.size()-1);
-        return aOrder.getOrderItem(aOrder.numberOfOrderItems()).equals(i);
+        return aOrder.getOrderItem(aOrder.numberOfOrderItems()-1).equals(i);
    }
 
    // check that all seats of the table have a bill that belongs to the current order of the table 
    private boolean allSeatsBilled() {
-        boolean result =false;
+      boolean result =false;
       for(Seat seat : seats){
           List<Bill> bills = seat.getBills();
           for(Bill bill : bills){

@@ -943,7 +943,7 @@ public class Table implements Serializable
   // line 85 "../../../../../RestoAppTableStateMachine.ump"
    private boolean iIsLastItem(OrderItem i){
     Order aOrder = orders.get(orders.size()-1);
-        return aOrder.getOrderItem(aOrder.numberOfOrderItems()).equals(i);
+        return aOrder.getOrderItem(aOrder.numberOfOrderItems()-1).equals(i);
   }
 
 

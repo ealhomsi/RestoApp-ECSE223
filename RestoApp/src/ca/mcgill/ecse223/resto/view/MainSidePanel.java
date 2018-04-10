@@ -61,7 +61,7 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		btnEndOrder.setBounds(380, 135, 240, 80);
 		this.add(btnEndOrder);
 		btnEndOrder.addActionListener(this);
-		
+
 		btnLoyaltyCard = new JButton("LOYALTY CARD");
 		btnLoyaltyCard.setBounds(450, 435, 173, 80);
 		btnLoyaltyCard.setBackground(Color.white);
@@ -78,6 +78,7 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		comboBox.addItem("Update Table");
 		comboBox.addItem("Change Table Location");
 		comboBox.addItem("View Orders");
+		comboBox.addItem("Cancel Orders/OrderItems");
 		comboBox.setFont(new Font("Comiec sans MS", Font.PLAIN, 20));
 		this.add(comboBox);
 		comboBox.addActionListener(this);
@@ -108,15 +109,17 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == comboBox) {	
+		if (e.getSource() == comboBox) {
 			int option = comboBox.getSelectedIndex();
 			if (option == 0)
 				return;
-			else if (option == 5){
+			else if (option == 5) {
 				this.page.setRightIndex(12);
 				this.page.updateSidePanels();
-			}
-			else{
+			} else if (option == 6) {
+				this.page.setRightIndex(20);
+				this.page.updateSidePanels();
+			} else {
 				this.page.setRightIndex(++option);
 				this.page.updateSidePanels();
 			}
@@ -135,7 +138,7 @@ public class MainSidePanel extends SidePanel implements ActionListener {
 		} else if (e.getSource() == btnLoyaltyCard) {
 			this.page.setRightIndex(16);
 			this.page.updateSidePanels();
-		}else if(e.getActionCommand().equals("BILL")){
+		} else if (e.getActionCommand().equals("BILL")) {
 			this.page.setRightIndex(19);
 			this.page.updateSidePanels();
 		}
