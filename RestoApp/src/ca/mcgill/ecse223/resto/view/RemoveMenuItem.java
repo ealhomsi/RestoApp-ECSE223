@@ -15,6 +15,7 @@ import ca.mcgill.ecse223.resto.controller.Controller;
 public class RemoveMenuItem extends SidePanel implements ActionListener{
 	private JButton cancel;
 	
+	
 	public Controller getController() {
 		return controller;
 	}
@@ -56,5 +57,4 @@ public class RemoveMenuItem extends SidePanel implements ActionListener{
 		// TODO Auto-generated method stub
 		
 	}
-
 }

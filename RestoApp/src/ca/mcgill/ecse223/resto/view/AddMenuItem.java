@@ -8,9 +8,13 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import ca.mcgill.ecse223.resto.controller.Controller;
+import ca.mcgill.ecse223.resto.controller.InvalidInputException;
+import ca.mcgill.ecse223.resto.model.PricedMenuItem;
+import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
 
 @SuppressWarnings("serial")
 public class AddMenuItem extends SidePanel implements ActionListener{
@@ -19,7 +23,7 @@ public class AddMenuItem extends SidePanel implements ActionListener{
 	private JComboBox<String> comboBox;
 	private JButton back;
 	private JButton add;
-
+	private ItemCategory itemCategory;
 	
 	public Controller getController() {
 		return controller;
@@ -28,6 +32,18 @@ public class AddMenuItem extends SidePanel implements ActionListener{
 	public void setController(Controller controller) {
 		this.controller = controller;
 	}
+	
+	public void clearTxt() {
+		nameTxt.setText(null);
+		priceTxt.setText(null);
+		this.page.updateSidePanels();
+	}
+	
+	public ItemCategory getItemCategory()
+	  {
+	    return itemCategory;
+	  }
+
 	
 	public AddMenuItem(Controller c, RestoAppPage p) {
 		super(c, p);
@@ -79,35 +95,49 @@ public class AddMenuItem extends SidePanel implements ActionListener{
 		add.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
 		add.setBackground(Color.WHITE);
 		add(add);
+		add.addActionListener(this);
 		
 		
-		comboBox = new JComboBox<String>();
+		comboBox = new JComboBox<String> ();
+		for(ItemCategory s: ItemCategory.values()) {
+			comboBox.addItem(s.toString());
+		}
 		comboBox.setBounds(350, 550, 300, 50);
 		comboBox.setBackground(Color.WHITE);
 		comboBox.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
-		comboBox.addItem("Appetizer");
-		comboBox.addItem("Main");
-		comboBox.addItem("Dessert");
-		comboBox.addItem("Alcoholic Beverage");
-		comboBox.addItem("Non Alcoholic Beverage");
 		add(comboBox);
 		comboBox.addActionListener(this);
 	}
+	
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
 		if (e.getSource() == back) {
 			this.page.setRightIndex(9);
 			this.page.updateSidePanels();
 		}
 
+		else if(e.getSource() == add) {
+			try {
+				String name = nameTxt.getText();
+				double price = Double.parseDouble(priceTxt.getText());
+				String category = comboBox.getSelectedItem().toString();
+				
+				Controller.addMenuItem(name, ItemCategory.valueOf(category), price);
+				this.clearTxt();
+				page.updateSidePanels();
+				
+			}catch (NumberFormatException e1) {
+				JOptionPane.showMessageDialog(this, "Please enter an integer value");
+			} catch (Exception e2) {
+			JOptionPane.showMessageDialog(this, e2.getMessage());
+			}
+		}
 	}
 
 	@Override
 	public void updateView() {
-		// TODO Auto-generated method stub
-		this.comboBox.setSelectedIndex(0);
+		
 	}
 }
