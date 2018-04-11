@@ -38,14 +38,14 @@ public class EndOrderPanel extends SidePanel implements ActionListener {
 		this.add(email);
 
 		SubmitButton = new JButton("End Order");
-		SubmitButton.setBounds(550, 650, 100, 50);
+		SubmitButton.setBounds(330, 650, 200, 50);
 		SubmitButton.setBackground(Color.white);
 		SubmitButton.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
 		this.add(SubmitButton);
 		SubmitButton.addActionListener(this);
 
 		backButton = new JButton("Back");
-		backButton.setBounds(150, 650, 100, 50);
+		backButton.setBounds(200, 650, 100, 50);
 		backButton.setBackground(Color.white);
 		backButton.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
 		backButton.addActionListener(this);
