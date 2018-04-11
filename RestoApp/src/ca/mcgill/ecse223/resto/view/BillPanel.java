@@ -26,6 +26,7 @@ import ca.mcgill.ecse223.resto.model.OrderItem;
 import ca.mcgill.ecse223.resto.model.Seat;
 import ca.mcgill.ecse223.resto.model.Table;
 
+@SuppressWarnings("serial")
 public class BillPanel extends SidePanel implements ActionListener{
 	private Controller c;
 	private DefaultTableModel seatOverview;
@@ -123,7 +124,8 @@ public class BillPanel extends SidePanel implements ActionListener{
 		order = new JComboBox<String>();
 		order.setBounds(220,100, 250, 50);
 		add(order);
-		order.setFont(new Font("Comic sans MS", Font.PLAIN, 10));
+		order.setFont(new Font("Comic sans MS", Font.PLAIN, 15));
+		order.setBackground(Color.WHITE);
 		order.addItemListener(new ItemListener() {
 			
 			@Override
@@ -191,17 +193,20 @@ public class BillPanel extends SidePanel implements ActionListener{
 		
 		adderButton = new JButton("Add");
 		adderButton.setBounds(220, 250, 70, 50);
+		adderButton.setBackground(Color.white);
 		adderButton.setFont(new Font("Comic sans MS", Font.PLAIN, 15));
 		adderButton.addActionListener(this);
 		add(adderButton);
 		
 		clearButton = new JButton("Clear");
+		clearButton.setBackground(Color.white);
 		clearButton.setBounds(290, 250, 70, 50);
 		clearButton.setFont(new Font("Comic sans MS", Font.PLAIN, 15));
 		clearButton.addActionListener(this);
 		add(clearButton);
 		
 		submitButton = new JButton("Submit");
+		submitButton.setBackground(Color.white);
 		submitButton.setBounds(360, 250, 100, 50);
 		submitButton.setFont(new Font("Comic sans MS", Font.PLAIN, 15));
 		submitButton.addActionListener(this);
@@ -215,6 +220,7 @@ public class BillPanel extends SidePanel implements ActionListener{
 		add(title2);
 		
 		backButton = new JButton("Back");
+		backButton.setBackground(Color.white);
 		backButton.setBounds(225, 450 , 100, 50);
 		backButton.addActionListener(this);
 		backButton.setFont(new Font("Comic sans MS", Font.PLAIN, 15));
