@@ -3,6 +3,7 @@ package ca.mcgill.ecse223.resto.controller;
 import java.awt.Rectangle;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -772,6 +773,16 @@ public class Controller {
 	 *            the email address which would have the points
 	 * @throws InvalidInputException
 	 */
+	private static java.sql.Date convertDate(java.util.Date utilDate) {
+		java.util.Calendar cal = Calendar.getInstance();
+		cal.setTime(utilDate);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		java.sql.Date sqlDate = new java.sql.Date(cal.getTime().getTime()); // your sql date
+		return sqlDate;
+	}
 	public static void endOrder(Order order, String emailAddress) throws InvalidInputException {
 		RestoApp service = RestoApplication.getRestoApp();
 		List<Order> currentOrders = service.getCurrentOrders();
@@ -943,7 +954,7 @@ public class Controller {
 			List<Reservation> reservations = table.getReservations();
 
 			for (Reservation reservation : reservations) {
-				if (reservation.doesOverlap(date, time)) {
+				if (reservation.doesOverlap(convertDate(date), time)) {
 					throw new InvalidInputException("time/date overlap");
 				}
 			}

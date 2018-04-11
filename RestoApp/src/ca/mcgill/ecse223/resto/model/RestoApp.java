@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.26.1-f40f105-3613 modeling language!*/
+/*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.io.Serializable;
@@ -323,7 +323,7 @@ public class RestoApp implements Serializable
   {
     return 0;
   }
-
+  /* Code from template association_AddManyToOne */
   public Reservation addReservation(Date aDate, Time aTime, int aNumberInParty, String aContactName, String aContactEmailAddress, String aContactPhoneNumber, Table... allTables)
   {
     return new Reservation(aDate, aTime, aNumberInParty, aContactName, aContactEmailAddress, aContactPhoneNumber, this, allTables);
@@ -395,7 +395,7 @@ public class RestoApp implements Serializable
   {
     return 0;
   }
-
+  /* Code from template association_AddManyToOne */
   public Table addTable(int aNumber, int aX, int aY, int aWidth, int aLength)
   {
     return new Table(aNumber, aX, aY, aWidth, aLength, this);
@@ -524,7 +524,7 @@ public class RestoApp implements Serializable
   {
     return 0;
   }
-
+  /* Code from template association_AddManyToOne */
   public Order addOrder(Date aDate, Time aTime, Table... allTables)
   {
     return new Order(aDate, aTime, this, allTables);
@@ -653,7 +653,7 @@ public class RestoApp implements Serializable
   {
     return 0;
   }
-
+  /* Code from template association_AddManyToOne */
   public PricedMenuItem addPricedMenuItem(double aPrice, MenuItem aMenuItem)
   {
     return new PricedMenuItem(aPrice, this, aMenuItem);
@@ -725,7 +725,7 @@ public class RestoApp implements Serializable
   {
     return 0;
   }
-
+  /* Code from template association_AddManyToOne */
   public Bill addBill(Order aOrder, Seat... allIssuedForSeats)
   {
     return new Bill(aOrder, this, allIssuedForSeats);
@@ -797,7 +797,7 @@ public class RestoApp implements Serializable
   {
     return 0;
   }
-
+  /* Code from template association_AddManyToOne */
   public LoyaltyCard addLoyaltyCard(double aPoint, String aClientName, String aPhoneNumber, String aEmailAddress)
   {
     return new LoyaltyCard(aPoint, aClientName, aPhoneNumber, aEmailAddress, this);
@@ -935,7 +935,7 @@ public class RestoApp implements Serializable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 7 ../../../../../RestoAppPersistence.ump
+  // line 7 "../../../../../RestoAppPersistence.ump"
   private static final long serialVersionUID = -2683593616927798071L ;
 
   

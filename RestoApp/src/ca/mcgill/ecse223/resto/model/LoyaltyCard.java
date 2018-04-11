@@ -1,12 +1,12 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.26.1-f40f105-3613 modeling language!*/
+/*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.io.Serializable;
 import java.util.*;
 
 // line 109 "../../../../../RestoAppPersistence.ump"
-// line 81 "../../../../../RestoApp v3.ump"
+// line 95 "../../../../../RestoApp v3.ump"
 public class LoyaltyCard implements Serializable
 {
 
@@ -242,7 +242,10 @@ public class LoyaltyCard implements Serializable
     orders.clear();
     RestoApp placeholderRestoApp = restoApp;
     this.restoApp = null;
-    placeholderRestoApp.removeLoyaltyCard(this);
+    if(placeholderRestoApp != null)
+    {
+      placeholderRestoApp.removeLoyaltyCard(this);
+    }
   }
 
   // line 114 "../../../../../RestoAppPersistence.ump"
@@ -267,7 +270,7 @@ public class LoyaltyCard implements Serializable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 112 ../../../../../RestoAppPersistence.ump
+  // line 112 "../../../../../RestoAppPersistence.ump"
   private static final long serialVersionUID = 5837274928374635219L ;
 
   

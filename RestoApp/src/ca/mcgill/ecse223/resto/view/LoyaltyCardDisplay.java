@@ -217,7 +217,7 @@ public class LoyaltyCardDisplay extends SidePanel implements ActionListener {
 				this.updateView();
 			} catch (InvalidInputException e1) {
 				JOptionPane.showMessageDialog(this, e1.getMessage());
-				e1.printStackTrace();
+//				e1.printStackTrace();
 			}
 		} else if (e.getSource() == submitRemovalButton) {
 			String emailToRemove = removeCard.getText();

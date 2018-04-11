@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.26.1-f40f105-3613 modeling language!*/
+/*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.io.Serializable;
@@ -351,7 +351,10 @@ public class Reservation implements Serializable
     }
     RestoApp placeholderRestoApp = restoApp;
     this.restoApp = null;
-    placeholderRestoApp.removeReservation(this);
+    if(placeholderRestoApp != null)
+    {
+      placeholderRestoApp.removeReservation(this);
+    }
   }
 
   // line 72 "../../../../../RestoAppPersistence.ump"
@@ -364,7 +367,7 @@ public class Reservation implements Serializable
   }
 
   // line 29 "../../../../../RestoApp v3.ump"
-   public boolean doesOverlap(java.util.Date date, java.sql.Time time){
+   public boolean doesOverlap(Date date, java.sql.Time time){
     return Math.abs((this.date.getTime() + this.time.getTime()) - (date.getTime() + time.getTime())) < 7200000;
   }
 
@@ -385,7 +388,7 @@ public class Reservation implements Serializable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 69 ../../../../../RestoAppPersistence.ump
+  // line 69 "../../../../../RestoAppPersistence.ump"
   private static final long serialVersionUID = 2315072607928790501L ;
 
   
