@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -99,6 +100,29 @@ public class TableView {
 	}
 
 	public void drawTable(Graphics g, Calendar now) {
+
+		// check if reserved
+		if (table.getReservations().size() == 0)
+			return;
+
+		// there is reservation check if any of them clash
+		boolean reservationIsNear = false;
+		for (Reservation r : table.getReservations()) {
+			// calendar eventDate object to hold day, month and year
+			Calendar eventDate = Calendar.getInstance();
+			eventDate.set(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH);
+			// eventTime holds the number of milliseconds since the start of the day -- done
+			// by converting hours and minutes to milliseconds
+			long eventTime = (now.HOUR_OF_DAY) * 3600000 + (now.MINUTE) * 60000;
+			Time time = new Time(eventTime);
+
+			if (r.doesOverlap(eventDate.getTime(), time)) {
+				this.color = Color.GREEN;
+				reservationIsNear = true;
+				break;
+			}
+		}
+
 		g.setColor(color);
 		g.fillRect(table.getX(), table.getY(), table.getWidth(), table.getLength());
 		g.setColor(Color.white);
@@ -115,19 +139,6 @@ public class TableView {
 		// Draw the String
 		g.drawString(text, x, y);
 
-		// check if reserved
-		if (table.getReservations().size() == 0)
-			return;
-
-		// there is reservation check if any of them clash
-		boolean reservationIsNear = false;
-		for (Reservation r : table.getReservations()) {
-			if (getDateDiffInHours(r.getDate(), new java.sql.Date(Calendar.getInstance().getTime().getTime())) >= 120) {
-				reservationIsNear = true;
-				break;
-			}
-		}
-
 		if (reservationIsNear) {
 			text = "reserved!";
 			x = rect.x + rect.width / 4;
@@ -139,8 +150,8 @@ public class TableView {
 		}
 	}
 
-	public static long getDateDiffInHours(Date date1, Date date2) {
-		long diffInMillies = date2.getTime() - date1.getTime();
+	public static long getDateDiffInMinutes(long date1, long date2) {
+		long diffInMillies = Math.abs(date2 - date1);
 		return TimeUnit.MILLISECONDS.toMinutes(diffInMillies);
 	}
 

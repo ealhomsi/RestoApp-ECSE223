@@ -17,7 +17,6 @@ class RestoApp {
 }
 
 class Reservation {
-   depend java.util.Date;
    Date date;
    Time time;
    Integer numberInParty;
