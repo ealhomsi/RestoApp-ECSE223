@@ -291,7 +291,7 @@ public class Table implements Serializable
       case Ordered:
         if (allSeatsBilled())
         {
-        // line 111 "../../../../../RestoAppTableStateMachine.ump"
+        // line 116 "../../../../../RestoAppTableStateMachine.ump"
           
           setStatus(Status.Available);
           wasEventProcessed = true;
@@ -383,19 +383,21 @@ public class Table implements Serializable
             if(o.hasBills()){
             	List<Bill> bills = o.getBills();
             	
-            	for(Bill b : bills){
+            	for(int i = 0; i<o.getBills().size(); i++){
+            		Bill b = o.getBill(i);
             		List<Seat> seats = b.getIssuedForSeats();
             		if(seats.contains(s)){
-            			b.removeIssuedForSeat(s);
-            			
-            			if(b.getIssuedForSeats().size() == 0){
-            				o.removeBill(b);
+            			if(b.getIssuedForSeats().size() == 1){
+            				b.delete();
+            				i=0;
+            			}else{
+            				b.removeIssuedForSeat(s);
+            				i=0;
             			}
-            		
             		}
             	}
             }
-            Bill bill = new Bill(o, r, s);
+            new Bill(o, r, s);
         setStatus(Status.Ordered);
         wasEventProcessed = true;
         break;
@@ -414,31 +416,34 @@ public class Table implements Serializable
     switch (aStatus)
     {
       case Ordered:
-        // line 84 "../../../../../RestoAppTableStateMachine.ump"
+        // line 86 "../../../../../RestoAppTableStateMachine.ump"
         // add provided seat to provided bill unless seat has already been added, in which case nothing needs
             // to be done; if the provided seat is already assigned to another bill for the current order, then the
             // seat is first removed from the other bill and if no seats are left for the bill, the bill is deleted
            	List<Seat> seats = b.getIssuedForSeats();
            	
-           	if(!seats.contains(s)){
+           	          	if(!seats.contains(s)){
            		Table table = s.getTable();
            		List<Order> orders = table.getOrders();
            		int size = orders.size();
            		Order o = orders.get(size-1);
            		
            		if(o.hasBills()){
-				List<Bill> bills = o.getBills();
-				for(Bill bill : bills){
-           				List<Seat> issuedSeats = bill.getIssuedForSeats();
-           			
-           			if(issuedSeats.contains(s)){
-           				bill.removeIssuedForSeat(s);
-           			if(b.getIssuedForSeats().size() == 0)
-           				o.removeBill(bill);
-					}
-				}
-           		}
-           	}
+                	for(int i = 0; i<o.getBills().size(); i++){
+                		Bill bill = o.getBill(i);
+                		List<Seat> seat = bill.getIssuedForSeats();
+                		if(seat.contains(s)){
+                			if(bill.getIssuedForSeats().size() == 1){
+                				bill.delete();
+                				i=0;
+                			}else{
+                				bill.removeIssuedForSeat(s);
+                				i=0;
+                			}
+                		}
+                	}
+		}
+           }
            	b.addIssuedForSeat(s);
         setStatus(Status.Ordered);
         wasEventProcessed = true;
@@ -972,7 +977,7 @@ public class Table implements Serializable
   /**
    * check that the provided quantity is an integer greater than 0
    */
-  // line 118 "../../../../../RestoAppTableStateMachine.ump"
+  // line 123 "../../../../../RestoAppTableStateMachine.ump"
    private boolean quantityIsPositive(int quantity){
     if(quantity>0)
         return true;
@@ -983,7 +988,7 @@ public class Table implements Serializable
   /**
    * check that the provided order item is the last item of the current order of the table
    */
-  // line 125 "../../../../../RestoAppTableStateMachine.ump"
+  // line 130 "../../../../../RestoAppTableStateMachine.ump"
    private boolean iIsLastItem(OrderItem i){
     Order aOrder = orders.get(orders.size()-1);
         return aOrder.getOrderItem(aOrder.numberOfOrderItems()-1).equals(i);
@@ -993,7 +998,7 @@ public class Table implements Serializable
   /**
    * check that all seats of the table have a bill that belongs to the current order of the table
    */
-  // line 131 "../../../../../RestoAppTableStateMachine.ump"
+  // line 136 "../../../../../RestoAppTableStateMachine.ump"
    private boolean allSeatsBilled(){
     boolean result =false;
       for(Seat seat : seats){
