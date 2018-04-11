@@ -500,6 +500,12 @@ public class Controller {
 		if (category == null)
 			throw new InvalidInputException("category is null");
 
+		if(MenuItem.hasWithName(name) && !(MenuItem.getWithName(name).hasCurrentPricedMenuItem())) {
+			PricedMenuItem pmi = MenuItem.getWithName(name).addPricedMenuItem(price, r);
+			MenuItem.getWithName(name).setCurrentPricedMenuItem(pmi);
+		}
+		
+		else {
 		MenuItem menuItem = null;
 		try {
 			menuItem = new MenuItem(name, menu);
@@ -510,7 +516,8 @@ public class Controller {
 		menuItem.setItemCategory(category);
 		PricedMenuItem pmi = menuItem.addPricedMenuItem(price, r);
 		menuItem.setCurrentPricedMenuItem(pmi);
-
+		}
+		
 		RestoApplication.save();
 	}
 
