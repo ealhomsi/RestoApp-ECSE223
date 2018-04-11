@@ -123,6 +123,39 @@ public class Controller {
 	}
 
 	/**
+	 * check if a reservation is near
+	 */
+	public static boolean isReservedNow(Table table) {
+		// check if reserved
+		if (table.getReservations().size() == 0)
+			return false;
+
+		// there is reservation check if any of them clash
+		for (Reservation r : table.getReservations()) {
+			final Calendar c = Calendar.getInstance();
+			int year = c.get(Calendar.YEAR);
+			int month = c.get(Calendar.MONTH);
+			int day = c.get(Calendar.DAY_OF_MONTH);
+			int hours = c.get(Calendar.HOUR_OF_DAY);
+			int minutes = c.get(Calendar.MINUTE);
+			// calendar eventDate object to hold day, month and year
+			Calendar eventDate = Calendar.getInstance();
+			eventDate.set(year, month, day);
+			// eventTime holds the number of milliseconds since the start of the day -- done
+			// by converting hours and minutes to milliseconds
+			long eventTime = hours * 3600000 + minutes * 60000;
+			Time time = new Time(eventTime);
+
+			if (r.doesOverlap(convertDate(eventDate.getTime()), time)) {
+				// this.color = Color.GREEN;
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Checks if all tables are current
 	 * 
 	 * @return true or false if table are not current
@@ -501,24 +534,24 @@ public class Controller {
 		if (category == null)
 			throw new InvalidInputException("category is null");
 
-		if(MenuItem.hasWithName(name) && !(MenuItem.getWithName(name).hasCurrentPricedMenuItem())) {
+		if (MenuItem.hasWithName(name) && !(MenuItem.getWithName(name).hasCurrentPricedMenuItem())) {
 			PricedMenuItem pmi = MenuItem.getWithName(name).addPricedMenuItem(price, r);
 			MenuItem.getWithName(name).setCurrentPricedMenuItem(pmi);
 		}
-		
+
 		else {
-		MenuItem menuItem = null;
-		try {
-			menuItem = new MenuItem(name, menu);
-		} catch (RuntimeException e) {
-			throw new InvalidInputException(e.getMessage());
+			MenuItem menuItem = null;
+			try {
+				menuItem = new MenuItem(name, menu);
+			} catch (RuntimeException e) {
+				throw new InvalidInputException(e.getMessage());
+			}
+
+			menuItem.setItemCategory(category);
+			PricedMenuItem pmi = menuItem.addPricedMenuItem(price, r);
+			menuItem.setCurrentPricedMenuItem(pmi);
 		}
 
-		menuItem.setItemCategory(category);
-		PricedMenuItem pmi = menuItem.addPricedMenuItem(price, r);
-		menuItem.setCurrentPricedMenuItem(pmi);
-		}
-		
 		RestoApplication.save();
 	}
 
@@ -783,6 +816,7 @@ public class Controller {
 		java.sql.Date sqlDate = new java.sql.Date(cal.getTime().getTime()); // your sql date
 		return sqlDate;
 	}
+
 	public static void endOrder(Order order, String emailAddress) throws InvalidInputException {
 		RestoApp service = RestoApplication.getRestoApp();
 		List<Order> currentOrders = service.getCurrentOrders();
@@ -962,8 +996,8 @@ public class Controller {
 		if (seatCapacity < numberInParty) {
 			throw new InvalidInputException("seat capactiy is less than the number in party");
 		}
-		new Reservation(new java.sql.Date(date.getTime()), time, numberInParty, contactName, contactEmailAddress, contactPhoneNumber,
-				restoApp, tables.toArray(new Table[tables.size()]));
+		new Reservation(new java.sql.Date(date.getTime()), time, numberInParty, contactName, contactEmailAddress,
+				contactPhoneNumber, restoApp, tables.toArray(new Table[tables.size()]));
 		RestoApplication.save();
 	}
 
@@ -1285,5 +1319,27 @@ public class Controller {
 		RestoApplication.save();
 		return price;
 
+	}
+
+	public static List<Table> getAllTableObject() {
+		// TODO Auto-generated method stub
+		RestoApp r = RestoApplication.getRestoApp();
+		
+		return r.getTables();
+	}
+	
+	/**
+	 * checks if a new reservation on that time and date is available
+	 * @param table
+	 * @param date
+	 * @param time
+	 * @return
+	 */
+	public static boolean TableAvaialbeOnTimeAndDate(Table table, Date date, Time time) {
+		for(Reservation r: table.getReservations()) {
+			if(r.doesOverlap(convertDate(date), time))
+				return false;
+		}
+		return true;
 	}
 }

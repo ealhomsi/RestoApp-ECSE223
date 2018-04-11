@@ -101,36 +101,35 @@ public class TableView {
 	}
 
 	public void drawTable(Graphics g, Calendar now) {
+		boolean reservationIsNear = false;
 
 		// check if reserved
-		if (table.getReservations().size() == 0)
-			return;
+		if (table.getReservations().size() != 0) {
+			// there is reservation check if any of them clash
+			for (Reservation r : table.getReservations()) {
+				final Calendar c = Calendar.getInstance();
+				int year = c.get(Calendar.YEAR);
+				int month = c.get(Calendar.MONTH);
+				int day = c.get(Calendar.DAY_OF_MONTH);
+				int hours = c.get(Calendar.HOUR_OF_DAY);
+				int minutes = c.get(Calendar.MINUTE);
+				// calendar eventDate object to hold day, month and year
+				Calendar eventDate = Calendar.getInstance();
+				eventDate.set(year, month, day);
+				// eventTime holds the number of milliseconds since the start of the day -- done
+				// by converting hours and minutes to milliseconds
+				long eventTime = hours * 3600000 + minutes * 60000;
+				Time time = new Time(eventTime);
 
-		// there is reservation check if any of them clash
-		boolean reservationIsNear = false;
-		for (Reservation r : table.getReservations()) {
-			final Calendar c = Calendar.getInstance();
-			int year = c.get(Calendar.YEAR);
-			int month = c.get(Calendar.MONTH);
-			int day = c.get(Calendar.DAY_OF_MONTH);
-			int hours = c.get(Calendar.HOUR_OF_DAY);
-			int minutes = c.get(Calendar.MINUTE);
-			// calendar eventDate object to hold day, month and year
-			Calendar eventDate = Calendar.getInstance();
-			eventDate.set(year, month, day);
-			// eventTime holds the number of milliseconds since the start of the day -- done
-			// by converting hours and minutes to milliseconds
-			long eventTime = hours * 3600000 + minutes * 60000;
-			Time time = new Time(eventTime);
-
-			if (r.doesOverlap(convertDate(eventDate.getTime()), time)) {
-				// this.color = Color.GREEN;
-				reservationIsNear = true;
-				break;
+				if (r.doesOverlap(convertDate(eventDate.getTime()), time)) {
+					// this.color = Color.GREEN;
+					reservationIsNear = true;
+					break;
+				}
 			}
 		}
 
-		g.setColor(color);
+		g.setColor(this.color);
 		g.fillRect(table.getX(), table.getY(), table.getWidth(), table.getLength());
 		g.setColor(Color.white);
 
@@ -207,6 +206,7 @@ public class TableView {
 	public String toString() {
 		return table.getNumber() + "";
 	}
+
 	private static java.sql.Date convertDate(java.util.Date utilDate) {
 		java.util.Calendar cal = Calendar.getInstance();
 		cal.setTime(utilDate);

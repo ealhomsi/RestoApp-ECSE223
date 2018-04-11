@@ -217,6 +217,26 @@ public class ReservationPanel extends SidePanel implements ActionListener {
 						+ Long.parseLong(minuteTextField.getText()) * 60000;
 				Time time = new Time(eventTime);
 
+				// check if auto is passed
+				String autoOption = tablesAssignedField.getText();
+				if(autoOption.trim().toLowerCase().equals("auto")) {
+					//auto means grab the next available table on that date and time
+					for(Table table: Controller.getAllTableObject()) {
+						if(Controller.TableAvaialbeOnTimeAndDate(table, eventDate.getTime(), time)) {
+							List<Table> autoTable = new ArrayList<>();
+							autoTable.add(table);
+							Controller.reserve(eventDate.getTime(), time, Integer.parseInt(numberOfPersonsTextField.getText()),
+									nameTextField.getText(), emailTextField.getText(), phoneNumberTextField.getText(), autoTable);
+							
+							JOptionPane.showMessageDialog(this, "table number " + table.getNumber() + " was assigned automatically to this resv");
+							return;
+						}
+					}
+				}
+				
+				//check if asap
+				//check if nextweek
+				
 				// tokenizer to take a list of table number from the user
 				StringTokenizer token = new StringTokenizer(tablesAssignedField.getText(), " ");
 				List<Table> tables = new ArrayList<>();
