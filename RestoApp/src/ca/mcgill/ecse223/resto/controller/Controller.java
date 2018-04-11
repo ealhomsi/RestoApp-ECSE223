@@ -1226,7 +1226,7 @@ public class Controller {
 	 * @param emailAddress
 	 * @throws InvalidInputException
 	 */
-	public void registrationForLoyaltyCard(String clientName, String phoneNumber, String emailAddress)
+	public void registerLoyaltyCard(String clientName, String phoneNumber, String emailAddress)
 			throws InvalidInputException {
 		boolean hasLoyaltyCard = LoyaltyCard.hasWithEmailAddress(emailAddress);
 
