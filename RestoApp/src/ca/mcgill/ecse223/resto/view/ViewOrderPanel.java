@@ -8,6 +8,7 @@ import ca.mcgill.ecse223.resto.controller.Controller;
 import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.model.Table;
 import ca.mcgill.ecse223.resto.model.OrderItem;
+import ca.mcgill.ecse223.resto.model.Seat;
 
 import javax.swing.*;
 
@@ -23,6 +24,7 @@ public class ViewOrderPanel extends SidePanel implements ActionListener {
 	private GridLayout layout;
 	private JButton back;
 	private JButton submit;
+	private JLabel instruction;
 
 	public ViewOrderPanel(Controller controller, RestoAppPage page) {
 		super(controller, page);
@@ -30,32 +32,41 @@ public class ViewOrderPanel extends SidePanel implements ActionListener {
 
 		// variable initialisations
 		currentTables = new JComboBox<>();
-		titlePage = new JLabel("Table Orders", SwingConstants.CENTER);
+		titlePage = new JLabel("TABLE ORDERS", SwingConstants.CENTER);
 		// embeddedPanel = new JPanel();
 		// listOfOrderItems = new JScrollPane();
 		comboBoxLabel = new JLabel("select table");
 		back = new JButton("back");
-		submit = new JButton("submit");
+		submit = new JButton("SUBMIT");
+		submit.setFont(new Font("Comic sans MS", Font.PLAIN, 10));
 
 		// titlePage JLabel properties
 		titlePage.setBounds(0, 0, 750, 50);
 		titlePage.setFont(new Font("Comic sans MS", Font.BOLD, 50));
-		titlePage.setForeground(new Color(0, 255, 127));
+		titlePage.setForeground(Color.black);
 
 		// currentTables combo box properties
 		for (Integer tableId : controller.getAllCurrentTableNumbers()) {
 			currentTables.addItem(tableId);
 		}
 
-		comboBoxLabel.setBounds(750 / 2 - 50, 800 - 150, 100, 50);
-		currentTables.setBounds(750 / 2 - 50, 800 - 100, 100, 50);
+		instruction = new JLabel("SELECT TABLE");
+		instruction.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
+		instruction.setBounds(40,100,200,50);
+		instruction.setForeground(Color.black);
+		
+		//comboBoxLabel.setBounds(750 / 2 - 50, 800 - 150, 100, 50);
+		comboBoxLabel.setBounds(225, 100, 350, 50);
+		//currentTables.setBounds(750 / 2 - 50, 800 - 100, 100, 50);
+		currentTables.setBounds(225, 100, 350, 50);
 
 		// back and submit JButton properties
 		back.setBounds(750 / 2 - 200, 800 - 100, 100, 50);
-		submit.setBounds(750 / 2 + 100, 800 - 100, 100, 50);
+		submit.setBounds(600, 110, 100, 30);
 		back.addActionListener(this);
 		submit.addActionListener(this);
 
+		this.add(instruction);
 		this.add(currentTables);
 		this.add(titlePage);
 		this.add(back);
@@ -73,6 +84,17 @@ public class ViewOrderPanel extends SidePanel implements ActionListener {
 		revalidate();
 		repaint();
 
+	}
+	
+	public String toStringForSeats(List<Seat> seats) {
+		String seatsForOrderItem = "";
+		for(int i=0; i < seats.size(); i++) {
+			if(!seatsForOrderItem.equals("")) {
+				seatsForOrderItem += ",";
+			}
+			seatsForOrderItem +=  seats.get(i).getTable().indexOfSeat(seats.get(i)) ;
+		}
+		return seatsForOrderItem;
 	}
 
 	public void actionPerformed(ActionEvent event) {
@@ -93,7 +115,9 @@ public class ViewOrderPanel extends SidePanel implements ActionListener {
 				// hashmap -> retrieve orderItems from table
 				Integer tableId = (Integer) currentTables.getSelectedItem();
 				Table table = Table.getWithNumber(tableId);
-				List<OrderItem> orderItems = controller.getOrderItems(table);
+				List<OrderItem> orderItems = null;
+
+				 orderItems = controller.getOrderItems(table);
 
 				// calculate the number of rows with constant column size of 4. Gridlayout used
 				// with JScrollPane
@@ -106,9 +130,12 @@ public class ViewOrderPanel extends SidePanel implements ActionListener {
 				int index = 0;
 				for (OrderItem orderItem : orderItems) {
 					System.out.println(orderItem);
-					JLabel label = new JLabel(htmlOpeningTag + "Quantity: " + orderItem.getQuantity() + "<br>Price: "
-							+ orderItem.getPricedMenuItem().getPrice() + "<br>Menu Item: "
-							+ orderItem.getPricedMenuItem().getMenuItem().getName() + htmlClosingTag);
+					JLabel label = new JLabel(htmlOpeningTag + 
+							"<br>Menu Item: "+ orderItem.getPricedMenuItem().getMenuItem().getName()
+							+ "<br>Price: " + orderItem.getPricedMenuItem().getPrice()  
+							+ "<br>Quantity: X  " + orderItem.getQuantity() 
+							+ "<br>Seats: " + toStringForSeats(orderItem.getSeats())
+							+ htmlClosingTag);
 					labels[index++] = label;
 				}
 				for (JLabel label : labels) {
@@ -120,7 +147,8 @@ public class ViewOrderPanel extends SidePanel implements ActionListener {
 
 			} catch (InvalidInputException ex) {
 				JOptionPane.showMessageDialog(this, ex.getMessage());
-				ex.printStackTrace();
+//				ex.printStackTrace();
+				return;
 			}
 			this.repaint();
 			this.revalidate();

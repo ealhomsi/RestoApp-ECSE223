@@ -55,6 +55,20 @@ class OrderItem {
    Integer quantity;
    * orderItems -- 1 PricedMenuItem pricedMenuItem; // only from MenuItem.currentPricedMenuItem for currentOrders
    * orderItems -- 1..* Seat seats; // only from order.tables.seats
+public double getPriceForSeat(){
+
+   	double finalPrice = 0.00;
+
+   	List<Seat> seats = getSeats();
+ 
+  	PricedMenuItem orderItemPrice = getPricedMenuItem();
+
+   	Double price = orderItemPrice.getPrice();
+
+   	finalPrice = price / seats.size();
+   
+	
+   	return finalPrice;}
 }
 
 class Menu {   

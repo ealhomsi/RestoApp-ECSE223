@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.sql.Date;
 
 import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.model.Reservation;
@@ -122,7 +123,7 @@ public class TableView {
 			long eventTime = hours * 3600000 + minutes * 60000;
 			Time time = new Time(eventTime);
 
-			if (r.doesOverlap(eventDate.getTime(), time)) {
+			if (r.doesOverlap(convertDate(eventDate.getTime()), time)) {
 				// this.color = Color.GREEN;
 				reservationIsNear = true;
 				break;
@@ -206,5 +207,14 @@ public class TableView {
 	public String toString() {
 		return table.getNumber() + "";
 	}
-
+	private static java.sql.Date convertDate(java.util.Date utilDate) {
+		java.util.Calendar cal = Calendar.getInstance();
+		cal.setTime(utilDate);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		java.sql.Date sqlDate = new java.sql.Date(cal.getTime().getTime()); // your sql date
+		return sqlDate;
+	}
 }

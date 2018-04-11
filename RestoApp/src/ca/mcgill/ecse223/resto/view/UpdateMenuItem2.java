@@ -42,40 +42,40 @@ public class UpdateMenuItem2 extends SidePanel implements ActionListener{
 		
 		
 		item = new JLabel("");
-		item.setBounds(250, 200, 300, 100);
+		item.setBounds(300, 100, 300, 100);
 		item.setFont(new Font("Comic Sans MS", Font.PLAIN, 40));
 		item.setBackground(Color.white);
 		add(item);
 		
 		
 		name = new JLabel("New Name");
-		name.setBounds(120, 350, 150, 60);
+		name.setBounds(120, 250, 150, 60);
 		name.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
 		add(name);
 		
 		price = new JLabel("New price");
-		price.setBounds(120, 450, 150, 60);
+		price.setBounds(120, 350, 150, 60);
 		price.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
 		add(price);
 		
 		nameTxt = new JTextField();
-		nameTxt.setBounds(300, 350, 300, 60);
+		nameTxt.setBounds(300, 250, 300, 60);
 		add(nameTxt);
 		
 		priceTxt = new JTextField();
 		priceTxt.setColumns(10);
-		priceTxt.setBounds(300, 450, 300, 60);
+		priceTxt.setBounds(300, 350, 300, 60);
 		add(priceTxt);
 		
 		change = new JButton("Submit change");
-		change.setBounds(450, 600, 200, 60);
+		change.setBounds(400, 550, 200, 60);
 		change.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
 		change.setBackground(Color.white);
 		change.addActionListener(this);
 		add(change);
 		
 		cancel = new JButton("cancel");
-		cancel.setBounds(250, 600, 150, 60);
+		cancel.setBounds(200, 550, 150, 60);
 		cancel.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
 		cancel.setBackground(Color.WHITE);
 		cancel.addActionListener(this);
@@ -86,12 +86,13 @@ public class UpdateMenuItem2 extends SidePanel implements ActionListener{
 			comboBox.addItem(s.toString());
 		}
 		comboBox.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
-		comboBox.setBounds(300, 523, 300, 60);
+		comboBox.setBackground(Color.WHITE);
+		comboBox.setBounds(300, 450, 300, 60);
 		add(comboBox);
 		
 		newCategory = new JLabel("New category");
 		newCategory.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
-		newCategory.setBounds(120, 510, 150, 60);
+		newCategory.setBounds(120, 450, 150, 60);
 		add(newCategory);
 	}
 
@@ -111,13 +112,14 @@ public class UpdateMenuItem2 extends SidePanel implements ActionListener{
 				String category = comboBox.getSelectedItem().toString();
 				
 				Controller.updateMenuItem(menuItem, name, ItemCategory.valueOf(category), price);
-				this.page.updateSidePanels();
 				this.clearTxt();
+				this.page.updateSidePanels();
+				
 				
 			} catch (NumberFormatException e1) {
 				JOptionPane.showMessageDialog(this, "Please enter an integer value");
-			} catch (InvalidInputException e1) {
-				e1.printStackTrace();
+			}  catch (Exception e2) {
+				JOptionPane.showMessageDialog(this, e2.getMessage());
 			}
 		}
 		

@@ -159,10 +159,10 @@ public class BillPanel extends SidePanel implements ActionListener{
 					String result = "";
 					double amount = 0;
 					for(Seat seat: seats){
-						result += "id "+seat.getTable().getNumber()+ "Index: "+seat.getTable().indexOfSeat(seat);
+						result += "Id: "+seat.getTable().getNumber()+ " Index: "+seat.getTable().indexOfSeat(seat) + ", ";
 						List<OrderItem> orderItems = seat.getOrderItems();
 						for(OrderItem aOrderItem: orderItems){
-							amount += aOrderItem.getPricedMenuItem().getPrice();
+							amount += aOrderItem.getPriceForSeat(); // to change....................
 						}
 					}
 					Object[] toAdd = {result,amount};
@@ -224,7 +224,7 @@ public class BillPanel extends SidePanel implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if(arg0.getActionCommand().equals("Add")){
-			if(seatCombo.getSelectedObjects() == null)
+			if(seatCombo.getSelectedItem() == null)
 				return;
 			Object[] addStr = seatCombo.getSelectedObjects();
 			String str = addStr[0].toString();
@@ -248,7 +248,7 @@ public class BillPanel extends SidePanel implements ActionListener{
 		}
 		if(arg0.getActionCommand().equals("Submit")){
 			if(selectedSeat.size() == 0) {
-				JOptionPane.showConfirmDialog(this, "select some seats");
+				System.out.print("No seat selected");
 				return;
 			}
 			try {
@@ -256,6 +256,7 @@ public class BillPanel extends SidePanel implements ActionListener{
 			} catch (InvalidInputException e) {
 				System.out.println(e.getMessage());
 			}
+			updateView();
 		}
 	}
 

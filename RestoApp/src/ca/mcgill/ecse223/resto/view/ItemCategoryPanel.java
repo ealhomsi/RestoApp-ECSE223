@@ -19,7 +19,6 @@ import ca.mcgill.ecse223.resto.model.PricedMenuItem;
 @SuppressWarnings("serial")
 public class ItemCategoryPanel extends SidePanel implements ActionListener {
 	private OrderItemPanel orderPanel = null;
-	private RemoveMenuItem removeMenuItem = null;
 	private ItemCategory aCategory = null;
 	static ArrayList<JButton> buttonsList = new ArrayList<JButton>();
 
@@ -93,7 +92,7 @@ public class ItemCategoryPanel extends SidePanel implements ActionListener {
 		JButton b = (JButton) arg0.getSource();
 
 		if (MenuCategoriesPanel.selectedComboBox == 3 && buttonsList.contains(b)) {
-			int result = JOptionPane.showConfirmDialog(this, "Do you wanna delete this menu item good sir?");
+			int result = JOptionPane.showConfirmDialog(this, "Do you want to delete this item?");
 			if (result == JOptionPane.OK_OPTION) {
 				try {
 					PricedMenuItem p = this.controller.getPricedMenuItem(b.getText().split("-")[0].trim());

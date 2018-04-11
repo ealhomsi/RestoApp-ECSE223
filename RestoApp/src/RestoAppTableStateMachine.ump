@@ -62,11 +62,56 @@ class Table {
             // create a new bill with the provided order and seat; if the provided seat is already assigned to
             // another bill for the current order, then the seat is first removed from the other bill and if no seats
             // are left for the bill, the bill is deleted
+            RestoApp r = this.getRestoApp();
+            
+            if(o.hasBills()){
+            	List<Bill> bills = o.getBills();
+            	
+            	for(int i = 0; i<o.getBills().size(); i++){
+            		Bill b = o.getBill(i);
+            		List<Seat> seats = b.getIssuedForSeats();
+            		if(seats.contains(s)){
+            			if(b.getIssuedForSeats().size() == 1){
+            				b.delete();
+            				i=0;
+            			}else{
+            				b.removeIssuedForSeat(s);
+            				i=0;
+            			}
+            		}
+            	}
+            }
+            new Bill(o, r, s);
          } -> Ordered;
          addToBill(Bill b, Seat s) / {
             // add provided seat to provided bill unless seat has already been added, in which case nothing needs
             // to be done; if the provided seat is already assigned to another bill for the current order, then the
             // seat is first removed from the other bill and if no seats are left for the bill, the bill is deleted
+           	List<Seat> seats = b.getIssuedForSeats();
+           	
+           	          	if(!seats.contains(s)){
+           		Table table = s.getTable();
+           		List<Order> orders = table.getOrders();
+           		int size = orders.size();
+           		Order o = orders.get(size-1);
+           		
+           		if(o.hasBills()){
+                	for(int i = 0; i<o.getBills().size(); i++){
+                		Bill bill = o.getBill(i);
+                		List<Seat> seat = bill.getIssuedForSeats();
+                		if(seat.contains(s)){
+                			if(bill.getIssuedForSeats().size() == 1){
+                				bill.delete();
+                				i=0;
+                			}else{
+                				bill.removeIssuedForSeat(s);
+                				i=0;
+                			}
+                		}
+                	}
+		}
+           }
+           	b.addIssuedForSeat(s);
          } -> Ordered;
          endOrder(Order o) [allSeatsBilled()] / {
          } -> Available;
