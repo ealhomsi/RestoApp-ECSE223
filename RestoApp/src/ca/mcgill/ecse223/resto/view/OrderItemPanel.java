@@ -60,33 +60,36 @@ public class OrderItemPanel extends SidePanel implements ActionListener {
 		this.add(promptQuantity);
 
 		quantity = new JTextField();
-		quantity.setBounds(300, 135, 50, 30);
+		quantity.setBounds(400, 130, 50, 40);
 		this.add(quantity);
 
 		submit = new JButton("submit");
-		submit.setBounds(100, 449, 200, 80);
+		submit.setBounds(250, 500, 200, 80);
 		submit.addActionListener(this);
+		submit.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
 		submit.setBackground(Color.white);
 		this.add(submit);
 
 		back = new JButton("back");
-		back.setBounds(400, 449, 200, 80);
+		back.setBounds(470, 500, 200, 80);
 		back.addActionListener(this);
+		back.setFont(new Font("Comic sans MS", Font.PLAIN, 20));
 		back.setBackground(Color.white);
 		this.add(back);
 
 		orders = new JComboBox<>();
 		orders.setBackground(Color.white);
-		orders.setBounds(120, 200, 400, 50);
+		orders.setBounds(120, 200, 550, 50);
+		orders.setFont(new Font("Comic sans MS", Font.PLAIN, 15));
 		orders.addActionListener(this);
 		this.add(orders);
 
 		promptSeats = new JLabel("Enter which Seats format: #Table:#Seat, #Table:#Seat");
-		promptSeats.setBounds(120, 245, 600, 100);
-		promptSeats.setFont((new Font("Comic sans MS", Font.BOLD, 15)));
+		promptSeats.setBounds(120, 250, 600, 100);
+		promptSeats.setFont((new Font("Comic sans MS", Font.PLAIN, 20)));
 		this.add(promptSeats);
 		seats = new JTextField("");
-		seats.setBounds(120, 340, 500, 30);
+		seats.setBounds(120, 340, 550, 50);
 		this.add(seats);
 
 		// updateView
@@ -154,7 +157,7 @@ public class OrderItemPanel extends SidePanel implements ActionListener {
 	@Override
 	public void updateView() {
 		if (pricedMenuItem != null)
-			this.promptQuantity.setText(this.pricedMenuItem.getMenuItem().getName() + " Quantity");
+			this.promptQuantity.setText(this.pricedMenuItem.getMenuItem().getName() + " Quantity:");
 
 		this.orders.removeAllItems();
 		for (OrderView t : controller.getAllCurrentOrders()) {
