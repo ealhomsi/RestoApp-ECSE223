@@ -156,7 +156,6 @@ public class TableView {
 			g.setFont(new Font("TimesRoman", Font.PLAIN, 10));
 			g.drawString(text, x, y);
 			g.setFont(f);
-
 		}
 	}
 
