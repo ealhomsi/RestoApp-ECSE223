@@ -1226,7 +1226,7 @@ public class Controller {
 	 * @param emailAddress
 	 * @throws InvalidInputException
 	 */
-	public void registrationForLoyaltyCard(String clientName, String phoneNumber, String emailAddress)
+	public void registerLoyaltyCard(String clientName, String phoneNumber, String emailAddress)
 			throws InvalidInputException {
 		boolean hasLoyaltyCard = LoyaltyCard.hasWithEmailAddress(emailAddress);
 
@@ -1303,7 +1303,7 @@ public class Controller {
 	 * @param aCard
 	 * @return
 	 */
-	public static double calculatePoints(LoyaltyCard aCard) {
+	public static void calculatePoints(LoyaltyCard aCard) {
 		List<Order> allOrders = aCard.getOrders();
 		Double price = aCard.getPoint();
 
@@ -1317,7 +1317,6 @@ public class Controller {
 		aCard.setPoint(price);
 
 		RestoApplication.save();
-		return price;
 
 	}
 

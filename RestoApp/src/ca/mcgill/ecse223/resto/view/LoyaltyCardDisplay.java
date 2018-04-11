@@ -26,6 +26,7 @@ import ca.mcgill.ecse223.resto.controller.Controller;
 import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.model.LoyaltyCard;
 
+@SuppressWarnings("serial")
 public class LoyaltyCardDisplay extends SidePanel implements ActionListener {
 	private static JScrollPane cardListScroll;
 	private DefaultTableModel cardListFrameView;
@@ -212,7 +213,7 @@ public class LoyaltyCardDisplay extends SidePanel implements ActionListener {
 			String enteredEmail = enterEmail.getText();
 
 			try {
-				controller.registrationForLoyaltyCard(enteredName, enteredPhone, enteredEmail);
+				controller.registerLoyaltyCard(enteredName, enteredPhone, enteredEmail);
 				this.clearRegistrationInputs();
 				this.updateView();
 			} catch (InvalidInputException e1) {
