@@ -944,7 +944,7 @@ public class Controller {
 		if (seatCapacity < numberInParty) {
 			throw new InvalidInputException("seat capactiy is less than the number in party");
 		}
-		new Reservation((java.sql.Date) date, time, numberInParty, contactName, contactEmailAddress, contactPhoneNumber,
+		new Reservation(new java.sql.Date(date.getTime()), time, numberInParty, contactName, contactEmailAddress, contactPhoneNumber,
 				restoApp, tables.toArray(new Table[tables.size()]));
 		RestoApplication.save();
 	}
