@@ -67,15 +67,18 @@ public class CancelOrderPanel extends SidePanel implements ActionListener {
 				int index = orders.getSelectedIndex();
 				OrderView selectedOrderView;
 				try {
-					selectedOrderView = controller.getAllCurrentOrders().get(index);
+					if (controller.getAllCurrentOrders().size() != 0) {
+						selectedOrderView = controller.getAllCurrentOrders().get(index);
+						Order selectedOrder = selectedOrderView.getOrder();
+						List<OrderItem> OrderItems = selectedOrder.getOrderItems();
+						for (OrderItem t : OrderItems) {
+							orderItems.addItem(new OrderItemView(t));
+						}
+					}
 				} catch (Exception a) {
 					return;
 				}
-				Order selectedOrder = selectedOrderView.getOrder();
-				List<OrderItem> OrderItems = selectedOrder.getOrderItems();
-				for (OrderItem t : OrderItems) {
-					orderItems.addItem(new OrderItemView(t));
-				}
+
 			}
 		});
 		this.add(orders);
@@ -173,6 +176,11 @@ public class CancelOrderPanel extends SidePanel implements ActionListener {
 		for (OrderView t : controller.getAllCurrentOrders()) {
 			orders.addItem(t);
 		}
+
+		orders.revalidate();
+		orders.repaint();
+		this.revalidate();
+		this.repaint();
 	}
 
 }
