@@ -986,7 +986,7 @@ public class Controller {
 
 		for (Table table : tables) {
 			if (!currentTables.contains(table)) {
-				throw new InvalidInputException("invalid table parameter");
+				throw new InvalidInputException("table is not current table parameter");
 			}
 
 			seatCapacity += table.numberOfCurrentSeats();
@@ -1329,7 +1329,7 @@ public class Controller {
 		// TODO Auto-generated method stub
 		RestoApp r = RestoApplication.getRestoApp();
 
-		return r.getTables();
+		return r.getCurrentTables();
 	}
 
 	/**
@@ -1340,9 +1340,9 @@ public class Controller {
 	 * @param time
 	 * @return
 	 */
-	public static boolean TableAvaialbeOnTimeAndDate(Table table, Date date, Time time) {
+	public static boolean TableAvaialbeOnTimeAndDate(Table table, Date date, Time time, int set) {
 		for (Reservation r : table.getReservations()) {
-			if (r.doesOverlap(convertDate(date), time))
+			if (table.getCurrentSeats().size() <set ||   r.doesOverlap(convertDate(date), time))
 				return false;
 		}
 		return true;

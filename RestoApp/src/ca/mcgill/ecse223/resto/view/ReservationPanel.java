@@ -219,24 +219,29 @@ public class ReservationPanel extends SidePanel implements ActionListener {
 
 				// check if auto is passed
 				String autoOption = tablesAssignedField.getText();
-				if(autoOption.trim().toLowerCase().equals("auto")) {
-					//auto means grab the next available table on that date and time
-					for(Table table: Controller.getAllTableObject()) {
-						if(Controller.TableAvaialbeOnTimeAndDate(table, eventDate.getTime(), time)) {
+				if (autoOption.trim().toLowerCase().equals("auto")) {
+					// auto means grab the next available table on that date and time
+					for (Table table : Controller.getAllTableObject()) {
+						if (Controller.TableAvaialbeOnTimeAndDate(table, eventDate.getTime(), time,
+								Integer.parseInt(numberOfPersonsTextField.getText()))) {
 							List<Table> autoTable = new ArrayList<>();
 							autoTable.add(table);
-							Controller.reserve(eventDate.getTime(), time, Integer.parseInt(numberOfPersonsTextField.getText()),
-									nameTextField.getText(), emailTextField.getText(), phoneNumberTextField.getText(), autoTable);
-							
-							JOptionPane.showMessageDialog(this, "table number " + table.getNumber() + " was assigned automatically to this resv");
+							Controller.reserve(eventDate.getTime(), time,
+									Integer.parseInt(numberOfPersonsTextField.getText()), nameTextField.getText(),
+									emailTextField.getText(), phoneNumberTextField.getText(), autoTable);
+
+							JOptionPane.showMessageDialog(this,
+									"table number " + table.getNumber() + " was assigned automatically to this resv");
 							return;
 						}
 					}
+					JOptionPane.showMessageDialog(this, "we could not find any table on that date automatically");
+					return;
 				}
-				
-				//check if asap
-				//check if nextweek
-				
+
+				// check if asap
+				// check if nextweek
+
 				// tokenizer to take a list of table number from the user
 				StringTokenizer token = new StringTokenizer(tablesAssignedField.getText(), " ");
 				List<Table> tables = new ArrayList<>();
@@ -249,7 +254,7 @@ public class ReservationPanel extends SidePanel implements ActionListener {
 				// calls reserve method in controller
 				Controller.reserve(eventDate.getTime(), time, Integer.parseInt(numberOfPersonsTextField.getText()),
 						nameTextField.getText(), emailTextField.getText(), phoneNumberTextField.getText(), tables);
-				
+
 				this.page.updateSidePanels();
 			} catch (Exception e2) {
 				JOptionPane.showMessageDialog(this, e2.getMessage());
