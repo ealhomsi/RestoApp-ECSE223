@@ -112,13 +112,14 @@ public class UpdateMenuItem2 extends SidePanel implements ActionListener{
 				String category = comboBox.getSelectedItem().toString();
 				
 				Controller.updateMenuItem(menuItem, name, ItemCategory.valueOf(category), price);
-				this.page.updateSidePanels();
 				this.clearTxt();
+				this.page.updateSidePanels();
+				
 				
 			} catch (NumberFormatException e1) {
 				JOptionPane.showMessageDialog(this, "Please enter an integer value");
-			} catch (InvalidInputException e1) {
-				e1.printStackTrace();
+			}  catch (Exception e2) {
+				JOptionPane.showMessageDialog(this, e2.getMessage());
 			}
 		}
 		
