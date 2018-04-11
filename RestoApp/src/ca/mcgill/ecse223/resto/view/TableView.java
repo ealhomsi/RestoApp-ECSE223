@@ -108,12 +108,18 @@ public class TableView {
 		// there is reservation check if any of them clash
 		boolean reservationIsNear = false;
 		for (Reservation r : table.getReservations()) {
+			final Calendar c = Calendar.getInstance();
+			int year = c.get(Calendar.YEAR);
+			int month = c.get(Calendar.MONTH);
+			int day = c.get(Calendar.DAY_OF_MONTH);
+			int hours = c.get(Calendar.HOUR_OF_DAY);
+			int minutes = c.get(Calendar.MINUTE);
 			// calendar eventDate object to hold day, month and year
 			Calendar eventDate = Calendar.getInstance();
-			eventDate.set(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH);
+			eventDate.set(year, month, day);
 			// eventTime holds the number of milliseconds since the start of the day -- done
 			// by converting hours and minutes to milliseconds
-			long eventTime = (now.HOUR_OF_DAY) * 3600000 + (now.MINUTE) * 60000;
+			long eventTime = hours * 3600000 + minutes * 60000;
 			Time time = new Time(eventTime);
 
 			if (r.doesOverlap(eventDate.getTime(), time)) {
