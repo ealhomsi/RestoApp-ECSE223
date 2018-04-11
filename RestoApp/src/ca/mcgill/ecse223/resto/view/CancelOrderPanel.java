@@ -147,7 +147,7 @@ public class CancelOrderPanel extends SidePanel implements ActionListener {
 
 			} catch (Exception a) {
 				JOptionPane.showMessageDialog(this, "error : " + a.getMessage());
-				a.printStackTrace();
+//				a.printStackTrace();
 				return;
 			}
 
@@ -159,12 +159,12 @@ public class CancelOrderPanel extends SidePanel implements ActionListener {
 				controller.cancelOrderItem(selectedOrderItem);
 			} catch (Exception a1) {
 				JOptionPane.showMessageDialog(this, "error : " + a1.getMessage());
-				a1.printStackTrace();
+//				a1.printStackTrace();
 				return;
 
 			}
 		}
-		this.page.updateSidePanels();
+//		this.page.updateSidePanels();
 	}
 
 	@Override
