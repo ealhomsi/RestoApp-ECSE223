@@ -208,13 +208,15 @@ public class TableView {
 	}
 
 	private static java.sql.Date convertDate(java.util.Date utilDate) {
-		java.util.Calendar cal = Calendar.getInstance();
-		cal.setTime(utilDate);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		java.sql.Date sqlDate = new java.sql.Date(cal.getTime().getTime()); // your sql date
-		return sqlDate;
+		
+		return new java.sql.Date(utilDate.getTime());
+//		java.util.Calendar cal = Calendar.getInstance();
+//		cal.setTime(utilDate);
+//		cal.set(Calendar.HOUR_OF_DAY, 0);
+//		cal.set(Calendar.MINUTE, 0);
+//		cal.set(Calendar.SECOND, 0);
+//		cal.set(Calendar.MILLISECOND, 0);
+//		java.sql.Date sqlDate = new java.sql.Date(cal.getTime().getTime()); // your sql date
+//		return sqlDate;
 	}
 }

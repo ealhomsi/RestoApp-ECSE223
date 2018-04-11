@@ -249,6 +249,8 @@ public class ReservationPanel extends SidePanel implements ActionListener {
 				// calls reserve method in controller
 				Controller.reserve(eventDate.getTime(), time, Integer.parseInt(numberOfPersonsTextField.getText()),
 						nameTextField.getText(), emailTextField.getText(), phoneNumberTextField.getText(), tables);
+				
+				this.page.updateSidePanels();
 			} catch (Exception e2) {
 				JOptionPane.showMessageDialog(this, e2.getMessage());
 			}

@@ -807,14 +807,16 @@ public class Controller {
 	 * @throws InvalidInputException
 	 */
 	private static java.sql.Date convertDate(java.util.Date utilDate) {
-		java.util.Calendar cal = Calendar.getInstance();
-		cal.setTime(utilDate);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		java.sql.Date sqlDate = new java.sql.Date(cal.getTime().getTime()); // your sql date
-		return sqlDate;
+		return new java.sql.Date(utilDate.getTime());
+		// java.util.Calendar cal = Calendar.getInstance();
+		// cal.setTime(utilDate);
+		// cal.set(Calendar.HOUR_OF_DAY, 0);
+		// cal.set(Calendar.MINUTE, 0);
+		// cal.set(Calendar.SECOND, 0);
+		// cal.set(Calendar.MILLISECOND, 0);
+		// java.sql.Date sqlDate = new java.sql.Date(cal.getTime().getTime()); // your
+		// sql date
+		// return sqlDate;
 	}
 
 	public static void endOrder(Order order, String emailAddress) throws InvalidInputException {
@@ -960,6 +962,9 @@ public class Controller {
 		if (!isValidEmailAddress(contactEmailAddress)) {
 			throw new InvalidInputException("email format is wrong");
 		}
+
+		if (!isValidPhoneNumber(contactPhoneNumber))
+			throw new InvalidInputException("phone should be 10 digits 5149393333");
 
 		// checks for negative quantity
 		if (numberInParty < 0) {
@@ -1271,7 +1276,7 @@ public class Controller {
 	 * @param phone
 	 * @return
 	 */
-	private boolean isValidPhoneNumber(String phone) {
+	private static boolean isValidPhoneNumber(String phone) {
 		if (phone.length() != 10)
 			return false;
 
@@ -1323,20 +1328,21 @@ public class Controller {
 	public static List<Table> getAllTableObject() {
 		// TODO Auto-generated method stub
 		RestoApp r = RestoApplication.getRestoApp();
-		
+
 		return r.getTables();
 	}
-	
+
 	/**
 	 * checks if a new reservation on that time and date is available
+	 * 
 	 * @param table
 	 * @param date
 	 * @param time
 	 * @return
 	 */
 	public static boolean TableAvaialbeOnTimeAndDate(Table table, Date date, Time time) {
-		for(Reservation r: table.getReservations()) {
-			if(r.doesOverlap(convertDate(date), time))
+		for (Reservation r : table.getReservations()) {
+			if (r.doesOverlap(convertDate(date), time))
 				return false;
 		}
 		return true;
