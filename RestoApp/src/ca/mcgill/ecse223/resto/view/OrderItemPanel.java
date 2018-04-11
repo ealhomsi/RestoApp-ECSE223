@@ -104,11 +104,23 @@ public class OrderItemPanel extends SidePanel implements ActionListener {
 			Order o = ov.getOrder();
 
 			// grab quantity
-			int quantity = Integer.parseInt(this.quantity.getText());
+			int quantity = 0;
+			try {
+				quantity = Integer.parseInt(this.quantity.getText());
+
+			} catch (java.lang.NumberFormatException ee) {
+				JOptionPane.showMessageDialog(this, "please enter quantity");
+				return;
+			}
 
 			// grab seats and tables
 			String input = seats.getText();
 			input = input.trim();
+			if (input.equals("")) {
+				JOptionPane.showMessageDialog(this, "please enter seats");
+				return;
+			}
+
 			String[] seatTableCombination = input.split(",");
 			ArrayList<Table> tables = new ArrayList<>();
 			ArrayList<Seat> seats = new ArrayList<>();
@@ -128,8 +140,8 @@ public class OrderItemPanel extends SidePanel implements ActionListener {
 				JOptionPane.showMessageDialog(this, e1.getMessage());
 				e1.printStackTrace();
 			}
-			
-			//go back
+
+			// go back
 			this.page.setRightIndex(9);
 			this.page.updateSidePanels();
 		} else if (e.getSource() == back) {

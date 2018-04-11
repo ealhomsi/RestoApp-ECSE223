@@ -5,10 +5,14 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import ca.mcgill.ecse223.resto.controller.InvalidInputException;
+import ca.mcgill.ecse223.resto.model.Reservation;
 import ca.mcgill.ecse223.resto.model.Seat;
 import ca.mcgill.ecse223.resto.model.Table;
 
@@ -94,7 +98,7 @@ public class TableView {
 		this.color = color;
 	}
 
-	public void drawTable(Graphics g) {
+	public void drawTable(Graphics g, Calendar now) {
 		g.setColor(color);
 		g.fillRect(table.getX(), table.getY(), table.getWidth(), table.getLength());
 		g.setColor(Color.white);
@@ -110,6 +114,34 @@ public class TableView {
 		g.setColor(Color.WHITE);
 		// Draw the String
 		g.drawString(text, x, y);
+
+		// check if reserved
+		if (table.getReservations().size() == 0)
+			return;
+
+		// there is reservation check if any of them clash
+		boolean reservationIsNear = false;
+		for (Reservation r : table.getReservations()) {
+			if (getDateDiffInHours(r.getDate(), new java.sql.Date(Calendar.getInstance().getTime().getTime())) >= 120) {
+				reservationIsNear = true;
+				break;
+			}
+		}
+
+		if (reservationIsNear) {
+			text = "reserved!";
+			x = rect.x + rect.width / 4;
+			// Determine the Y coordinate for the text
+			y = rect.y + rect.height / 4;
+			g.setColor(Color.WHITE);
+			// Draw the String
+			g.drawString(text, x, y);
+		}
+	}
+
+	public static long getDateDiffInHours(Date date1, Date date2) {
+		long diffInMillies = date2.getTime() - date1.getTime();
+		return TimeUnit.MILLISECONDS.toMinutes(diffInMillies);
 	}
 
 	/** Helper methods for automatic seats placing **/
