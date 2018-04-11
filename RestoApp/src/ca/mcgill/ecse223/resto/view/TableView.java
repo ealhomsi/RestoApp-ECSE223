@@ -1,11 +1,11 @@
 package ca.mcgill.ecse223.resto.view;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -123,7 +123,7 @@ public class TableView {
 			Time time = new Time(eventTime);
 
 			if (r.doesOverlap(eventDate.getTime(), time)) {
-				this.color = Color.GREEN;
+				// this.color = Color.GREEN;
 				reservationIsNear = true;
 				break;
 			}
@@ -146,13 +146,17 @@ public class TableView {
 		g.drawString(text, x, y);
 
 		if (reservationIsNear) {
-			text = "reserved!";
+			text = "reserved!!";
 			x = rect.x + rect.width / 4;
 			// Determine the Y coordinate for the text
 			y = rect.y + rect.height / 4;
 			g.setColor(Color.WHITE);
 			// Draw the String
+			Font f = g.getFont();
+			g.setFont(new Font("TimesRoman", Font.PLAIN, 10));
 			g.drawString(text, x, y);
+			g.setFont(f);
+
 		}
 	}
 
