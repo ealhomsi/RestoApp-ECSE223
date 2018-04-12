@@ -164,7 +164,7 @@ public class BillPanel extends SidePanel implements ActionListener{
 						result += "Id: "+seat.getTable().getNumber()+ " Index: "+seat.getTable().indexOfSeat(seat) + ", ";
 						List<OrderItem> orderItems = seat.getOrderItems();
 						for(OrderItem aOrderItem: orderItems){
-							amount += aOrderItem.getPriceForSeat(); // to change....................
+							amount += aOrderItem.getPriceForSeat()* aOrderItem.getQuantity(); // to change....................
 						}
 					}
 					Object[] toAdd = {result,amount};
