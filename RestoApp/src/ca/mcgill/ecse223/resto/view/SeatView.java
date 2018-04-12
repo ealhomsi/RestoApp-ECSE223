@@ -6,8 +6,10 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 
 import ca.mcgill.ecse223.resto.model.Seat;
+import ca.mcgill.ecse223.resto.model.Table.Status;
 
 /**
  * this class is a wrapper class for the seat
@@ -17,7 +19,7 @@ import ca.mcgill.ecse223.resto.model.Seat;
  */
 public class SeatView {
 	private int id;
-private Seat seat;
+	private Seat seat;
 	private final static int RADIUS = 20;
 	private int x;
 	private int y;
@@ -32,10 +34,14 @@ private Seat seat;
 	}
 
 	private void hasAtLeastOneOrderItem() {
-		if(this.getSeat().getOrderItems().size() > 0) {
+		if (this.getSeat().getOrderItems().size() > 0 && this.getSeat().getTable().getOrders().size()> 0 && this.getSeat().getTable().getStatus() == Status.Ordered) {
+			System.out.println("heelo");
 			this.setColor(Color.PINK);
+		} else {
+			this.setColor(Color.RED);
 		}
 	}
+
 	public int getId() {
 		return id;
 	}
@@ -100,7 +106,7 @@ private Seat seat;
 		FontMetrics metrics = g.getFontMetrics(g.getFont());
 		String text = this.getId() + " ";
 		// Determine the X coordinate for the text
-		int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2 + SeatView.getRadius()/8;
+		int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2 + SeatView.getRadius() / 8;
 		// Determine the Y coordinate for the text
 		int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
 		g.setColor(Color.WHITE);
